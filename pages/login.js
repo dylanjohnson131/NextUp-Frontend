@@ -35,6 +35,10 @@ export default function Login() {
         <button type="submit" className="mt-4 bg-cyan-400 text-slate-900 px-3 py-1 rounded">Log in</button>
         {error && <p className="text-red-400 mt-2">{error}</p>}
       </form>
+      
+      <div className="mt-6">
+        <p>Don't have an account? <a href="/register" className="text-cyan-400 hover:underline">Create one</a></p>
+      </div>
     </main>
   )
 }
