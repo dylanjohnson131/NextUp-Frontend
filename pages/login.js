@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
-import { login } from '../lib/api'
+import { login, getCurrentUser } from '../lib/api'
 
 export default function Login() {
   const router = useRouter()
@@ -15,7 +15,15 @@ export default function Login() {
       const res = await login({ email, password })
       
       if (res && (res.message === 'Logged in successfully' || res.success)) {
-        router.push('/dashboard')
+        // Get user info to redirect to appropriate dashboard
+        const userInfo = await getCurrentUser()
+        if (userInfo && userInfo.Role === 'Coach') {
+          router.push('/coach/dashboard')
+        } else if (userInfo && userInfo.Role === 'Player') {
+          router.push('/player/dashboard')
+        } else {
+          router.push('/dashboard')
+        }
       } else {
         setError('Invalid credentials')
       }

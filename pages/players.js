@@ -14,7 +14,11 @@ export default function Players(){
       <h1>Players</h1>
       {loading && <p>Loading...</p>}
       <ul className="mt-4">
-        {players.map(pl=> <li key={pl.PlayerId}>{pl.Name} — {pl.Position}</li>)}
+        {players && players.length > 0 ? (
+          players.map(pl=> <li key={pl.playerId}>{pl.name} — {pl.position}</li>)
+        ) : (
+          <li>No players found</li>
+        )}
       </ul>
     </main>
   )

@@ -1,86 +1,18 @@
-import Link from 'next/link'import Link from 'next/link'import Link from 'next/link'import Link from 'next/link'import Link from 'next/link'
+import Link from 'next/link'
+import { useEffect, useState } from 'react'
+import { getCurrentUser, logout } from '../lib/api'
 
+export default function RoleNavBar() {
+  const [user, setUser] = useState(null)
+  const [loading, setLoading] = useState(true)
 
-
-export default function NavBar() {
-
-  return (
-
-    <nav className="bg-slate-900 border-b border-slate-700 px-4 py-3">export default function NavBar() {
-
-      <div className="flex items-center justify-between">
-
-        <Link href="/" className="text-xl font-bold text-cyan-400">  return (
-
-          NextUp
-
-        </Link>    <nav className="bg-slate-900 border-b border-slate-700 px-4 py-3">export default function NavBar() {import { useEffect, useState } from 'react'
-
-        <div className="flex gap-4">
-
-          <Link href="/login" className="text-slate-300 hover:text-white">      <div className="flex items-center justify-between">
-
-            Login
-
-          </Link>        <Link href="/" className="text-xl font-bold text-cyan-400">  return (
-
-          <Link href="/register" className="bg-cyan-400 text-slate-900 px-3 py-1 rounded">
-
-            Sign Up          NextUp
-
-          </Link>
-
-        </div>        </Link>    <nav className="bg-slate-900 border-b border-slate-700 px-4 py-3">export default function NavBar() {import { getCurrentUser, logout } from '../lib/api'
-
-      </div>
-
-    </nav>        <div className="flex gap-4">
-
-  )
-
-}          <Link href="/login" className="text-slate-300 hover:text-white">      <div className="flex items-center justify-between">
-
-            Login
-
-          </Link>        <Link href="/" className="text-xl font-bold text-cyan-400">NextUp</Link>  return (
-
-          <Link href="/register" className="bg-cyan-400 text-slate-900 px-3 py-1 rounded">
-
-            Sign Up        <div className="flex gap-4">
-
-          </Link>
-
-        </div>          <Link href="/login" className="text-slate-300 hover:text-white">Login</Link>    <nav className="bg-slate-900 border-b border-slate-700 px-4 py-3">export default function NavBar() {
-
-      </div>
-
-    </nav>          <Link href="/register" className="bg-cyan-400 text-slate-900 px-3 py-1 rounded">Sign Up</Link>
-
-  )
-
-}        </div>      <div className="flex items-center justify-between">  const [user, setUser] = useState(null)
-
-      </div>
-
-    </nav>        <Link href="/" className="text-xl font-bold text-cyan-400">NextUp</Link>  const [loading, setLoading] = useState(true)
-
-  )
-
-}        <div className="flex gap-4">
-
-          <Link href="/login" className="text-slate-300 hover:text-white">Login</Link>  useEffect(() => {
-
-          <Link href="/register" className="bg-cyan-400 text-slate-900 px-3 py-1 rounded">Sign Up</Link>    getCurrentUser()
-
-        </div>      .then(userData => {
-
-      </div>        setUser(userData)
-
-    </nav>        setLoading(false)
-
-  )      })
-
-}      .catch(() => {
+  useEffect(() => {
+    getCurrentUser()
+      .then(userData => {
+        setUser(userData)
+        setLoading(false)
+      })
+      .catch(() => {
         setUser(null)
         setLoading(false)
       })
@@ -106,7 +38,7 @@ export default function NavBar() {
     )
   }
 
-  if (!user || !user.IsAuthenticated) {
+  if (!user || !user.isAuthenticated) {
     return (
       <nav className="bg-slate-900 border-b border-slate-700 px-4 py-3">
         <div className="flex items-center justify-between">
@@ -121,7 +53,7 @@ export default function NavBar() {
   }
 
   // Coach Navigation
-  if (user.Role === 'Coach') {
+  if (user.role === 'Coach') {
     return (
       <nav className="bg-slate-900 border-b border-slate-700 px-4 py-3">
         <div className="flex items-center justify-between">
@@ -134,7 +66,7 @@ export default function NavBar() {
             <Link href="/coach/game-stats" className="text-slate-300 hover:text-white">Game Stats</Link>
             
             <div className="flex items-center gap-3 ml-6 border-l border-slate-700 pl-6">
-              <span className="text-slate-400">Coach {user.Name}</span>
+              <span className="text-slate-400">Coach {user.name}</span>
               <button 
                 onClick={handleLogout}
                 className="text-slate-300 hover:text-white text-sm"
@@ -148,8 +80,8 @@ export default function NavBar() {
     )
   }
 
-  // Player Navigation
-  if (user.Role === 'Player') {
+  // Player Navigation  
+  if (user.role === 'Player') {
     return (
       <nav className="bg-slate-900 border-b border-slate-700 px-4 py-3">
         <div className="flex items-center justify-between">
@@ -163,7 +95,7 @@ export default function NavBar() {
             <Link href="/player/matchup" className="text-slate-300 hover:text-white">Matchup</Link>
             
             <div className="flex items-center gap-3 ml-6 border-l border-slate-700 pl-6">
-              <span className="text-slate-400">{user.Name}</span>
+              <span className="text-slate-400">{user.name}</span>
               <button 
                 onClick={handleLogout}
                 className="text-slate-300 hover:text-white text-sm"
@@ -183,7 +115,7 @@ export default function NavBar() {
       <div className="flex items-center justify-between">
         <Link href="/" className="text-xl font-bold text-cyan-400">NextUp</Link>
         <div className="flex items-center gap-3">
-          <span className="text-slate-400">{user.Name}</span>
+          <span className="text-slate-400">{user.name}</span>
           <button 
             onClick={handleLogout}
             className="text-slate-300 hover:text-white text-sm"
@@ -191,17 +123,6 @@ export default function NavBar() {
             Logout
           </button>
         </div>
-      </div>
-    </nav>
-  )
-}
-      <div className="flex items-center gap-4">
-        <Link href="/" className={`font-bold text-xl ${router.pathname === '/' ? 'underline' : ''}`}>NextUp</Link>
-        <Link href="/dashboard" className={active('/dashboard')}>Dashboard</Link>
-        <Link href="/players" className={active('/players')}>Players</Link>
-      </div>
-      <div>
-        <Link href="/login" className="bg-cyan-400 text-slate-900 px-3 py-1 rounded">Log in</Link>
       </div>
     </nav>
   )

@@ -42,34 +42,38 @@ export default function Register() {
       let res
       if (userType === 'player') {
         const playerData = {
-          firstName,
-          lastName,
-          email,
-          password,
-          teamId: parseInt(teamId),
-          position: position || null,
-          age: age ? parseInt(age) : null,
-          height: height || null,
-          weight: weight ? parseInt(weight) : null,
-          jerseyNumber: jerseyNumber ? parseInt(jerseyNumber) : null
+          FirstName: firstName,
+          LastName: lastName,
+          Email: email,
+          Password: password,
+          TeamId: parseInt(teamId),
+          Position: position || null,
+          Age: age ? parseInt(age) : null,
+          Height: height || null,
+          Weight: weight ? parseInt(weight) : null,
+          JerseyNumber: jerseyNumber ? parseInt(jerseyNumber) : null
         }
         res = await registerPlayer(playerData)
       } else {
         const coachData = {
-          firstName,
-          lastName,
-          email,
-          password,
-          experienceYears: experienceYears ? parseInt(experienceYears) : null,
-          specialty: specialty || null,
-          certification: certification || null,
-          bio: bio || null
+          FirstName: firstName,
+          LastName: lastName,
+          Email: email,
+          Password: password,
+          ExperienceYears: experienceYears ? parseInt(experienceYears) : null,
+          Specialty: specialty || null,
+          Certification: certification || null,
+          Bio: bio || null
         }
         res = await registerCoach(coachData)
       }
 
-      if (res && (res.message === 'Player registered and signed in.' || res.message === 'Coach registered and signed in.')) {
-        window.location.href = '/dashboard'
+      if (res && (res.Message === 'Player registered and signed in.' || res.Message === 'Coach registered and signed in.')) {
+        if (userType === 'coach') {
+          window.location.href = '/coach/dashboard'
+        } else {
+          window.location.href = '/player/dashboard'
+        }
       } else {
         setError('Registration failed')
       }
@@ -161,12 +165,16 @@ export default function Register() {
                 onChange={e => setTeamId(e.target.value)} 
                 className="w-full p-2 rounded bg-slate-800"
               >
-                <option value="">Select a team</option>
-                {teams.map(team => (
-                  <option key={team.TeamId} value={team.TeamId}>
-                    {team.Name} - {team.Location}
-                  </option>
-                ))}
+                <option key="select-team" value="">Select a team</option>
+                {teams && teams.length > 0 ? (
+                  teams.map(team => (
+                    <option key={team.teamId} value={team.teamId}>
+                      {team.name} - {team.location}
+                    </option>
+                  ))
+                ) : (
+                  <option key="no-teams" value="" disabled>No teams available</option>
+                )}
               </select>
             </div>
             

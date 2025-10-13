@@ -1,10 +1,10 @@
 import '../styles/globals.css'
-import NavBar from '../components/NavBar'
+import RoleNavBar from '../components/RoleNavBar'
 
 export default function App({ Component, pageProps }) {
   return (
     <>
-      <NavBar />
+      <RoleNavBar />
       <Component {...pageProps} />
     </>
   )

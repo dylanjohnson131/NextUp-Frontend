@@ -1,0 +1,41 @@
+import RoleNavBar from '../../components/RoleNavBar'
+
+export default function TeamInfo() {
+  return (
+    <div>
+      <RoleNavBar />
+      <main className="container mx-auto px-4 py-8">
+        <h1 className="text-3xl font-bold text-white mb-6">Team Info</h1>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Team Roster */}
+          <div className="bg-slate-800 rounded-lg p-6">
+            <h2 className="text-xl font-semibold text-white mb-4">Team Roster</h2>
+            <p className="text-slate-400">Read-only view of team roster coming soon...</p>
+          </div>
+          
+          {/* Team Strengths & Weaknesses */}
+          <div className="bg-slate-800 rounded-lg p-6">
+            <h2 className="text-xl font-semibold text-white mb-4">Team Analysis</h2>
+            <div className="space-y-4">
+              <div>
+                <h3 className="text-green-400 font-medium mb-2">Team Strengths</h3>
+                <p className="text-slate-400 text-sm">Team strengths analysis coming soon...</p>
+              </div>
+              <div>
+                <h3 className="text-red-400 font-medium mb-2">Areas to Improve</h3>
+                <p className="text-slate-400 text-sm">Team weaknesses analysis coming soon...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        {/* Top Performers */}
+        <div className="mt-8 bg-slate-800 rounded-lg p-6">
+          <h2 className="text-xl font-semibold text-white mb-4">Team Top Performers</h2>
+          <p className="text-slate-400">Your team's top performers and their statistics coming soon...</p>
+        </div>
+      </main>
+    </div>
+  )
+}
