@@ -1,4 +1,5 @@
 import RoleNavBar from '../../components/RoleNavBar'
+import Link from 'next/link'
 
 export default function Schedule() {
   return (
@@ -16,10 +17,14 @@ export default function Schedule() {
                 <div>
                   <p className="text-white font-medium">vs. Storm Riders</p>
                   <p className="text-slate-400 text-sm">Oct 12, 2025 - 3:00 PM</p>
+                  <p className="text-slate-500 text-xs">Away Game</p>
                 </div>
-                <button className="bg-cyan-400 text-slate-900 px-3 py-1 rounded text-sm">
+                <Link 
+                  href="/coach/opponent/storm-riders" 
+                  className="bg-cyan-400 text-slate-900 px-3 py-1 rounded text-sm hover:bg-cyan-300 transition-colors"
+                >
                   View Team Stats
-                </button>
+                </Link>
               </div>
             </div>
             
@@ -28,10 +33,14 @@ export default function Schedule() {
                 <div>
                   <p className="text-white font-medium">vs. Eagles FC</p>
                   <p className="text-slate-400 text-sm">Oct 19, 2025 - 2:30 PM</p>
+                  <p className="text-slate-500 text-xs">Home Game</p>
                 </div>
-                <button className="bg-cyan-400 text-slate-900 px-3 py-1 rounded text-sm">
+                <Link 
+                  href="/coach/opponent/eagles-fc" 
+                  className="bg-cyan-400 text-slate-900 px-3 py-1 rounded text-sm hover:bg-cyan-300 transition-colors"
+                >
                   View Team Stats
-                </button>
+                </Link>
               </div>
             </div>
           </div>
