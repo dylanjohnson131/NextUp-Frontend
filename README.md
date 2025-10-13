@@ -79,3 +79,25 @@ npm run lint    # run linter (if configured)
 - I can add an EditorConfig / recommended VS Code settings for Tailwind IntelliSense.
 
 Enjoy building! If you want, I can also create a quick demo component that uses Tailwind classes.
+
+9) Connecting to an API
+
+This project looks for an API base URL in the environment variable `NEXT_PUBLIC_API_URL`.
+If not provided it defaults to `http://localhost:3000`.
+
+To run the dev server and point the client at a remote API (PowerShell):
+
+```powershell
+# Set env for current shell
+$env:NEXT_PUBLIC_API_URL = 'https://api.example.com'
+npm run dev
+```
+
+Or create a `.env.local` file in the project root with:
+
+```
+NEXT_PUBLIC_API_URL=https://api.example.com
+```
+
+The client exposes simple helpers in `lib/api.js`: `login`, `fetchPlayers`, and `fetchDashboard`.
+
