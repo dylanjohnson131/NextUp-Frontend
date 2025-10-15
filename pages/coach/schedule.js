@@ -1,12 +1,9 @@
-import RoleNavBar from '../../components/RoleNavBar'
 import Link from 'next/link'
 import { withAuth } from '../../hocs/withAuth'
 
 function Schedule() {
   return (
-    <div>
-      <RoleNavBar />
-      <main className="container mx-auto px-4 py-8">
+    <main className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold text-white mb-6">Schedule</h1>
         
         <div className="bg-slate-800 rounded-lg p-6">
@@ -53,7 +50,6 @@ function Schedule() {
           </div>
         </div>
       </main>
-    </div>
   )
 }
 

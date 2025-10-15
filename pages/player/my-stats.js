@@ -1,11 +1,8 @@
-import RoleNavBar from '../../components/RoleNavBar'
 import { withAuth } from '../../hocs/withAuth'
 
 function MyStats() {
   return (
-    <div>
-      <RoleNavBar />
-      <main className="container mx-auto px-4 py-8">
+    <main className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold text-white mb-6">My Stats</h1>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -34,7 +31,6 @@ function MyStats() {
           <p className="text-slate-400">AI-powered analysis of your strongest positions based on stats coming soon...</p>
         </div>
       </main>
-    </div>
   )
 }
 

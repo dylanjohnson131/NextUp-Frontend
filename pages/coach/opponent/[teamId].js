@@ -60,9 +60,7 @@ function OpponentOverview() {
   }
 
   return (
-    <div>
-      <RoleNavBar />
-      <main className="container mx-auto px-4 py-8">
+    <main className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
@@ -208,7 +206,6 @@ function OpponentOverview() {
           )}
         </div>
       </main>
-    </div>
   )
 }
 

@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import RoleNavBar from '../../components/RoleNavBar'
 import { getCurrentUser, fetchTeams } from '../../lib/api'
 import { withAuth } from '../../hocs/withAuth'
 
@@ -29,19 +28,14 @@ function CoachDashboard() {
 
   if (loading) {
     return (
-      <div>
-        <RoleNavBar />
-        <main className="container mx-auto px-4 py-8">
-          <div className="text-center">Loading...</div>
-        </main>
-      </div>
+      <main className="container mx-auto px-4 py-8">
+        <div className="text-center">Loading...</div>
+      </main>
     )
   }
 
   return (
-    <div>
-      <RoleNavBar />
-      <main className="container mx-auto px-4 py-8">
+    <main className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-white mb-2">Coach Dashboard</h1>
           <p className="text-slate-400">Welcome back! Here's an overview of your teams and recent activity.</p>
@@ -118,7 +112,6 @@ function CoachDashboard() {
           </div>
         </div>
       </main>
-    </div>
   )
 }
 

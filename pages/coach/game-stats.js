@@ -1,11 +1,8 @@
-import RoleNavBar from '../../components/RoleNavBar'
 import { withAuth } from '../../hocs/withAuth'
 
 function GameStats() {
   return (
-    <div>
-      <RoleNavBar />
-      <main className="container mx-auto px-4 py-8">
+    <main className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold text-white mb-6">Game Stats</h1>
         
         <div className="bg-slate-800 rounded-lg p-6">
@@ -33,7 +30,6 @@ function GameStats() {
           </div>
         </div>
       </main>
-    </div>
   )
 }
 
