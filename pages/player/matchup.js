@@ -1,6 +1,7 @@
 import RoleNavBar from '../../components/RoleNavBar'
+import { withAuth } from '../../hocs/withAuth'
 
-export default function Matchup() {
+function Matchup() {
   return (
     <div>
       <RoleNavBar />
@@ -51,3 +52,5 @@ export default function Matchup() {
     </div>
   )
 }
+
+export default withAuth(Matchup, 'Player')

@@ -1,7 +1,8 @@
 import RoleNavBar from '../../components/RoleNavBar'
 import Link from 'next/link'
+import { withAuth } from '../../hocs/withAuth'
 
-export default function Schedule() {
+function Schedule() {
   return (
     <div>
       <RoleNavBar />
@@ -55,3 +56,5 @@ export default function Schedule() {
     </div>
   )
 }
+
+export default withAuth(Schedule, 'Coach')

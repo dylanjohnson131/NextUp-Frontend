@@ -1,6 +1,7 @@
 import RoleNavBar from '../../components/RoleNavBar'
+import { withAuth } from '../../hocs/withAuth'
 
-export default function MyGoals() {
+function MyGoals() {
   return (
     <div>
       <RoleNavBar />
@@ -47,3 +48,5 @@ export default function MyGoals() {
     </div>
   )
 }
+
+export default withAuth(MyGoals, 'Player')

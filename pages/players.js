@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { fetchPlayers } from '../lib/api'
+import { withAuth } from '../hocs/withAuth'
 
-export default function Players(){
+function Players(){
   const [players, setPlayers] = useState([])
   const [loading, setLoading] = useState(true)
 
@@ -23,3 +24,5 @@ export default function Players(){
     </main>
   )
 }
+
+export default withAuth(Players)

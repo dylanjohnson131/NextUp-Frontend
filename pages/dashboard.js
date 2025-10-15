@@ -1,9 +1,10 @@
 import Link from 'next/link'
+import { withAuth } from '../hocs/withAuth'
 
-export default function Dashboard(){
+function Dashboard(){
   return (
     <main className="container">
-      <h1>Coach Dashboard</h1>
+      <h1>Dashboard</h1>
       <section className="mt-4">
         <p>Welcome to your NextUp dashboard!</p>
         <div className="mt-6">
@@ -17,3 +18,5 @@ export default function Dashboard(){
     </main>
   )
 }
+
+export default withAuth(Dashboard)

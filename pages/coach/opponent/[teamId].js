@@ -2,8 +2,9 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import RoleNavBar from '../../../components/RoleNavBar'
 import { fetchOpponentTeamOverview } from '../../../lib/api'
+import { withAuth } from '../../../hocs/withAuth'
 
-export default function OpponentOverview() {
+function OpponentOverview() {
   const router = useRouter()
   const { teamId } = router.query
   const [teamData, setTeamData] = useState(null)
@@ -210,3 +211,5 @@ export default function OpponentOverview() {
     </div>
   )
 }
+
+export default withAuth(OpponentOverview, 'Coach')

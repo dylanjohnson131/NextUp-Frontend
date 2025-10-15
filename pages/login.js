@@ -1,9 +1,12 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { login, getCurrentUser } from '../lib/api'
+import { withGuest } from '../hocs/withAuth'
+import { useAuth } from '../contexts/AuthContext'
 
-export default function Login() {
+function Login() {
   const router = useRouter()
+  const { login: setUser } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState(null)
@@ -17,9 +20,11 @@ export default function Login() {
       if (res && (res.message === 'Logged in successfully' || res.success)) {
         // Get user info to redirect to appropriate dashboard
         const userInfo = await getCurrentUser()
-        if (userInfo && userInfo.Role === 'Coach') {
+        setUser(userInfo) // Update the auth context
+        
+        if (userInfo && userInfo.role === 'Coach') {
           router.push('/coach/dashboard')
-        } else if (userInfo && userInfo.Role === 'Player') {
+        } else if (userInfo && userInfo.role === 'Player') {
           router.push('/player/dashboard')
         } else {
           router.push('/dashboard')
@@ -50,3 +55,5 @@ export default function Login() {
     </main>
   )
 }
+
+export default withGuest(Login)

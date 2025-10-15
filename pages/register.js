@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import { registerPlayer, registerCoach, fetchTeams } from '../lib/api'
+import { withGuest } from '../hocs/withAuth'
 
-export default function Register() {
+function Register() {
   const [userType, setUserType] = useState('player')
   const [teams, setTeams] = useState([])
   const [loading, setLoading] = useState(false)
@@ -299,3 +300,5 @@ export default function Register() {
     </main>
   )
 }
+
+export default withGuest(Register)

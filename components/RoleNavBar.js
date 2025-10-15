@@ -1,22 +1,9 @@
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
-import { getCurrentUser, logout } from '../lib/api'
+import { logout } from '../lib/api'
+import { useAuth } from '../contexts/AuthContext'
 
 export default function RoleNavBar() {
-  const [user, setUser] = useState(null)
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    getCurrentUser()
-      .then(userData => {
-        setUser(userData)
-        setLoading(false)
-      })
-      .catch(() => {
-        setUser(null)
-        setLoading(false)
-      })
-  }, [])
+  const { user, loading, isAuthenticated } = useAuth()
 
   const handleLogout = async () => {
     try {
@@ -38,7 +25,7 @@ export default function RoleNavBar() {
     )
   }
 
-  if (!user || !user.isAuthenticated) {
+  if (!isAuthenticated) {
     return (
       <nav className="bg-slate-900 border-b border-slate-700 px-4 py-3">
         <div className="flex items-center justify-between">

@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
 import RoleNavBar from '../../components/RoleNavBar'
 import { getCurrentUser, fetchPlayers } from '../../lib/api'
+import { withAuth } from '../../hocs/withAuth'
 
-export default function PlayerDashboard() {
+function PlayerDashboard() {
   const [user, setUser] = useState(null)
   const [playerData, setPlayerData] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -120,3 +121,5 @@ export default function PlayerDashboard() {
     </div>
   )
 }
+
+export default withAuth(PlayerDashboard, 'Player')

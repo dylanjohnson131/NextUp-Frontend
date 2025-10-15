@@ -1,6 +1,7 @@
 import RoleNavBar from '../../components/RoleNavBar'
+import { withAuth } from '../../hocs/withAuth'
 
-export default function GameStats() {
+function GameStats() {
   return (
     <div>
       <RoleNavBar />
@@ -35,3 +36,5 @@ export default function GameStats() {
     </div>
   )
 }
+
+export default withAuth(GameStats, 'Coach')
