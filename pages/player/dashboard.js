@@ -41,7 +41,7 @@ function PlayerDashboard() {
     <main className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-white mb-2">Player Dashboard</h1>
-          <p className="text-slate-400">Welcome back, {user?.Name}! Track your progress and team performance.</p>
+          <p className="text-slate-400">Welcome back, {user.Name} Track your progress and team performance.</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

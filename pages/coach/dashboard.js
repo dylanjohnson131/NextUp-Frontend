@@ -1,20 +1,25 @@
 import { useEffect, useState } from 'react'
-import { getCurrentUser, fetchTeams } from '../../lib/api'
+import { useRouter } from 'next/router'
+import { getCurrentUser, getCurrentCoach, fetchTeams } from '../../lib/api'
 import { withAuth } from '../../hocs/withAuth'
 
 function CoachDashboard() {
+  const router = useRouter()
   const [user, setUser] = useState(null)
+  const [coach, setCoach] = useState(null)
   const [teams, setTeams] = useState([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const loadData = async () => {
       try {
-        const [userInfo, teamsData] = await Promise.all([
+        const [userInfo, coachInfo, teamsData] = await Promise.all([
           getCurrentUser(),
+          getCurrentCoach(),
           fetchTeams()
         ])
         setUser(userInfo)
+        setCoach(coachInfo)
         setTeams(teamsData || [])
       } catch (error) {
         console.error('Failed to load dashboard data:', error)
@@ -46,22 +51,28 @@ function CoachDashboard() {
           <div className="bg-slate-800 rounded-lg p-6">
             <h2 className="text-xl font-semibold text-white mb-4">My Teams</h2>
             <div className="space-y-4">
-              {teams.filter(team => team.Coach?.Name === user?.Name).map(team => (
-                <div key={team.TeamId} className="bg-slate-700 rounded p-4">
+              {coach?.Team ? (
+                <div className="bg-slate-700 rounded p-4">
                   <div className="flex justify-between items-start">
                     <div>
-                      <h3 className="font-semibold text-white">{team.Name}</h3>
-                      <p className="text-slate-400 text-sm">{team.Location}</p>
-                      <p className="text-slate-400 text-sm">{team.PlayerCount} Players</p>
+                      <h3 className="font-semibold text-white">{coach.Team.Name}</h3>
+                      <p className="text-slate-400 text-sm">{coach.Team.Location}</p>
                     </div>
                     <div className="text-right">
-                      <button className="bg-cyan-400 text-slate-900 px-3 py-1 rounded text-sm">
+                      <button 
+                        onClick={() => router.push('/coach/my-team')}
+                        className="bg-cyan-400 text-slate-900 px-3 py-1 rounded text-sm hover:bg-cyan-300 transition-colors"
+                      >
                         Manage
                       </button>
                     </div>
                   </div>
                 </div>
-              ))}
+              ) : (
+                <div className="bg-slate-700 rounded p-4 text-center">
+                  <p className="text-slate-400">No team assigned yet</p>
+                </div>
+              )}
               
               <button className="w-full bg-slate-700 border-2 border-dashed border-slate-600 rounded p-4 text-slate-400 hover:border-slate-500 transition-colors">
                 + Create New Team
@@ -73,13 +84,22 @@ function CoachDashboard() {
           <div className="bg-slate-800 rounded-lg p-6">
             <h2 className="text-xl font-semibold text-white mb-4">Quick Actions</h2>
             <div className="space-y-3">
-              <button className="w-full bg-cyan-400 text-slate-900 px-4 py-3 rounded font-medium hover:bg-cyan-300 transition-colors">
+              <button 
+                onClick={() => router.push('/coach/game-stats')}
+                className="w-full bg-cyan-400 text-slate-900 px-4 py-3 rounded font-medium hover:bg-cyan-300 transition-colors"
+              >
                 Record Game Stats
               </button>
-              <button className="w-full bg-slate-700 text-white px-4 py-3 rounded font-medium hover:bg-slate-600 transition-colors">
+              <button 
+                onClick={() => router.push('/coach/my-team')}
+                className="w-full bg-slate-700 text-white px-4 py-3 rounded font-medium hover:bg-slate-600 transition-colors"
+              >
                 View Team Performance
               </button>
-              <button className="w-full bg-slate-700 text-white px-4 py-3 rounded font-medium hover:bg-slate-600 transition-colors">
+              <button 
+                onClick={() => router.push('/coach/opponents')}
+                className="w-full bg-slate-700 text-white px-4 py-3 rounded font-medium hover:bg-slate-600 transition-colors"
+              >
                 Browse Opponents
               </button>
             </div>
