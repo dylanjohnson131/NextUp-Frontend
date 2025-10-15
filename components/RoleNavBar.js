@@ -1,11 +1,9 @@
 import Link from 'next/link'
-import { useState } from 'react'
 import { logout } from '../lib/api'
 import { useAuth } from '../contexts/AuthContext'
 
 export default function RoleNavBar() {
   const { user, loading, isAuthenticated } = useAuth()
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const handleLogout = async () => {
     try {
@@ -19,7 +17,7 @@ export default function RoleNavBar() {
   if (loading) {
     return (
       <nav className="bg-slate-900/95 backdrop-blur-sm border-b border-slate-700/50 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-8">
           <div className="flex items-center justify-between h-16">
             <Link href="/" className="text-2xl font-bold text-cyan-400 hover:text-cyan-300 transition-colors">
               NextUp
@@ -34,7 +32,7 @@ export default function RoleNavBar() {
   if (!isAuthenticated) {
     return (
       <nav className="bg-slate-900/95 backdrop-blur-sm border-b border-slate-700/50 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-8">
           <div className="flex items-center justify-between h-16">
             <Link href="/" className="text-2xl font-bold text-cyan-400 hover:text-cyan-300 transition-colors">
               NextUp
@@ -63,14 +61,12 @@ export default function RoleNavBar() {
   if (user.role === 'Coach') {
     return (
       <nav className="bg-slate-900/95 backdrop-blur-sm border-b border-slate-700/50 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-8">
           <div className="flex items-center justify-between h-16">
-            {/* Logo */}
             <Link href="/" className="text-2xl font-bold text-cyan-400 hover:text-cyan-300 transition-colors">
               NextUp
             </Link>
             
-            {/* Navigation */}
             <div className="flex items-center space-x-8">
               <Link 
                 href="/coach/dashboard" 
@@ -97,7 +93,6 @@ export default function RoleNavBar() {
                 Game Stats
               </Link>
               
-              {/* User Profile Section */}
               <div className="flex items-center space-x-4 ml-8 pl-8 border-l border-slate-700">
                 <span className="text-slate-400 font-medium">Coach {user.name}</span>
                 <button 
@@ -118,14 +113,12 @@ export default function RoleNavBar() {
   if (user.role === 'Player') {
     return (
       <nav className="bg-slate-900/95 backdrop-blur-sm border-b border-slate-700/50 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-8">
           <div className="flex items-center justify-between h-16">
-            {/* Logo */}
             <Link href="/" className="text-2xl font-bold text-cyan-400 hover:text-cyan-300 transition-colors">
               NextUp
             </Link>
             
-            {/* Navigation */}
             <div className="flex items-center space-x-8">
               <Link 
                 href="/player/dashboard" 
@@ -158,7 +151,6 @@ export default function RoleNavBar() {
                 Matchup
               </Link>
               
-              {/* User Profile Section */}
               <div className="flex items-center space-x-4 ml-8 pl-8 border-l border-slate-700">
                 <span className="text-slate-400 font-medium">{user.name}</span>
                 <button 
@@ -178,7 +170,7 @@ export default function RoleNavBar() {
   // Default fallback
   return (
     <nav className="bg-slate-900/95 backdrop-blur-sm border-b border-slate-700/50 sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-8">
         <div className="flex items-center justify-between h-16">
           <Link href="/" className="text-2xl font-bold text-cyan-400 hover:text-cyan-300 transition-colors">
             NextUp
