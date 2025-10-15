@@ -72,15 +72,8 @@ npm start       # start production server after build
 npm run lint    # run linter (if configured)
 ```
 
-8) Want me to do more?
 
-- I can add a small Tailwind-styled component and example usage.
-- I can run `npm audit` and apply fixes.
-- I can add an EditorConfig / recommended VS Code settings for Tailwind IntelliSense.
-
-Enjoy building! If you want, I can also create a quick demo component that uses Tailwind classes.
-
-9) Connecting to an API
+8) Connecting to an API
 
 This project looks for an API base URL in the environment variable `NEXT_PUBLIC_API_URL`.
 If not provided it defaults to `http://localhost:3000`.
