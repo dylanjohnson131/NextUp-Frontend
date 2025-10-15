@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { getCurrentUser, fetchPlayers } from '../../lib/api'
+import { getCurrentUser, getCurrentPlayer, fetchPlayers } from '../../lib/api'
 import { withAuth } from '../../hocs/withAuth'
 
 function PlayerDashboard() {
@@ -10,12 +10,12 @@ function PlayerDashboard() {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const userInfo = await getCurrentUser()
+        const [userInfo, currentPlayer] = await Promise.all([
+          getCurrentUser(),
+          getCurrentPlayer()
+        ])
+
         setUser(userInfo)
-        
-        // Get player-specific data
-        const players = await fetchPlayers()
-        const currentPlayer = players?.find(p => p.Name === userInfo?.Name)
         setPlayerData(currentPlayer)
       } catch (error) {
         console.error('Failed to load dashboard data:', error)
@@ -46,23 +46,24 @@ function PlayerDashboard() {
           {/* Player Quick Stats */}
           <div className="bg-slate-800 rounded-lg p-6">
             <h2 className="text-xl font-semibold text-white mb-4">Your Profile</h2>
+
             {playerData ? (
               <div className="space-y-3">
-                <div className="flex justify-between">
+                <div className="flex justify-between items-center">
                   <span className="text-slate-400">Position:</span>
-                  <span className="text-white">{playerData.Position || 'Not set'}</span>
+                  <span className="text-white text-right">{playerData.position && playerData.position.trim() !== '' ? playerData.position : 'Not set'}</span>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex justify-between items-center">
                   <span className="text-slate-400">Jersey #:</span>
-                  <span className="text-white">{playerData.JerseyNumber || 'Not assigned'}</span>
+                  <span className="text-white text-right">{playerData.jerseyNumber ? playerData.jerseyNumber : 'Not assigned'}</span>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex justify-between items-center">
                   <span className="text-slate-400">Age:</span>
-                  <span className="text-white">{playerData.Age || 'Not set'}</span>
+                  <span className="text-white text-right">{playerData.age ? playerData.age : 'Not set'}</span>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex justify-between items-center">
                   <span className="text-slate-400">Team:</span>
-                  <span className="text-white">{playerData.Team?.Name || 'No team'}</span>
+                  <span className="text-white text-right">{playerData.team?.name || 'No team'}</span>
                 </div>
               </div>
             ) : (
