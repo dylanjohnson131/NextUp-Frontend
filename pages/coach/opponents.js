@@ -101,15 +101,6 @@ function BrowseOpponents() {
           </div>
         </div>
       )}
-
-      <div className="mt-8 text-center">
-        <button 
-          onClick={() => router.push('/coach/dashboard')}
-          className="bg-slate-700 text-white px-6 py-3 rounded font-medium hover:bg-slate-600 transition-colors"
-        >
-          Back to Dashboard
-        </button>
-      </div>
     </main>
   )
 }

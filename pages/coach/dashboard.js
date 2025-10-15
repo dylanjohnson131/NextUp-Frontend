@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { getCurrentUser, getCurrentCoach, fetchTeams } from '../../lib/api'
+import { getCurrentUser, getCurrentCoach, fetchTeams, fetchUpcomingGames } from '../../lib/api'
 import { withAuth } from '../../hocs/withAuth'
 
 function CoachDashboard() {
@@ -8,6 +8,7 @@ function CoachDashboard() {
   const [user, setUser] = useState(null)
   const [coach, setCoach] = useState(null)
   const [teams, setTeams] = useState([])
+  const [upcomingGames, setUpcomingGames] = useState([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -21,6 +22,17 @@ function CoachDashboard() {
         setUser(userInfo)
         setCoach(coachInfo)
         setTeams(teamsData || [])
+        
+        // Fetch upcoming games if coach has a team
+        if (coachInfo?.Team?.TeamId) {
+          try {
+            const gamesData = await fetchUpcomingGames(coachInfo.Team.TeamId)
+            setUpcomingGames(gamesData || [])
+          } catch (error) {
+            console.error('Failed to load upcoming games:', error)
+            setUpcomingGames([])
+          }
+        }
       } catch (error) {
         console.error('Failed to load dashboard data:', error)
       } finally {
@@ -30,6 +42,8 @@ function CoachDashboard() {
     
     loadData()
   }, [])
+
+
 
   if (loading) {
     return (
@@ -110,25 +124,41 @@ function CoachDashboard() {
         <div className="mt-8 bg-slate-800 rounded-lg p-6">
           <h2 className="text-xl font-semibold text-white mb-4">Upcoming Games</h2>
           <div className="space-y-3">
-            <div className="bg-slate-700 rounded p-4 flex justify-between items-center">
-              <div>
-                <p className="text-white font-medium">vs. Storm Riders</p>
-                <p className="text-slate-400 text-sm">Oct 12, 2025 - 3:00 PM</p>
+            {upcomingGames.length > 0 ? (
+              upcomingGames.slice(0, 2).map((game) => (
+                <div key={game.GameId} className="bg-slate-700 rounded p-4 flex justify-between items-center">
+                  <div>
+                    <p className="text-white font-medium">
+                      {game.IsHome ? 'vs.' : '@'} {game.Opponent.Name}
+                    </p>
+                    <p className="text-slate-400 text-sm">
+                      {new Date(game.GameDate).toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric'
+                      })} - {new Date(game.GameDate).toLocaleTimeString('en-US', {
+                        hour: 'numeric',
+                        minute: '2-digit',
+                        hour12: true
+                      })}
+                    </p>
+                    {game.Location && (
+                      <p className="text-slate-400 text-xs">{game.Location}</p>
+                    )}
+                  </div>
+                  <button 
+                    onClick={() => router.push(`/coach/opponent/${game.Opponent.TeamId}`)}
+                    className="bg-slate-600 text-white px-3 py-1 rounded text-sm hover:bg-slate-500 transition-colors"
+                  >
+                    Scout Team
+                  </button>
+                </div>
+              ))
+            ) : (
+              <div className="bg-slate-700 rounded p-4 text-center">
+                <p className="text-slate-400">No upcoming games scheduled</p>
               </div>
-              <button className="bg-slate-600 text-white px-3 py-1 rounded text-sm hover:bg-slate-500">
-                Scout Team
-              </button>
-            </div>
-            
-            <div className="bg-slate-700 rounded p-4 flex justify-between items-center">
-              <div>
-                <p className="text-white font-medium">vs. Eagles FC</p>
-                <p className="text-slate-400 text-sm">Oct 19, 2025 - 2:30 PM</p>
-              </div>
-              <button className="bg-slate-600 text-white px-3 py-1 rounded text-sm hover:bg-slate-500">
-                Scout Team
-              </button>
-            </div>
+            )}
           </div>
         </div>
       </main>
