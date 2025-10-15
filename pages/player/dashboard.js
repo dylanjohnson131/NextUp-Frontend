@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
 import { getCurrentUser, getCurrentPlayer, fetchPlayers } from '../../lib/api'
 import { withAuth } from '../../hocs/withAuth'
 
 function PlayerDashboard() {
+  const router = useRouter()
   const [user, setUser] = useState(null)
   const [playerData, setPlayerData] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -75,13 +77,22 @@ function PlayerDashboard() {
           <div className="bg-slate-800 rounded-lg p-6">
             <h2 className="text-xl font-semibold text-white mb-4">Quick Actions</h2>
             <div className="space-y-3">
-              <button className="w-full bg-cyan-400 text-slate-900 px-4 py-3 rounded font-medium hover:bg-cyan-300 transition-colors">
+              <button 
+                onClick={() => router.push('/player/my-stats')}
+                className="w-full bg-cyan-400 text-slate-900 px-4 py-3 rounded font-medium hover:bg-cyan-300 transition-colors"
+              >
                 View My Stats
               </button>
-              <button className="w-full bg-slate-700 text-white px-4 py-3 rounded font-medium hover:bg-slate-600 transition-colors">
+              <button 
+                onClick={() => router.push('/player/my-goals')}
+                className="w-full bg-slate-700 text-white px-4 py-3 rounded font-medium hover:bg-slate-600 transition-colors"
+              >
                 Update Goals
               </button>
-              <button className="w-full bg-slate-700 text-white px-4 py-3 rounded font-medium hover:bg-slate-600 transition-colors">
+              <button 
+                onClick={() => router.push('/player/team-info')}
+                className="w-full bg-slate-700 text-white px-4 py-3 rounded font-medium hover:bg-slate-600 transition-colors"
+              >
                 View Team Info
               </button>
             </div>
