@@ -16,10 +16,13 @@ function TeamsManagement() {
     name: '',
     school: '',
     mascot: '',
+    location: '',
     city: '',
     state: '',
     division: '',
-    conference: ''
+    conference: '',
+    isPublic: true,
+    coachId: null
   })
 
   useEffect(() => {
@@ -48,7 +51,8 @@ function TeamsManagement() {
     e.preventDefault()
     try {
       if (editingTeam) {
-        await updateAthleticDirectorTeam(editingTeam.id, formData)
+        // Use the correct property name (lowercase teamId)
+        await updateAthleticDirectorTeam(editingTeam.teamId, formData)
       } else {
         await createAthleticDirectorTeam(formData)
       }
@@ -58,10 +62,13 @@ function TeamsManagement() {
         name: '',
         school: '',
         mascot: '',
+        location: '',
         city: '',
         state: '',
         division: '',
-        conference: ''
+        conference: '',
+        isPublic: true,
+        coachId: null
       })
       setShowCreateForm(false)
       setEditingTeam(null)
@@ -70,7 +77,9 @@ function TeamsManagement() {
       
       // Clear URL param if present
       if (router.query.action) {
-        router.replace('/athletic-director/teams', undefined, { shallow: true })
+        const url = new URL(window.location)
+        url.searchParams.delete('action')
+        window.history.replaceState({}, '', url)
       }
     } catch (err) {
       console.error('Submit error:', err)
@@ -84,10 +93,13 @@ function TeamsManagement() {
       name: team.name || '',
       school: team.school || '',
       mascot: team.mascot || '',
+      location: team.location || '',
       city: team.city || '',
       state: team.state || '',
       division: team.division || '',
-      conference: team.conference || ''
+      conference: team.conference || '',
+      isPublic: team.isPublic !== undefined ? team.isPublic : true,
+      coachId: team.coachId || null
     })
     setShowCreateForm(true)
   }
@@ -114,10 +126,13 @@ function TeamsManagement() {
       name: '',
       school: '',
       mascot: '',
+      location: '',
       city: '',
       state: '',
       division: '',
-      conference: ''
+      conference: '',
+      isPublic: true,
+      coachId: null
     })
     if (router.query.action) {
       router.replace('/athletic-director/teams', undefined, { shallow: true })
@@ -265,6 +280,18 @@ function TeamsManagement() {
                 />
               </div>
 
+              <div className="md:col-span-2">
+                <label className="flex items-center text-sm font-medium text-slate-300 mb-2">
+                  <input
+                    type="checkbox"
+                    checked={formData.isPublic}
+                    onChange={(e) => setFormData({ ...formData, isPublic: e.target.checked })}
+                    className="mr-2 rounded border-slate-600 bg-slate-700 text-cyan-500 focus:ring-cyan-500"
+                  />
+                  Public Team (visible to all users)
+                </label>
+              </div>
+
               <div className="md:col-span-2 flex gap-4">
                 <button
                   type="submit"
@@ -319,9 +346,11 @@ function TeamsManagement() {
                           <p className="text-white">{team.mascot || 'N/A'}</p>
                         </div>
                         <div>
-                          <span className="text-slate-400">Location:</span>
+                          <span className="text-slate-400">City, State:</span>
                           <p className="text-white">
-                            {team.city && team.state ? `${team.city}, ${team.state}` : 'N/A'}
+                            {team.city && team.state ? `${team.city}, ${team.state}` : 
+                             team.city ? team.city : 
+                             team.state ? team.state : 'N/A'}
                           </p>
                         </div>
                         <div>
@@ -344,7 +373,7 @@ function TeamsManagement() {
                         Edit
                       </button>
                       <button
-                        onClick={() => handleDelete(team.id)}
+                        onClick={() => handleDelete(team.TeamId || team.teamId)}
                         className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200"
                       >
                         Delete
