@@ -304,27 +304,27 @@ function TeamsManagement() {
             </div>
           ) : (
             <div className="divide-y divide-slate-700/50">
-              {teams.map((team) => (
-                <div key={team.id} className="p-6 hover:bg-slate-700/30 transition-colors duration-200">
+              {teams.map((team, index) => (
+                <div key={`team-${team.id || index}`} className="p-6 hover:bg-slate-700/30 transition-colors duration-200">
                   <div className="flex justify-between items-start">
                     <div className="flex-1">
                       <h3 className="text-xl font-semibold text-white mb-2">{team.name}</h3>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                        <div key="school">
+                        <div>
                           <span className="text-slate-400">School:</span>
                           <p className="text-white">{team.school || 'N/A'}</p>
                         </div>
-                        <div key="mascot">
+                        <div>
                           <span className="text-slate-400">Mascot:</span>
                           <p className="text-white">{team.mascot || 'N/A'}</p>
                         </div>
-                        <div key="location">
+                        <div>
                           <span className="text-slate-400">Location:</span>
                           <p className="text-white">
                             {team.city && team.state ? `${team.city}, ${team.state}` : 'N/A'}
                           </p>
                         </div>
-                        <div key="division">
+                        <div>
                           <span className="text-slate-400">Division:</span>
                           <p className="text-white">{team.division || 'N/A'}</p>
                         </div>

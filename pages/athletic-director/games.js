@@ -432,8 +432,8 @@ function GamesManagement() {
             </div>
           ) : (
             <div className="divide-y divide-slate-700/50">
-              {games.map((game) => (
-                <div key={game.id} className="p-6 hover:bg-slate-700/30 transition-colors duration-200">
+              {games.map((game, index) => (
+                <div key={`game-${game.id || index}`} className="p-6 hover:bg-slate-700/30 transition-colors duration-200">
                   <div className="flex justify-between items-start">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-3">
@@ -445,19 +445,19 @@ function GamesManagement() {
                         </span>
                       </div>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                        <div key="datetime">
+                        <div>
                           <span className="text-slate-400">Date & Time:</span>
                           <p className="text-white">{formatGameDate(game.gameDate)}</p>
                         </div>
-                        <div key="location">
+                        <div>
                           <span className="text-slate-400">Location:</span>
                           <p className="text-white">{game.location || 'N/A'}</p>
                         </div>
-                        <div key="week">
+                        <div>
                           <span className="text-slate-400">Week:</span>
                           <p className="text-white">{game.week || 'N/A'}</p>
                         </div>
-                        <div key="season">
+                        <div>
                           <span className="text-slate-400">Season:</span>
                           <p className="text-white">{game.season}</p>
                         </div>
