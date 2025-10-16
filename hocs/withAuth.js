@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { useAuth } from '../contexts/AuthContext'
 
-export function withAuth(WrappedComponent, requiredRole = null) {
+function withAuth(WrappedComponent, requiredRoles = null) {
   return function AuthenticatedComponent(props) {
     const { user, loading, isAuthenticated } = useAuth()
     const router = useRouter()
@@ -14,17 +14,22 @@ export function withAuth(WrappedComponent, requiredRole = null) {
           return
         }
 
-        // Check role if specified
-        if (requiredRole && user?.role !== requiredRole) {
-          // Redirect to appropriate dashboard based on user role
-          if (user?.role === 'Coach') {
-            router.push('/coach/dashboard')
-          } else if (user?.role === 'Player') {
-            router.push('/player/dashboard')
-          } else {
-            router.push('/dashboard')
+        // Check role if specified - now supports array of roles
+        if (requiredRoles) {
+          const allowedRoles = Array.isArray(requiredRoles) ? requiredRoles : [requiredRoles]
+          if (!allowedRoles.includes(user?.role)) {
+            // Redirect to appropriate dashboard based on user role
+            if (user?.role === 'Coach') {
+              router.push('/coach/dashboard')
+            } else if (user?.role === 'Player') {
+              router.push('/player/dashboard')
+            } else if (user?.role === 'AthleticDirector') {
+              router.push('/athletic-director/dashboard')
+            } else {
+              router.push('/dashboard')
+            }
+            return
           }
-          return
         }
       }
     }, [loading, isAuthenticated, user, router])
@@ -44,8 +49,11 @@ export function withAuth(WrappedComponent, requiredRole = null) {
     }
 
     // Don't render if role is required but doesn't match
-    if (requiredRole && user?.role !== requiredRole) {
-      return null
+    if (requiredRoles) {
+      const allowedRoles = Array.isArray(requiredRoles) ? requiredRoles : [requiredRoles]
+      if (!allowedRoles.includes(user?.role)) {
+        return null
+      }
     }
 
     return <WrappedComponent {...props} />
@@ -65,6 +73,8 @@ export function withGuest(WrappedComponent) {
           router.push('/coach/dashboard')
         } else if (user?.role === 'Player') {
           router.push('/player/dashboard')
+        } else if (user?.role === 'AthleticDirector') {
+          router.push('/athletic-director/dashboard')
         } else {
           router.push('/dashboard')
         }
@@ -88,3 +98,6 @@ export function withGuest(WrappedComponent) {
     return <WrappedComponent {...props} />
   }
 }
+
+// Make withAuth the default export
+export default withAuth

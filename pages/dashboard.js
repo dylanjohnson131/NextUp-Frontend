@@ -1,5 +1,6 @@
 import Link from 'next/link'
-import { withAuth } from '../hocs/withAuth'
+import { useAuth } from '../contexts/AuthContext'
+import withAuth from '../hocs/withAuth'
 
 function Dashboard(){
   return (

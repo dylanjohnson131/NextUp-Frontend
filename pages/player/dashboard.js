@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { getCurrentUser, getCurrentPlayer, fetchPlayers } from '../../lib/api'
-import { withAuth } from '../../hocs/withAuth'
+import withAuth from '../../hocs/withAuth'
 
 function PlayerDashboard() {
   const router = useRouter()

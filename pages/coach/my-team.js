@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { getCurrentCoach, fetchTeamById } from '../../lib/api'
-import { withAuth } from '../../hocs/withAuth'
+import withAuth from '../../hocs/withAuth'
 import Link from 'next/link'
 
 function MyTeam() {

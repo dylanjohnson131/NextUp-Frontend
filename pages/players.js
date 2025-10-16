@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { fetchPlayers } from '../lib/api'
-import { withAuth } from '../hocs/withAuth'
+import withAuth from '../hocs/withAuth'
 
 function Players(){
   const [players, setPlayers] = useState([])

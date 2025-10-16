@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { withAuth } from '../../hocs/withAuth'
+import withAuth from '../../hocs/withAuth'
 import { fetchMyGoals, createPlayerGoal, updatePlayerGoal, deletePlayerGoal, getCurrentPlayer } from '../../lib/api'
 
 function MyGoals() {

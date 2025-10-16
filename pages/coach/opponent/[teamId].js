@@ -2,7 +2,7 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import RoleNavBar from '../../../components/RoleNavBar'
 import { fetchOpponentTeamOverview } from '../../../lib/api'
-import { withAuth } from '../../../hocs/withAuth'
+import withAuth from '../../../hocs/withAuth'
 
 function OpponentOverview() {
   const router = useRouter()
