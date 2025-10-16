@@ -24,9 +24,9 @@ function CoachDashboard() {
         setTeams(teamsData || [])
         
         // Fetch upcoming games if coach has a team
-        if (coachInfo?.Team?.TeamId) {
+        if (coachInfo?.team?.teamId) {
           try {
-            const gamesData = await fetchUpcomingGames(coachInfo.Team.TeamId)
+            const gamesData = await fetchUpcomingGames(coachInfo.team.teamId)
             setUpcomingGames(gamesData || [])
           } catch (error) {
             console.error('Failed to load upcoming games:', error)
@@ -65,20 +65,23 @@ function CoachDashboard() {
           <div className="bg-slate-800 rounded-lg p-6">
             <h2 className="text-xl font-semibold text-white mb-4">My Teams</h2>
             <div className="space-y-4">
-              {coach?.Team ? (
-                <div className="bg-slate-700 rounded p-4">
+              {coach?.team ? (
+                <div 
+                  onClick={() => router.push('/coach/my-team')}
+                  className="bg-slate-700 rounded p-4 cursor-pointer hover:bg-slate-600 transition-colors"
+                >
                   <div className="flex justify-between items-start">
                     <div>
-                      <h3 className="font-semibold text-white">{coach.Team.Name}</h3>
-                      <p className="text-slate-400 text-sm">{coach.Team.Location}</p>
+                      <h3 className="font-semibold text-white">
+                        {coach.team.name}
+                        <span className="text-slate-400 font-normal"> (2025-2026)</span>
+                      </h3>
+                      <p className="text-slate-400 text-sm">{coach.team.location}</p>
                     </div>
                     <div className="text-right">
-                      <button 
-                        onClick={() => router.push('/coach/my-team')}
-                        className="bg-cyan-400 text-slate-900 px-3 py-1 rounded text-sm hover:bg-cyan-300 transition-colors"
-                      >
-                        Manage
-                      </button>
+                      <span className="text-cyan-400 text-sm">
+                        Click to manage →
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -87,10 +90,6 @@ function CoachDashboard() {
                   <p className="text-slate-400">No team assigned yet</p>
                 </div>
               )}
-              
-              <button className="w-full bg-slate-700 border-2 border-dashed border-slate-600 rounded p-4 text-slate-400 hover:border-slate-500 transition-colors">
-                + Create New Team
-              </button>
             </div>
           </div>
 
