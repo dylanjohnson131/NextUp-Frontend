@@ -17,9 +17,9 @@ function Schedule() {
         setCoach(coachInfo)
         
         // Fetch upcoming games if coach has a team
-        if (coachInfo?.Team?.TeamId) {
+        if (coachInfo?.team?.teamId) {
           try {
-            const gamesData = await fetchUpcomingGames(coachInfo.Team.TeamId)
+            const gamesData = await fetchUpcomingGames(coachInfo.team.teamId)
             setUpcomingGames(gamesData || [])
           } catch (error) {
             console.error('Failed to load upcoming games:', error)
@@ -52,36 +52,37 @@ function Schedule() {
           
           <div className="space-y-4">
             {upcomingGames.length > 0 ? (
-              upcomingGames.map((game) => (
-                <div key={game.GameId} className="bg-slate-700 rounded p-4">
+              upcomingGames.map((game, index) => (
+                <div key={game.gameId || index} className="bg-slate-700 rounded p-4">
                   <div className="flex justify-between items-center">
                     <div>
                       <p className="text-white font-medium">
-                        {game.IsHome ? 'vs.' : '@'} {game.Opponent.Name}
+                        {game.isHome ? 'vs.' : '@'} {game.opponent?.name || 'TBD'}
                       </p>
                       <p className="text-slate-400 text-sm">
-                        {new Date(game.GameDate).toLocaleDateString('en-US', {
+                        {new Date(game.gameDate).toLocaleDateString('en-US', {
                           month: 'short',
                           day: 'numeric',
                           year: 'numeric'
-                        })} - {new Date(game.GameDate).toLocaleTimeString('en-US', {
+                        })} - {new Date(game.gameDate).toLocaleTimeString('en-US', {
                           hour: 'numeric',
                           minute: '2-digit',
                           hour12: true
                         })}
                       </p>
                       <p className="text-slate-500 text-xs">
-                        {game.IsHome ? 'Home Game' : 'Away Game'}
+                        {game.isHome ? 'Home Game' : 'Away Game'}
                       </p>
-                      {game.Location && (
+                      {game.location && (
                         <p className="text-slate-500 text-xs">
-                          Location: {game.Location}
+                          Location: {game.location}
                         </p>
                       )}
                     </div>
                     <button 
-                      onClick={() => router.push(`/coach/opponent/${game.Opponent.TeamId}`)}
+                      onClick={() => router.push(`/coach/opponent/${game.opponent?.teamId}`)}
                       className="bg-cyan-400 text-slate-900 px-3 py-1 rounded text-sm hover:bg-cyan-300 transition-colors"
+                      disabled={!game.opponent?.teamId}
                     >
                       View Team Stats
                     </button>

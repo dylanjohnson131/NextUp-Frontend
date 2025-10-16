@@ -60,43 +60,48 @@ function GamesManagement() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     
+    // Validate required fields
+    if (!formData.homeTeamId || !formData.awayTeamId) {
+      setError('Please select both home and away teams')
+      return
+    }
+    
     if (formData.homeTeamId === formData.awayTeamId) {
       setError('Home team and away team cannot be the same')
       return
     }
 
+    if (!formData.gameDate || !formData.gameTime) {
+      setError('Please select game date and time')
+      return
+    }
+
     try {
-      // Combine date and time into a single DateTime string
-      const gameDateTime = `${formData.gameDate}T${formData.gameTime}:00`
+      // Combine date and time into a single DateTime string with UTC timezone
+      const gameDateTime = `${formData.gameDate}T${formData.gameTime}:00.000Z`
       
-      const submitData = {
-        ...formData,
-        gameDate: gameDateTime,
-        homeTeamId: parseInt(formData.homeTeamId),
-        awayTeamId: parseInt(formData.awayTeamId),
-        week: parseInt(formData.week) || null,
-        season: parseInt(formData.season)
+      // Convert to integers and validate
+      const homeTeamId = parseInt(formData.homeTeamId)
+      const awayTeamId = parseInt(formData.awayTeamId)
+      const season = parseInt(formData.season)
+      
+      if (isNaN(homeTeamId) || isNaN(awayTeamId) || isNaN(season)) {
+        setError(`Invalid values - homeTeamId: ${homeTeamId}, awayTeamId: ${awayTeamId}, season: ${season}`)
+        return
       }
-      delete submitData.gameTime // Remove separate time field
 
-      const url = editingGame 
-        ? `/api/athletic-directors/games/${editingGame.id}`
-        : '/api/athletic-directors/games'
-      
-      const method = editingGame ? 'PUT' : 'POST'
-      
-      const response = await fetch(url, {
-        method,
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        credentials: 'include',
-        body: JSON.stringify(submitData)
-      })
+      const submitData = {
+        homeTeamId,
+        awayTeamId,
+        gameDate: gameDateTime,
+        location: formData.location,
+        season: season.toString()
+      }
 
-      if (!response.ok) {
-        const errorData = await response.text()
-        throw new Error(`Failed to ${editingGame ? 'update' : 'create'} game: ${errorData}`)
+      if (editingGame) {
+        await updateAthleticDirectorGame(editingGame.id, submitData)
+      } else {
+        await createAthleticDirectorGame(submitData)
       }
 
       // Reset form and refetch games
@@ -278,9 +283,9 @@ function GamesManagement() {
                   className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
                 >
                   <option value="">Select Home Team</option>
-                  {teams.map((team) => (
-                    <option key={team.id} value={team.id}>
-                      {team.name} ({team.school})
+                  {teams.map((team, index) => (
+                    <option key={team.teamId || `home-team-${index}`} value={team.teamId}>
+                      {team.name} ({team.school || team.location})
                     </option>
                   ))}
                 </select>
@@ -297,9 +302,9 @@ function GamesManagement() {
                   className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
                 >
                   <option value="">Select Away Team</option>
-                  {teams.map((team) => (
-                    <option key={team.id} value={team.id} disabled={team.id.toString() === formData.homeTeamId}>
-                      {team.name} ({team.school})
+                  {teams.map((team, index) => (
+                    <option key={team.teamId || `away-team-${index}`} value={team.teamId} disabled={team.teamId && team.teamId.toString() === formData.homeTeamId}>
+                      {team.name} ({team.school || team.location})
                     </option>
                   ))}
                 </select>
@@ -438,13 +443,13 @@ function GamesManagement() {
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-3">
                         <h3 className="text-xl font-semibold text-white">
-                          {game.awayTeamName || 'Away Team'} @ {game.homeTeamName || 'Home Team'}
+                          {game.awayTeam?.name || 'Away Team'} @ {game.homeTeam?.name || 'Home Team'}
                         </h3>
                         <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(game.status)}`}>
                           {game.status}
                         </span>
                       </div>
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                      <div className="grid grid-cols-2 md:grid-cols-2 gap-4 text-sm">
                         <div>
                           <span className="text-slate-400">Date & Time:</span>
                           <p className="text-white">{formatGameDate(game.gameDate)}</p>
@@ -452,14 +457,6 @@ function GamesManagement() {
                         <div>
                           <span className="text-slate-400">Location:</span>
                           <p className="text-white">{game.location || 'N/A'}</p>
-                        </div>
-                        <div>
-                          <span className="text-slate-400">Week:</span>
-                          <p className="text-white">{game.week || 'N/A'}</p>
-                        </div>
-                        <div>
-                          <span className="text-slate-400">Season:</span>
-                          <p className="text-white">{game.season}</p>
                         </div>
                       </div>
                     </div>
