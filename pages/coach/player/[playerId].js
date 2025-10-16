@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { fetchPlayerStats, fetchPlayerById } from '../../../lib/api'
-import { withAuth } from '../../../hocs/withAuth'
+import withAuth from '../../../hocs/withAuth'
 import Link from 'next/link'
 
 function PlayerStats() {

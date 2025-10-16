@@ -11,10 +11,7 @@ function GameStats() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="bg-slate-700 rounded p-4">
               <h3 className="text-white font-medium mb-3">Current Game</h3>
-              <p className="text-slate-400 mb-4">No active game</p>
-              <button className="bg-cyan-400 text-slate-900 px-4 py-2 rounded font-medium">
-                Start New Game
-              </button>
+              <p className="text-slate-400">No active game</p>
             </div>
             
             <div className="bg-slate-700 rounded p-4">

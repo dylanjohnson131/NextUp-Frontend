@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { getCurrentCoach, fetchUpcomingGames } from '../../lib/api'
-import { withAuth } from '../../hocs/withAuth'
+import withAuth from '../../hocs/withAuth'
 
 function Schedule() {
   const router = useRouter()

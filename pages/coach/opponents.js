@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { fetchTeams, getCurrentCoach } from '../../lib/api'
-import { withAuth } from '../../hocs/withAuth'
+import withAuth from '../../hocs/withAuth'
 
 function BrowseOpponents() {
   const router = useRouter()

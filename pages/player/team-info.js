@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { withAuth } from '../../hocs/withAuth'
+import withAuth from '../../hocs/withAuth'
 import { fetchMyTeam } from '../../lib/api'
 
 function TeamInfo() {
