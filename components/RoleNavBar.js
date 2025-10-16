@@ -1,16 +1,18 @@
 import Link from 'next/link'
-import { logout } from '../lib/api'
+import { logout as apiLogout } from '../lib/api'
 import { useAuth } from '../contexts/AuthContext'
 
 export default function RoleNavBar() {
-  const { user, loading, isAuthenticated } = useAuth()
+  const { user, loading, isAuthenticated, logout } = useAuth()
 
   const handleLogout = async () => {
     try {
-      await logout()
-      window.location.href = '/login'
+      logout() // Call AuthContext logout first (clears state and redirects)
+      await apiLogout() // Then call API logout to clear server session
     } catch (err) {
       console.error('Logout failed:', err)
+      // Fallback redirect if something goes wrong
+      window.location.href = '/'
     }
   }
 

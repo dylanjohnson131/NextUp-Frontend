@@ -4,11 +4,12 @@ import { useAuth } from '../contexts/AuthContext'
 
 function withAuth(WrappedComponent, requiredRoles = null) {
   return function AuthenticatedComponent(props) {
-    const { user, loading, isAuthenticated } = useAuth()
+    const { user, loading, isAuthenticated, isLoggingOut } = useAuth()
     const router = useRouter()
 
     useEffect(() => {
-      if (!loading) {
+      // Don't redirect if we're in the process of logging out
+      if (!loading && !isLoggingOut) {
         if (!isAuthenticated) {
           router.push('/login')
           return
@@ -32,10 +33,10 @@ function withAuth(WrappedComponent, requiredRoles = null) {
           }
         }
       }
-    }, [loading, isAuthenticated, user, router])
+    }, [loading, isAuthenticated, user, router, isLoggingOut])
 
-    // Show loading while checking authentication
-    if (loading) {
+    // Show loading while checking authentication or logging out
+    if (loading || isLoggingOut) {
       return (
         <div className="min-h-screen bg-slate-900 flex items-center justify-center">
           <div className="text-white">Loading...</div>
@@ -43,8 +44,8 @@ function withAuth(WrappedComponent, requiredRoles = null) {
       )
     }
 
-    // Don't render the component if not authenticated
-    if (!isAuthenticated) {
+    // Don't render the component if not authenticated (unless logging out)
+    if (!isAuthenticated && !isLoggingOut) {
       return null
     }
 

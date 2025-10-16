@@ -1,12 +1,14 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { getCurrentUser, logout } from '../lib/api'
+import { getCurrentUser, logout as apiLogout } from '../lib/api'
+import { useAuth } from '../contexts/AuthContext'
 
 export default function NavBar() {
   const router = useRouter()
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
+  const { logout } = useAuth()
 
   useEffect(() => {
     getCurrentUser()
@@ -22,10 +24,12 @@ export default function NavBar() {
 
   const handleLogout = async () => {
     try {
-      await logout()
-      router.push('/login')
+      logout() // Call AuthContext logout first (clears state and redirects)
+      await apiLogout() // Then call API logout to clear server session
     } catch (err) {
       console.error('Logout failed:', err)
+      // Fallback redirect if something goes wrong
+      window.location.href = '/'
     }
   }
 

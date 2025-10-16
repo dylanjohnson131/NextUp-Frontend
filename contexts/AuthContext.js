@@ -15,6 +15,7 @@ export const useAuth = () => {
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [isLoggingOut, setIsLoggingOut] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
@@ -37,16 +38,19 @@ export function AuthProvider({ children }) {
   }
 
   const logout = () => {
+    setIsLoggingOut(true)
     setUser(null)
-    router.push('/')
+    // Use window.location for immediate redirect, bypassing router navigation
+    window.location.href = '/'
   }
 
-  const isAuthenticated = user && user.isAuthenticated
+  const isAuthenticated = user && user.isAuthenticated && !isLoggingOut
 
   const value = {
     user,
     loading,
     isAuthenticated,
+    isLoggingOut,
     login,
     logout,
     checkAuth
