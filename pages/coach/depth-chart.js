@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { getCurrentCoach, fetchTeamById } from '../../lib/api'
 import { withAuth } from '../../hocs/withAuth'
+import Link from 'next/link'
 
 function DepthChart() {
   const [coach, setCoach] = useState(null)
@@ -82,7 +83,10 @@ function DepthChart() {
             <div className="flex justify-between items-center">
               <div>
                 <div className="font-medium text-white">
-                  #{player.jerseyNumber} {player.name}
+                  #{player.jerseyNumber} 
+                  <Link href={`/coach/player/${player.playerId}`} className="text-cyan-400 hover:text-cyan-300 transition-colors ml-1">
+                    {player.name}
+                  </Link>
                 </div>
                 <div className="text-xs text-slate-300">
                   {index === 0 && <span className="bg-green-600 px-1 rounded text-xs mr-1">1st</span>}

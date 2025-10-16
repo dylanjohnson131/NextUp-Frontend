@@ -67,7 +67,7 @@ function CoachDashboard() {
             <div className="space-y-4">
               {coach?.team ? (
                 <div 
-                  onClick={() => router.push('/coach/my-team')}
+                  onClick={() => router.push('/coach/depth-chart')}
                   className="bg-slate-700 rounded p-4 cursor-pointer hover:bg-slate-600 transition-colors"
                 >
                   <div className="flex justify-between items-start">
@@ -108,12 +108,6 @@ function CoachDashboard() {
                 className="w-full bg-cyan-400 text-slate-900 px-4 py-3 rounded font-medium hover:bg-cyan-300 transition-colors"
               >
                 Record Game Stats
-              </button>
-              <button 
-                onClick={() => router.push('/coach/my-team')}
-                className="w-full bg-slate-700 text-white px-4 py-3 rounded font-medium hover:bg-slate-600 transition-colors"
-              >
-                View Team Performance
               </button>
               <button 
                 onClick={() => router.push('/coach/opponents')}

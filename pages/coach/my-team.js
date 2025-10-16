@@ -97,15 +97,25 @@ function MyTeam() {
             {teamData.players.slice(0, 6).map(player => (
               <div key={player.playerId} className="bg-slate-700 rounded-lg p-4">
                 <div className="flex justify-between items-start mb-2">
-                  <h3 className="font-medium text-white">#{player.jerseyNumber} {player.name}</h3>
+                  <h3 className="font-medium text-white">
+                    #{player.jerseyNumber} 
+                    <Link href={`/coach/player/${player.playerId}`} className="text-cyan-400 hover:text-cyan-300 transition-colors ml-1">
+                      {player.name}
+                    </Link>
+                  </h3>
                   <span className="text-xs bg-slate-600 px-2 py-1 rounded text-slate-300">
                     {player.position || 'No Position'}
                   </span>
                 </div>
-                <div className="text-sm text-slate-400">
+                <div className="text-sm text-slate-400 mb-2">
                   Age: {player.age}
                   {player.height && ` • ${player.height}`}
                   {player.weight && ` • ${player.weight}lbs`}
+                </div>
+                <div className="text-right">
+                  <Link href={`/coach/player/${player.playerId}`} className="text-xs text-cyan-400 hover:text-cyan-300 transition-colors">
+                    View Stats →
+                  </Link>
                 </div>
               </div>
             ))}

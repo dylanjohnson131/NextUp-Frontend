@@ -75,10 +75,10 @@ export default function RoleNavBar() {
                 Dashboard
               </Link>
               <Link 
-                href="/coach/my-team" 
+                href="/coach/depth-chart" 
                 className="text-slate-300 hover:text-cyan-400 px-3 py-2 rounded-md font-medium transition-colors duration-200"
               >
-                My Team
+                Depth Chart
               </Link>
               <Link 
                 href="/coach/schedule" 
