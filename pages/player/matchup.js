@@ -1,6 +1,36 @@
+import { useState, useEffect } from 'react'
+import { getCurrentPlayer, fetchUpcomingGames } from '../../lib/api'
 import withAuth from '../../hocs/withAuth'
 
 function Matchup() {
+  const [nextGame, setNextGame] = useState(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const loadMatchupData = async () => {
+      try {
+        const currentPlayer = await getCurrentPlayer()
+        
+        // Fetch next game if player has a team
+        if (currentPlayer?.team?.teamId) {
+          try {
+            const upcomingGames = await fetchUpcomingGames(currentPlayer.team.teamId)
+            if (upcomingGames && upcomingGames.length > 0) {
+              setNextGame(upcomingGames[0]) // Get the next upcoming game
+            }
+          } catch (error) {
+            console.error('Failed to load upcoming games:', error)
+          }
+        }
+      } catch (error) {
+        console.error('Failed to load matchup data:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    
+    loadMatchupData()
+  }, [])
   return (
     <main className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold text-white mb-6">Next Matchup</h1>
@@ -8,10 +38,32 @@ function Matchup() {
         <div className="bg-slate-800 rounded-lg p-6 mb-8">
           <h2 className="text-xl font-semibold text-white mb-4">Upcoming Game</h2>
           <div className="bg-slate-700 rounded p-4">
-            <div className="text-center">
-              <p className="text-white font-medium text-lg">vs. Storm Riders</p>
-              <p className="text-slate-400">Oct 12, 2025 - 3:00 PM</p>
-            </div>
+            {loading ? (
+              <div className="text-center">
+                <p className="text-slate-400">Loading game information...</p>
+              </div>
+            ) : nextGame ? (
+              <div className="text-center">
+                <p className="text-white font-medium text-lg">
+                  vs. {nextGame.awayTeam?.name || 'TBD'}
+                </p>
+                <p className="text-slate-400">
+                  {nextGame.gameDate ? new Date(nextGame.gameDate).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short', 
+                    day: 'numeric'
+                  }) : 'Date TBD'} - {nextGame.gameTime || 'Time TBD'}
+                </p>
+                {nextGame.location && (
+                  <p className="text-slate-500 text-sm mt-1">{nextGame.location}</p>
+                )}
+              </div>
+            ) : (
+              <div className="text-center">
+                <p className="text-slate-400">No upcoming games scheduled</p>
+                <p className="text-slate-500 text-sm mt-1">Check back later for matchup details</p>
+              </div>
+            )}
           </div>
         </div>
         

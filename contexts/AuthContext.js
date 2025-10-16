@@ -38,7 +38,7 @@ export function AuthProvider({ children }) {
 
   const logout = () => {
     setUser(null)
-    router.push('/login')
+    router.push('/')
   }
 
   const isAuthenticated = user && user.isAuthenticated
