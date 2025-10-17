@@ -99,7 +99,7 @@ function GamesManagement() {
       }
 
       if (editingGame) {
-        await updateAthleticDirectorGame(editingGame.id, submitData)
+        await updateAthleticDirectorGame(editingGame.gameId, submitData)
       } else {
         await createAthleticDirectorGame(submitData)
       }
@@ -139,14 +139,14 @@ function GamesManagement() {
     const timeString = gameDate.toTimeString().slice(0, 5)
     
     setFormData({
-      homeTeamId: game.homeTeamId?.toString() || '',
-      awayTeamId: game.awayTeamId?.toString() || '',
+      homeTeamId: game.homeTeam?.teamId?.toString() || '',
+      awayTeamId: game.awayTeam?.teamId?.toString() || '',
       gameDate: dateString,
       gameTime: timeString,
       location: game.location || '',
       week: game.week?.toString() || '',
       season: game.season || new Date().getFullYear(),
-      status: game.status || 'Scheduled'
+      status: game.isCompleted ? 'Completed' : 'Scheduled'
     })
     setShowCreateForm(true)
   }
@@ -163,13 +163,14 @@ function GamesManagement() {
       })
 
       if (!response.ok) {
-        throw new Error('Failed to delete game')
+        const errorData = await response.json().catch(() => ({ error: 'Failed to delete game' }))
+        throw new Error(errorData.error || 'Failed to delete game')
       }
 
       await fetchGames()
     } catch (err) {
       console.error('Delete error:', err)
-      setError('Failed to delete game')
+      setError(err.message || 'Failed to delete game')
     }
   }
 
@@ -438,15 +439,15 @@ function GamesManagement() {
           ) : (
             <div className="divide-y divide-slate-700/50">
               {games.map((game, index) => (
-                <div key={`game-${game.id || index}`} className="p-6 hover:bg-slate-700/30 transition-colors duration-200">
+                <div key={`game-${game.gameId || index}`} className="p-6 hover:bg-slate-700/30 transition-colors duration-200">
                   <div className="flex justify-between items-start">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-3">
                         <h3 className="text-xl font-semibold text-white">
                           {game.awayTeam?.name || 'Away Team'} @ {game.homeTeam?.name || 'Home Team'}
                         </h3>
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(game.status)}`}>
-                          {game.status}
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(game.isCompleted ? 'Completed' : 'Scheduled')}`}>
+                          {game.isCompleted ? 'Completed' : 'Scheduled'}
                         </span>
                       </div>
                       <div className="grid grid-cols-2 md:grid-cols-2 gap-4 text-sm">
@@ -468,7 +469,7 @@ function GamesManagement() {
                         Edit
                       </button>
                       <button
-                        onClick={() => handleDelete(game.id)}
+                        onClick={() => handleDelete(game.gameId)}
                         className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200"
                       >
                         Delete
