@@ -69,19 +69,31 @@ function Register() {
         res = await registerCoach(coachData)
       }
 
-      if (res && (res.Message === 'Player registered and signed in.' || res.Message === 'Coach registered and signed in.')) {
+      // Log the response for debugging
+      console.log('Registration response:', res);
+      // Accept any response with a user or player object, or a message containing 'registered'
+      const success =
+        (res && (res.Message?.toLowerCase().includes('registered') || res.message?.toLowerCase().includes('registered')))
+        || (res && (res.User || res.Player));
+      if (success) {
         if (userType === 'coach') {
-          window.location.href = '/coach/dashboard'
+          window.location.href = '/coach/dashboard';
         } else {
-          window.location.href = '/player/dashboard'
+          window.location.href = '/player/dashboard';
         }
       } else {
-        setError('Registration failed')
+        setError(res?.error || 'Registration failed');
       }
     } catch (err) {
-      setError(err.message || 'Registration failed')
+      // Try to get a more specific error message
+      if (err.response && err.response.data && err.response.data.error) {
+        setError(err.response.data.error);
+      } else {
+        setError(err.message || 'Registration failed');
+      }
+      console.error('Registration error:', err);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
