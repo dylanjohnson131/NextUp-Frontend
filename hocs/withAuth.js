@@ -10,23 +10,23 @@ function withAuth(WrappedComponent, requiredRoles = null) {
     useEffect(() => {
       if (!loading && !isLoggingOut) {
         if (!isAuthenticated) {
-          router.push('/login')
+          if (router.pathname !== '/login') {
+            router.push('/login')
+          }
           return
         }
 
         if (requiredRoles) {
           const allowedRoles = Array.isArray(requiredRoles) ? requiredRoles : [requiredRoles]
           if (!allowedRoles.includes(user?.role)) {
-            if (user?.role === 'Coach') {
-              router.push('/coach/dashboard')
-            } else if (user?.role === 'Player') {
-              router.push('/player/dashboard')
-            } else if (user?.role === 'AthleticDirector') {
-              router.push('/athletic-director/dashboard')
-            } else {
-              router.push('/dashboard')
+            let destination = '/dashboard';
+            if (user?.role === 'Coach') destination = '/coach/dashboard';
+            else if (user?.role === 'Player') destination = '/player/dashboard';
+            else if (user?.role === 'AthleticDirector') destination = '/athletic-director/dashboard';
+            if (router.pathname !== destination) {
+              router.push(destination);
             }
-            return
+            return;
           }
         }
       }
@@ -62,14 +62,12 @@ export function withGuest(WrappedComponent) {
 
     useEffect(() => {
       if (!loading && isAuthenticated) {
-        if (user?.role === 'Coach') {
-          router.push('/coach/dashboard')
-        } else if (user?.role === 'Player') {
-          router.push('/player/dashboard')
-        } else if (user?.role === 'AthleticDirector') {
-          router.push('/athletic-director/dashboard')
-        } else {
-          router.push('/dashboard')
+        let destination = '/dashboard';
+        if (user?.role === 'Coach') destination = '/coach/dashboard';
+        else if (user?.role === 'Player') destination = '/player/dashboard';
+        else if (user?.role === 'AthleticDirector') destination = '/athletic-director/dashboard';
+        if (router.pathname !== destination) {
+          router.push(destination);
         }
       }
     }, [loading, isAuthenticated, user, router])

@@ -16,7 +16,7 @@ function BrowseOpponents() {
           fetchTeams(),
           getCurrentCoach()
         ])
-        setTeams(teamsData || [])
+        setTeams(teamsData)
         setCoach(coachInfo)
       } catch (error) {
         } finally {

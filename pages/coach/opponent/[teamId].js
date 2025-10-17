@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import RoleNavBar from '../../../components/RoleNavBar'
-import { fetchOpponentTeamOverview } from '../../../lib/api'
+import { fetchTeamById } from '../../../lib/api'
 import withAuth from '../../../hocs/withAuth'
 
 function OpponentOverview() {
@@ -13,18 +13,34 @@ function OpponentOverview() {
 
   useEffect(() => {
     if (teamId) {
-      fetchOpponentTeamOverview(teamId)
+      fetchTeamById(teamId)
         .then(data => {
-          setTeamData(data)
-          setLoading(false)
+          // Map API response to expected frontend structure
+          setTeamData({
+            team: {
+              name: data.Name || data.name,
+              location: data.Location || data.location,
+              wins: data.Wins || data.wins || 0,
+              losses: data.Losses || data.losses || 0,
+              ties: data.Ties || data.ties || 0
+            },
+            Roster: (data.Players || data.players || []).map(p => ({
+              playerId: p.PlayerId || p.playerId,
+              name: p.Name || p.name,
+              position: p.Position || p.position,
+              age: p.Age || p.age,
+              jerseyNumber: p.JerseyNumber || p.jerseyNumber
+            }))
+          });
+          setLoading(false);
         })
         .catch(err => {
-          console.error('Error fetching team data:', err)
-          setError('Failed to load team data')
-          setLoading(false)
-        })
+          console.error('Error fetching team data:', err);
+          setError('Failed to load team data');
+          setLoading(false);
+        });
     }
-  }, [teamId])
+  }, [teamId]);
 
   if (loading) {
     return (
@@ -86,9 +102,9 @@ function OpponentOverview() {
           <div className="lg:col-span-2">
             <div className="bg-slate-800 rounded-lg p-6">
               <h2 className="text-xl font-semibold text-white mb-4">Team Roster</h2>
-              {teamData?.roster && teamData.roster.length > 0 ? (
+              {teamData?.Roster && teamData.Roster.length > 0 ? (
                 <div className="space-y-3">
-                  {teamData.roster.map(player => (
+                  {teamData.Roster.map(player => (
                     <div key={player.playerId} className="flex justify-between items-center p-3 bg-slate-700 rounded">
                       <div>
                         <p className="text-white font-medium">{player.name}</p>

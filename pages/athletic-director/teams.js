@@ -292,9 +292,11 @@ function TeamsManagement() {
                   Head Coach *
                 </label>
                 <select
-                  required
-                  value={formData.coachId}
-                  onChange={(e) => setFormData({ ...formData, coachId: e.target.value })}
+                  value={formData.coachId ?? ''}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setFormData({ ...formData, coachId: value === 'REMOVE' ? null : value });
+                  }}
                   className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
                 >
                   <option value="">Select a coach...</option>
@@ -303,6 +305,9 @@ function TeamsManagement() {
                       {coach.name} ({coach.email})
                     </option>
                   ))}
+                  {editingTeam && editingTeam.coach && (
+                    <option value="REMOVE">Remove Coach</option>
+                  )}
                 </select>
               </div>
 
