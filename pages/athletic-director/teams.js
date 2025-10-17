@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '../../contexts/AuthContext'
 import { useRouter } from 'next/router'
-import { fetchAthleticDirectorTeams, createAthleticDirectorTeam, updateAthleticDirectorTeam, deleteAthleticDirectorTeam } from '../../lib/api'
+import { fetchAthleticDirectorTeams, createAthleticDirectorTeam, updateAthleticDirectorTeam, deleteAthleticDirectorTeam, fetchCoaches } from '../../lib/api'
 import withAuth from '../../hocs/withAuth'
 
 function TeamsManagement() {
   const { user } = useAuth()
   const router = useRouter()
   const [teams, setTeams] = useState([])
+  const [coaches, setCoaches] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [showCreateForm, setShowCreateForm] = useState(false)
@@ -16,17 +17,18 @@ function TeamsManagement() {
     name: '',
     school: '',
     mascot: '',
-    location: '',
+    location: '', // Keep as empty string for backend compatibility
     city: '',
     state: '',
     division: '',
     conference: '',
     isPublic: true,
-    coachId: null
+    coachId: ''
   })
 
   useEffect(() => {
     fetchTeams()
+    fetchAvailableCoaches()
     // Check if we should show create form from URL params
     if (router.query.action === 'create') {
       setShowCreateForm(true)
@@ -37,6 +39,11 @@ function TeamsManagement() {
     try {
       setLoading(true)
       const data = await fetchAthleticDirectorTeams()
+      console.log('Teams data received:', data)
+      if (data && data.length > 0) {
+        console.log('First team structure:', data[0])
+        console.log('First team coach info:', data[0].coach)
+      }
       setTeams(data)
       setError('')
     } catch (err) {
@@ -44,6 +51,16 @@ function TeamsManagement() {
       setError('Failed to load teams')
     } finally {
       setLoading(false)
+    }
+  }
+
+  const fetchAvailableCoaches = async () => {
+    try {
+      const data = await fetchCoaches()
+      setCoaches(data || [])
+    } catch (err) {
+      console.error('Coaches fetch error:', err)
+      // Don't set error for coaches, just log it
     }
   }
 
@@ -68,7 +85,7 @@ function TeamsManagement() {
         division: '',
         conference: '',
         isPublic: true,
-        coachId: null
+        coachId: ''
       })
       setShowCreateForm(false)
       setEditingTeam(null)
@@ -99,7 +116,7 @@ function TeamsManagement() {
       division: team.division || '',
       conference: team.conference || '',
       isPublic: team.isPublic !== undefined ? team.isPublic : true,
-      coachId: team.coachId || null
+      coachId: team.coachId || team.coach?.coachId || ''
     })
     setShowCreateForm(true)
   }
@@ -132,7 +149,7 @@ function TeamsManagement() {
       division: '',
       conference: '',
       isPublic: true,
-      coachId: null
+      coachId: ''
     })
     if (router.query.action) {
       router.replace('/athletic-director/teams', undefined, { shallow: true })
@@ -280,6 +297,25 @@ function TeamsManagement() {
                 />
               </div>
 
+              <div>
+                <label className="block text-sm font-medium text-slate-300 mb-2">
+                  Head Coach *
+                </label>
+                <select
+                  required
+                  value={formData.coachId}
+                  onChange={(e) => setFormData({ ...formData, coachId: e.target.value })}
+                  className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
+                >
+                  <option value="">Select a coach...</option>
+                  {coaches.map((coach) => (
+                    <option key={coach.coachId} value={coach.coachId}>
+                      {coach.name} ({coach.email})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
               <div className="md:col-span-2">
                 <label className="flex items-center text-sm font-medium text-slate-300 mb-2">
                   <input
@@ -358,12 +394,18 @@ function TeamsManagement() {
                           <p className="text-white">{team.division || 'N/A'}</p>
                         </div>
                       </div>
-                      {team.conference && (
-                        <div className="mt-2">
-                          <span className="text-slate-400 text-sm">Conference:</span>
-                          <p className="text-white text-sm">{team.conference}</p>
+                      <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                        <div>
+                          <span className="text-slate-400">Head Coach:</span>
+                          <p className="text-white">{team.coach?.name || 'No coach assigned'}</p>
                         </div>
-                      )}
+                        {team.conference && (
+                          <div>
+                            <span className="text-slate-400">Conference:</span>
+                            <p className="text-white">{team.conference}</p>
+                          </div>
+                        )}
+                      </div>
                     </div>
                     <div className="flex gap-2 ml-4">
                       <button
