@@ -21,8 +21,7 @@ function DepthChart() {
           setTeamData(teamDetails)
         }
       } catch (error) {
-        console.error('Failed to load team data:', error)
-      } finally {
+        } finally {
         setLoading(false)
       }
     }

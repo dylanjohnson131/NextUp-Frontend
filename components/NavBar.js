@@ -1,11 +1,9 @@
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { getCurrentUser, logout as apiLogout } from '../lib/api'
 import { useAuth } from '../contexts/AuthContext'
 
 export default function NavBar() {
-  const router = useRouter()
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
   const { logout } = useAuth()
@@ -24,11 +22,9 @@ export default function NavBar() {
 
   const handleLogout = async () => {
     try {
-      logout() // Call AuthContext logout first (clears state and redirects)
-      await apiLogout() // Then call API logout to clear server session
+      logout()
+      await apiLogout()
     } catch (err) {
-      console.error('Logout failed:', err)
-      // Fallback redirect if something goes wrong
       window.location.href = '/'
     }
   }
@@ -58,7 +54,6 @@ export default function NavBar() {
     )
   }
 
-  // Coach Navigation
   if (user.Role === 'Coach') {
     return (
       <nav className="bg-slate-900 border-b border-slate-700 px-4 py-3">
@@ -86,7 +81,6 @@ export default function NavBar() {
     )
   }
 
-  // Player Navigation
   if (user.Role === 'Player') {
     return (
       <nav className="bg-slate-900 border-b border-slate-700 px-4 py-3">
@@ -115,7 +109,6 @@ export default function NavBar() {
     )
   }
 
-  // Default fallback
   return (
     <nav className="bg-slate-900 border-b border-slate-700 px-4 py-3">
       <div className="flex items-center justify-between">

@@ -25,7 +25,6 @@ function AthleticDirectorDashboard() {
       setDashboardData(data)
       setError('')
     } catch (err) {
-      console.error('Dashboard fetch error:', err)
       setError('Failed to load dashboard data')
     } finally {
       setLoading(false)

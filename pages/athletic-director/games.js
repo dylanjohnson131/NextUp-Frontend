@@ -40,7 +40,6 @@ function GamesManagement() {
       setGames(data)
       setError('')
     } catch (err) {
-      console.error('Games fetch error:', err)
       setError('Failed to load games')
     } finally {
       setLoading(false)
@@ -52,7 +51,6 @@ function GamesManagement() {
       const data = await fetchAthleticDirectorTeams()
       setTeams(data)
     } catch (err) {
-      console.error('Teams fetch error:', err)
       setError('Failed to load teams')
     }
   }
@@ -125,7 +123,6 @@ function GamesManagement() {
         router.replace('/athletic-director/games', undefined, { shallow: true })
       }
     } catch (err) {
-      console.error('Submit error:', err)
       setError(err.message)
     }
   }
@@ -169,7 +166,6 @@ function GamesManagement() {
 
       await fetchGames()
     } catch (err) {
-      console.error('Delete error:', err)
       setError(err.message || 'Failed to delete game')
     }
   }

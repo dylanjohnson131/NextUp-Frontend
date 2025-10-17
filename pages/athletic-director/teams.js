@@ -17,7 +17,7 @@ function TeamsManagement() {
     name: '',
     school: '',
     mascot: '',
-    location: '', // Keep as empty string for backend compatibility
+    location: '',
     city: '',
     state: '',
     division: '',
@@ -39,15 +39,11 @@ function TeamsManagement() {
     try {
       setLoading(true)
       const data = await fetchAthleticDirectorTeams()
-      console.log('Teams data received:', data)
       if (data && data.length > 0) {
-        console.log('First team structure:', data[0])
-        console.log('First team coach info:', data[0].coach)
-      }
+        }
       setTeams(data)
       setError('')
     } catch (err) {
-      console.error('Teams fetch error:', err)
       setError('Failed to load teams')
     } finally {
       setLoading(false)
@@ -59,8 +55,6 @@ function TeamsManagement() {
       const data = await fetchCoaches()
       setCoaches(data || [])
     } catch (err) {
-      console.error('Coaches fetch error:', err)
-      // Don't set error for coaches, just log it
     }
   }
 
@@ -68,13 +62,11 @@ function TeamsManagement() {
     e.preventDefault()
     try {
       if (editingTeam) {
-        // Use the correct property name (lowercase teamId)
         await updateAthleticDirectorTeam(editingTeam.teamId, formData)
       } else {
         await createAthleticDirectorTeam(formData)
       }
 
-      // Reset form and refetch teams
       setFormData({
         name: '',
         school: '',
@@ -99,7 +91,6 @@ function TeamsManagement() {
         window.history.replaceState({}, '', url)
       }
     } catch (err) {
-      console.error('Submit error:', err)
       setError(`Failed to ${editingTeam ? 'update' : 'create'} team`)
     }
   }
@@ -131,7 +122,6 @@ function TeamsManagement() {
       await fetchTeams()
       setError('')
     } catch (err) {
-      console.error('Delete error:', err)
       setError('Failed to delete team')
     }
   }

@@ -17,7 +17,6 @@ function TeamInfo() {
       const teamData = await fetchMyTeam()
       setTeam(teamData)
     } catch (err) {
-      console.error('Error loading team info:', err)
       setError('Failed to load team information')
     } finally {
       setLoading(false)

@@ -7,11 +7,9 @@ export default function RoleNavBar() {
 
   const handleLogout = async () => {
     try {
-      logout() // Call AuthContext logout first (clears state and redirects)
-      await apiLogout() // Then call API logout to clear server session
+      logout()
+      await apiLogout()
     } catch (err) {
-      console.error('Logout failed:', err)
-      // Fallback redirect if something goes wrong
       window.location.href = '/'
     }
   }
@@ -59,7 +57,6 @@ export default function RoleNavBar() {
     )
   }
 
-  // Coach Navigation
   if (user.role === 'Coach') {
     return (
       <nav className="bg-slate-900/95 backdrop-blur-sm border-b border-slate-700/50 sticky top-0 z-50">
@@ -111,7 +108,6 @@ export default function RoleNavBar() {
     )
   }
 
-  // Player Navigation  
   if (user.role === 'Player') {
     return (
       <nav className="bg-slate-900/95 backdrop-blur-sm border-b border-slate-700/50 sticky top-0 z-50">
@@ -169,7 +165,6 @@ export default function RoleNavBar() {
     )
   }
 
-  // Athletic Director Navigation
   if (user.role === 'AthleticDirector') {
     return (
       <nav className="bg-slate-900/95 backdrop-blur-sm border-b border-slate-700/50 sticky top-0 z-50">
@@ -221,7 +216,6 @@ export default function RoleNavBar() {
     )
   }
 
-  // Default fallback
   return (
     <nav className="bg-slate-900/95 backdrop-blur-sm border-b border-slate-700/50 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-8">

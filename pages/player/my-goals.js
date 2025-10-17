@@ -28,7 +28,6 @@ function MyGoals() {
       setCurrentPlayer(player)
       await loadGoals()
     } catch (err) {
-      console.error('Error loading player data:', err)
       setError('Failed to load player information')
       setLoading(false)
     }
@@ -40,7 +39,6 @@ function MyGoals() {
       const data = await fetchMyGoals()
       setGoals(data || [])
     } catch (err) {
-      console.error('Error loading goals:', err)
       setError('Failed to load goals')
     } finally {
       setLoading(false)
@@ -84,7 +82,6 @@ function MyGoals() {
       await loadGoals()
       resetForm()
     } catch (err) {
-      console.error('Error saving goal:', err)
       setError(`Failed to ${editingGoal ? 'update' : 'create'} goal`)
     }
   }
@@ -107,7 +104,6 @@ function MyGoals() {
       await deletePlayerGoal(goalId)
       await loadGoals()
     } catch (err) {
-      console.error('Error deleting goal:', err)
       setError('Failed to delete goal')
     }
   }

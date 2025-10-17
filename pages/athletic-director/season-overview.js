@@ -52,7 +52,6 @@ function SeasonOverview() {
       })
       setError('')
     } catch (err) {
-      console.error('Season data fetch error:', err)
       setError('Failed to load season data')
     } finally {
       setLoading(false)

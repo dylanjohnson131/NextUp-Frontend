@@ -8,18 +8,15 @@ function withAuth(WrappedComponent, requiredRoles = null) {
     const router = useRouter()
 
     useEffect(() => {
-      // Don't redirect if we're in the process of logging out
       if (!loading && !isLoggingOut) {
         if (!isAuthenticated) {
           router.push('/login')
           return
         }
 
-        // Check role if specified - now supports array of roles
         if (requiredRoles) {
           const allowedRoles = Array.isArray(requiredRoles) ? requiredRoles : [requiredRoles]
           if (!allowedRoles.includes(user?.role)) {
-            // Redirect to appropriate dashboard based on user role
             if (user?.role === 'Coach') {
               router.push('/coach/dashboard')
             } else if (user?.role === 'Player') {
@@ -35,7 +32,6 @@ function withAuth(WrappedComponent, requiredRoles = null) {
       }
     }, [loading, isAuthenticated, user, router, isLoggingOut])
 
-    // Show loading while checking authentication or logging out
     if (loading || isLoggingOut) {
       return (
         <div className="min-h-screen bg-slate-900 flex items-center justify-center">
@@ -44,12 +40,10 @@ function withAuth(WrappedComponent, requiredRoles = null) {
       )
     }
 
-    // Don't render the component if not authenticated (unless logging out)
     if (!isAuthenticated && !isLoggingOut) {
       return null
     }
 
-    // Don't render if role is required but doesn't match
     if (requiredRoles) {
       const allowedRoles = Array.isArray(requiredRoles) ? requiredRoles : [requiredRoles]
       if (!allowedRoles.includes(user?.role)) {
@@ -61,7 +55,6 @@ function withAuth(WrappedComponent, requiredRoles = null) {
   }
 }
 
-// Helper function for pages that should redirect authenticated users
 export function withGuest(WrappedComponent) {
   return function GuestComponent(props) {
     const { user, loading, isAuthenticated } = useAuth()
@@ -69,7 +62,6 @@ export function withGuest(WrappedComponent) {
 
     useEffect(() => {
       if (!loading && isAuthenticated) {
-        // Redirect to appropriate dashboard based on user role
         if (user?.role === 'Coach') {
           router.push('/coach/dashboard')
         } else if (user?.role === 'Player') {
@@ -82,7 +74,6 @@ export function withGuest(WrappedComponent) {
       }
     }, [loading, isAuthenticated, user, router])
 
-    // Show loading while checking authentication
     if (loading) {
       return (
         <div className="min-h-screen bg-slate-900 flex items-center justify-center">
@@ -91,7 +82,6 @@ export function withGuest(WrappedComponent) {
       )
     }
 
-    // Don't render if authenticated (will redirect)
     if (isAuthenticated) {
       return null
     }
@@ -99,6 +89,4 @@ export function withGuest(WrappedComponent) {
     return <WrappedComponent {...props} />
   }
 }
-
-// Make withAuth the default export
 export default withAuth

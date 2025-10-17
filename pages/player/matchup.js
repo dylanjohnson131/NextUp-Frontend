@@ -19,12 +19,10 @@ function Matchup() {
               setNextGame(upcomingGames[0]) // Get the next upcoming game
             }
           } catch (error) {
-            console.error('Failed to load upcoming games:', error)
-          }
+            }
         }
       } catch (error) {
-        console.error('Failed to load matchup data:', error)
-      } finally {
+        } finally {
         setLoading(false)
       }
     }

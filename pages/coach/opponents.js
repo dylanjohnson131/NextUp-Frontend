@@ -19,8 +19,7 @@ function BrowseOpponents() {
         setTeams(teamsData || [])
         setCoach(coachInfo)
       } catch (error) {
-        console.error('Failed to load teams data:', error)
-      } finally {
+        } finally {
         setLoading(false)
       }
     }

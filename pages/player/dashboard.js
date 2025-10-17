@@ -29,12 +29,10 @@ function PlayerDashboard() {
               setNextGame(upcomingGames[0]) // Get the next upcoming game
             }
           } catch (error) {
-            console.error('Failed to load upcoming games:', error)
-          }
+            }
         }
       } catch (error) {
-        console.error('Failed to load dashboard data:', error)
-      } finally {
+        } finally {
         setLoading(false)
       }
     }

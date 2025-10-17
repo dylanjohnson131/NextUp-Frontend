@@ -29,13 +29,11 @@ function CoachDashboard() {
             const gamesData = await fetchUpcomingGames(coachInfo.team.teamId)
             setUpcomingGames(gamesData || [])
           } catch (error) {
-            console.error('Failed to fetch upcoming games:', error)
             setUpcomingGames([])
           }
         }
       } catch (error) {
-        console.error('Failed to load dashboard data:', error)
-      } finally {
+        } finally {
         setLoading(false)
       }
     }
