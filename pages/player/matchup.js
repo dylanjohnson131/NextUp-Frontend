@@ -4,6 +4,7 @@ import withAuth from '../../hocs/withAuth'
 
 function Matchup() {
   const [nextGame, setNextGame] = useState(null)
+  const [opponent, setOpponent] = useState(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -16,10 +17,20 @@ function Matchup() {
           try {
             const upcomingGames = await fetchUpcomingGames(currentPlayer.team.teamId)
             if (upcomingGames && upcomingGames.length > 0) {
-              setNextGame(upcomingGames[0]) // Get the next upcoming game
+              const game = upcomingGames[0];
+              setNextGame(game);
+              // Determine opponent based on backend's homeTeam/awayTeam and homeTeamId/awayTeamId
+              const myTeamId = currentPlayer.team.teamId;
+              let opp = null;
+              if (game.homeTeam?.homeTeamId === myTeamId) {
+                opp = game.awayTeam;
+              } else if (game.awayTeam?.awayTeamId === myTeamId) {
+                opp = game.homeTeam;
+              }
+              setOpponent(opp);
             }
           } catch (error) {
-            }
+          }
         }
       } catch (error) {
         } finally {
@@ -40,10 +51,10 @@ function Matchup() {
               <div className="text-center">
                 <p className="text-slate-400">Loading game information...</p>
               </div>
-            ) : nextGame ? (
+            ) : nextGame && opponent ? (
               <div className="text-center">
                 <p className="text-white font-medium text-lg">
-                  vs. {nextGame.awayTeam?.name || 'TBD'}
+                  vs. {opponent?.name || opponent?.Name || 'TBD'}
                 </p>
                 <p className="text-slate-400">
                   {nextGame.gameDate ? new Date(nextGame.gameDate).toLocaleDateString('en-US', {

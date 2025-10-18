@@ -8,6 +8,7 @@ function PlayerDashboard() {
   const [user, setUser] = useState(null)
   const [playerData, setPlayerData] = useState(null)
   const [nextGame, setNextGame] = useState(null)
+  const [opponent, setOpponent] = useState(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -26,10 +27,21 @@ function PlayerDashboard() {
           try {
             const upcomingGames = await fetchUpcomingGames(currentPlayer.team.teamId)
             if (upcomingGames && upcomingGames.length > 0) {
-              setNextGame(upcomingGames[0]) // Get the next upcoming game
+              const game = upcomingGames[0];
+              setNextGame(game);
+              // Determine opponent based on backend's HomeTeamId/AwayTeamId and HomeTeam/AwayTeam
+              const myTeamId = currentPlayer.team.teamId;
+              let opp = null;
+              // Backend returns HomeTeam and AwayTeam with homeTeamId/awayTeamId (lowercase in JSON)
+              if (game.homeTeam?.homeTeamId === myTeamId) {
+                opp = game.awayTeam;
+              } else if (game.awayTeam?.awayTeamId === myTeamId) {
+                opp = game.homeTeam;
+              }
+              setOpponent(opp);
             }
           } catch (error) {
-            }
+          }
         }
       } catch (error) {
         } finally {
@@ -123,16 +135,16 @@ function PlayerDashboard() {
         <div className="mt-8 bg-slate-800 rounded-lg p-6">
           <h2 className="text-xl font-semibold text-white mb-4">Next Game</h2>
           <div className="bg-slate-700 rounded p-4">
-            {nextGame ? (
+            {nextGame && opponent ? (
               <div className="flex justify-between items-center">
                 <div>
                   <p className="text-white font-medium">
-                    vs. {nextGame.awayTeam?.name || 'TBD'}
+                    vs. {opponent?.name || opponent?.Name || 'TBD'}
                   </p>
                   <p className="text-slate-400 text-sm">
                     {nextGame.gameDate ? new Date(nextGame.gameDate).toLocaleDateString('en-US', {
                       year: 'numeric',
-                      month: 'short', 
+                      month: 'short',
                       day: 'numeric'
                     }) : 'Date TBD'} - {nextGame.gameTime || 'Time TBD'}
                   </p>
@@ -140,7 +152,7 @@ function PlayerDashboard() {
                     <p className="text-slate-500 text-sm">{nextGame.location}</p>
                   )}
                 </div>
-                <button 
+                <button
                   onClick={() => router.push('/player/matchup')}
                   className="bg-cyan-400 text-slate-900 px-3 py-1 rounded text-sm hover:bg-cyan-300"
                 >
