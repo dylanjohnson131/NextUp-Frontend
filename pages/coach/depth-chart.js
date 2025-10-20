@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { getCurrentCoach, fetchTeamById } from '../../lib/api'
+import { normalizePosition, getStatsForPosition } from '../../lib/positions'
 import withAuth from '../../hocs/withAuth'
 import Link from 'next/link'
 
@@ -29,23 +30,23 @@ function DepthChart() {
     loadTeamData()
   }, [])
 
-  // Group players by position
+  // Group players by normalized position
   const groupPlayersByPosition = (players) => {
     const groups = {}
     players?.forEach(player => {
-      const position = player.position || 'Unknown'
-      if (!groups[position]) {
-        groups[position] = []
+      const canonicalPosition = normalizePosition(player.position || 'Unknown')
+      if (!groups[canonicalPosition]) {
+        groups[canonicalPosition] = []
       }
-      groups[position].push(player)
+      groups[canonicalPosition].push(player)
     })
     return groups
   }
 
-  // Define position categories
-  const offensePositions = ['QB', 'RB', 'WR', 'TE', 'LT', 'LG', 'C', 'RG', 'RT', 'Quarterback', 'Running Back', 'Wide Receiver', 'Tight End', 'Offensive Line']
-  const defensePositions = ['DE', 'DT', 'LB', 'CB', 'S', 'FS', 'SS', 'Linebacker', 'Safety', 'Defensive End', 'Cornerback']
-  const specialTeamsPositions = ['K', 'P', 'LS', 'Kicker', 'Punter']
+  // Canonical position sets for categorization
+  const offenseCanonical = new Set(['QB', 'RB', 'WR', 'TE', 'LT', 'LG', 'C', 'RG', 'RT', 'OL'])
+  const defenseCanonical = new Set(['DE', 'RDE','LDE','RDT', 'LDT', 'DT','WLB', 'MLB','SLB', 'LB' ,'CB', 'S', 'FS', 'SS', 'DL'])
+  const specialTeamsCanonical = new Set(['K', 'P'])
 
   const categorizePositions = (positionGroups) => {
     const offense = {}
@@ -53,15 +54,15 @@ function DepthChart() {
     const specialTeams = {}
     const other = {}
 
-    Object.entries(positionGroups).forEach(([position, players]) => {
-      if (offensePositions.some(pos => position.toLowerCase().includes(pos.toLowerCase()))) {
-        offense[position] = players
-      } else if (defensePositions.some(pos => position.toLowerCase().includes(pos.toLowerCase()))) {
-        defense[position] = players
-      } else if (specialTeamsPositions.some(pos => position.toLowerCase().includes(pos.toLowerCase()))) {
-        specialTeams[position] = players
+    Object.entries(positionGroups).forEach(([canonicalPosition, players]) => {
+      if (offenseCanonical.has(canonicalPosition)) {
+        offense[canonicalPosition] = players
+      } else if (defenseCanonical.has(canonicalPosition)) {
+        defense[canonicalPosition] = players
+      } else if (specialTeamsCanonical.has(canonicalPosition)) {
+        specialTeams[canonicalPosition] = players
       } else {
-        other[position] = players
+        other[canonicalPosition] = players
       }
     })
 
@@ -71,42 +72,27 @@ function DepthChart() {
   const positionGroups = teamData?.players ? groupPlayersByPosition(teamData.players) : {}
   const categorizedPositions = categorizePositions(positionGroups)
 
-  const renderPositionGroup = (positionName, players) => (
-    <div key={positionName} className="bg-slate-700 rounded-lg p-4">
-      <h3 className="font-semibold text-white mb-3 text-center border-b border-slate-600 pb-2">
-        {positionName}
-      </h3>
-      <div className="space-y-2">
-        {players.map((player, index) => (
-          <div key={player.playerId} className="bg-slate-600 rounded p-3 hover:bg-slate-500 transition-colors">
-            <div className="flex justify-between items-center">
-              <div>
-                <div className="font-medium text-white">
-                  #{player.jerseyNumber} 
-                  <Link href={`/coach/player/${player.playerId}`} className="text-cyan-400 hover:text-cyan-300 transition-colors ml-1">
-                    {player.name}
-                  </Link>
-                </div>
-                <div className="text-xs text-slate-300">
-                  {index === 0 && <span className="bg-green-600 px-1 rounded text-xs mr-1">1st</span>}
-                  {index === 1 && <span className="bg-yellow-600 px-1 rounded text-xs mr-1">2nd</span>}
-                  {index === 2 && <span className="bg-orange-600 px-1 rounded text-xs mr-1">3rd</span>}
-                  Age: {player.age}
-                  {player.height && ` • ${player.height}`}
-                  {player.weight && ` • ${player.weight}lbs`}
-                </div>
-              </div>
-            </div>
-          </div>
+  // Render a table row for a position and up to 4 players (starter, 2nd, 3rd, 4th)
+  const renderPositionRow = (positionName, players) => {
+    // Fill up to 4 slots with players or dashes
+    const slots = [0, 1, 2, 3].map(i => players[i] || null);
+    return (
+      <tr key={positionName}>
+        <td className="font-semibold text-slate-700 dark:text-white border px-2 py-1 whitespace-nowrap">{positionName}</td>
+        {slots.map((player, idx) => (
+          <td key={idx} className="border px-2 py-1 whitespace-nowrap">
+            {player ? (
+              <Link href={`/coach/player/${player.playerId}`} className="text-cyan-700 dark:text-cyan-400 font-medium hover:underline">
+                {player.name}
+              </Link>
+            ) : (
+              <span className="text-slate-400">-</span>
+            )}
+          </td>
         ))}
-        {players.length === 0 && (
-          <div className="text-center py-4 text-slate-400 text-sm">
-            No players assigned
-          </div>
-        )}
-      </div>
-    </div>
-  )
+      </tr>
+    );
+  };
 
   if (loading) {
     return (
@@ -168,12 +154,25 @@ function DepthChart() {
       {/* Depth Chart Content */}
       <div className="min-h-96">
         {activeTab === 'offense' && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {Object.entries(categorizedPositions.offense).map(([position, players]) =>
-              renderPositionGroup(position, players)
-            )}
+          <div className="overflow-x-auto">
+            <table className="min-w-full bg-white dark:bg-slate-800 rounded shadow">
+              <thead>
+                <tr>
+                  <th className="border px-2 py-2 text-left">POS</th>
+                  <th className="border px-2 py-2 text-left">STARTER</th>
+                  <th className="border px-2 py-2 text-left">2ND</th>
+                  <th className="border px-2 py-2 text-left">3RD</th>
+                  <th className="border px-2 py-2 text-left">4TH</th>
+                </tr>
+              </thead>
+              <tbody>
+                {Object.entries(categorizedPositions.offense).map(([position, players]) =>
+                  renderPositionRow(position, players)
+                )}
+              </tbody>
+            </table>
             {Object.keys(categorizedPositions.offense).length === 0 && (
-              <div className="col-span-full text-center py-12">
+              <div className="text-center py-12">
                 <p className="text-slate-400">No offensive players on the roster yet.</p>
               </div>
             )}
@@ -181,12 +180,25 @@ function DepthChart() {
         )}
 
         {activeTab === 'defense' && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {Object.entries(categorizedPositions.defense).map(([position, players]) =>
-              renderPositionGroup(position, players)
-            )}
+          <div className="overflow-x-auto">
+            <table className="min-w-full bg-white dark:bg-slate-800 rounded shadow">
+              <thead>
+                <tr>
+                  <th className="border px-2 py-2 text-left">POS</th>
+                  <th className="border px-2 py-2 text-left">STARTER</th>
+                  <th className="border px-2 py-2 text-left">2ND</th>
+                  <th className="border px-2 py-2 text-left">3RD</th>
+                  <th className="border px-2 py-2 text-left">4TH</th>
+                </tr>
+              </thead>
+              <tbody>
+                {Object.entries(categorizedPositions.defense).map(([position, players]) =>
+                  renderPositionRow(position, players)
+                )}
+              </tbody>
+            </table>
             {Object.keys(categorizedPositions.defense).length === 0 && (
-              <div className="col-span-full text-center py-12">
+              <div className="text-center py-12">
                 <p className="text-slate-400">No defensive players on the roster yet.</p>
               </div>
             )}
@@ -194,12 +206,25 @@ function DepthChart() {
         )}
 
         {activeTab === 'special' && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {Object.entries(categorizedPositions.specialTeams).map(([position, players]) =>
-              renderPositionGroup(position, players)
-            )}
+          <div className="overflow-x-auto">
+            <table className="min-w-full bg-white dark:bg-slate-800 rounded shadow">
+              <thead>
+                <tr>
+                  <th className="border px-2 py-2 text-left">POS</th>
+                  <th className="border px-2 py-2 text-left">STARTER</th>
+                  <th className="border px-2 py-2 text-left">2ND</th>
+                  <th className="border px-2 py-2 text-left">3RD</th>
+                  <th className="border px-2 py-2 text-left">4TH</th>
+                </tr>
+              </thead>
+              <tbody>
+                {Object.entries(categorizedPositions.specialTeams).map(([position, players]) =>
+                  renderPositionRow(position, players)
+                )}
+              </tbody>
+            </table>
             {Object.keys(categorizedPositions.specialTeams).length === 0 && (
-              <div className="col-span-full text-center py-12">
+              <div className="text-center py-12">
                 <p className="text-slate-400">No special teams players on the roster yet.</p>
               </div>
             )}

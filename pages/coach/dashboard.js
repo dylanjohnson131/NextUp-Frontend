@@ -90,31 +90,6 @@ function CoachDashboard() {
               )}
             </div>
           </div>
-
-          {/* Quick Actions */}
-          <div className="bg-slate-800 rounded-lg p-6">
-            <h2 className="text-xl font-semibold text-white mb-4">Quick Actions</h2>
-            <div className="space-y-3">
-              <button 
-                onClick={() => router.push('/coach/depth-chart')}
-                className="w-full bg-purple-600 text-white px-4 py-3 rounded font-medium hover:bg-purple-700 transition-colors"
-              >
-                Manage Depth Chart
-              </button>
-              <button 
-                onClick={() => router.push('/coach/game-stats')}
-                className="w-full bg-cyan-400 text-slate-900 px-4 py-3 rounded font-medium hover:bg-cyan-300 transition-colors"
-              >
-                Record Game Stats
-              </button>
-              <button 
-                onClick={() => router.push('/coach/opponents')}
-                className="w-full bg-slate-700 text-white px-4 py-3 rounded font-medium hover:bg-slate-600 transition-colors"
-              >
-                Browse Opponents
-              </button>
-            </div>
-          </div>
         </div>
 
         {/* Upcoming Games */}

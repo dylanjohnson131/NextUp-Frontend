@@ -123,40 +123,6 @@ function AthleticDirectorDashboard() {
         </div>
 
         {/* Dashboard Content */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6">
-            <h3 className="text-xl font-semibold text-white mb-4">Season Progress</h3>
-            <div className="space-y-4">
-              <div>
-                <div className="flex justify-between text-sm mb-2">
-                  <span className="text-slate-400">Games Completed</span>
-                  <span className="text-white">
-                    {dashboardData.completedGames} / {dashboardData.totalGames}
-                  </span>
-                </div>
-                <div className="w-full bg-slate-700 rounded-full h-2">
-                  <div 
-                    className="bg-gradient-to-r from-cyan-500 to-blue-500 h-2 rounded-full transition-all duration-500"
-                    style={{ 
-                      width: dashboardData.totalGames > 0 
-                        ? `${(dashboardData.completedGames / dashboardData.totalGames) * 100}%` 
-                        : '0%' 
-                    }}
-                  ></div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6">
-            <h3 className="text-xl font-semibold text-white mb-4">Recent Activity</h3>
-            <div className="space-y-3 text-sm">
-              <div className="text-slate-400">
-                Activity feed will be implemented in future updates
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   )

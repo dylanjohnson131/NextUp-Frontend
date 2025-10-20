@@ -1,36 +1,51 @@
+import { useEffect, useState } from 'react'
 import withAuth from '../../hocs/withAuth'
+import PlayerStatsCard from '../../components/PlayerStatsCard'
+import { fetchPlayerStats, getCurrentPlayer } from '../../lib/api'
 
 function MyStats() {
+  const [player, setPlayer] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    const loadPlayer = async () => {
+      try {
+        setLoading(true)
+  const playerData = await getCurrentPlayer()
+        const stats = await fetchPlayerStats(playerData.playerId).catch(() => null)
+        setPlayer({ ...playerData, stats })
+      } catch (err) {
+        console.error('Player info error:', err)
+        setError('Failed to load your player information')
+      } finally {
+        setLoading(false)
+      }
+    }
+    loadPlayer()
+  }, [])
+
+  if (loading) {
+    return (
+      <main className="container mx-auto px-4 py-8">
+        <div className="text-center text-white">Loading your stats...</div>
+      </main>
+    )
+  }
+
+  if (error || !player) {
+    return (
+      <main className="container mx-auto px-4 py-8">
+        <div className="text-center text-red-400">{error || 'Player not found'}</div>
+      </main>
+    )
+  }
+
   return (
     <main className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold text-white mb-6">My Stats</h1>
-        
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Position-Based Stats */}
-          <div className="bg-slate-800 rounded-lg p-6">
-            <h2 className="text-xl font-semibold text-white mb-4">Position Statistics</h2>
-            <p className="text-slate-400">Comprehensive position-based stat tracking coming soon...</p>
-          </div>
-          
-          {/* Performance Trend */}
-          <div className="bg-slate-800 rounded-lg p-6">
-            <h2 className="text-xl font-semibold text-white mb-4">Performance Trend</h2>
-            <p className="text-slate-400">Line chart showing game-by-game performance coming soon...</p>
-          </div>
-        </div>
-        
-        {/* Position Goals */}
-        <div className="mt-8 bg-slate-800 rounded-lg p-6">
-          <h2 className="text-xl font-semibold text-white mb-4">Position Goals</h2>
-          <p className="text-slate-400">Position-based goals and targets coming soon...</p>
-        </div>
-        
-        {/* Position Insights */}
-        <div className="mt-8 bg-slate-800 rounded-lg p-6">
-          <h2 className="text-xl font-semibold text-white mb-4">Position Insights</h2>
-          <p className="text-slate-400">AI-powered analysis of your strongest positions based on stats coming soon...</p>
-        </div>
-      </main>
+      <h1 className="text-3xl font-bold text-white mb-6">My Stats</h1>
+      <PlayerStatsCard player={player} />
+    </main>
   )
 }
 
