@@ -53,87 +53,85 @@ function CoachDashboard() {
 
   return (
     <main className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-white mb-2">Coach Dashboard</h1>
-          <p className="text-slate-400">Welcome back! Here's an overview of your teams and recent activity.</p>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* My Teams Section */}
-          <div className="bg-slate-800 rounded-lg p-6">
-            <h2 className="text-xl font-semibold text-white mb-4">My Teams</h2>
-            <div className="space-y-4">
+        <main style={{ maxWidth: '900px', margin: '0 auto', padding: '2.5rem 1.5rem' }}>
+          <div style={{ marginBottom: '2.5rem' }}>
+            <h1 style={{ fontSize: '2.5rem', fontWeight: 700, color: 'var(--primary)', marginBottom: '0.5rem', letterSpacing: '0.5px' }}>Coach Dashboard</h1>
+            <p style={{ color: '#b6c2b7', fontSize: '1.1rem', marginBottom: 0 }}>Welcome back! Here's an overview of your teams and recent activity.</p>
+          </div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2rem' }}>
+            {/* My Teams Section */}
+            <div style={{ flex: '1 1 340px', background: '#222', borderRadius: '14px', boxShadow: '0 2px 12px rgba(0,0,0,0.10)', padding: '2rem 1.5rem', minWidth: '300px' }}>
+              <h2 style={{ fontSize: '1.4rem', fontWeight: 600, color: 'var(--primary)', marginBottom: '1.2rem' }}>My Teams</h2>
               {coach?.team ? (
                 <div 
                   onClick={() => router.push('/coach/depth-chart')}
-                  className="bg-slate-700 rounded p-4 cursor-pointer hover:bg-slate-600 transition-colors"
+                  style={{ background: '#282c34', borderRadius: '10px', padding: '1.2rem', cursor: 'pointer', boxShadow: '0 1px 6px rgba(0,0,0,0.07)', transition: 'background 0.2s', marginBottom: '0.5rem' }}
+                  onMouseOver={e => e.currentTarget.style.background = '#2a3440'}
+                  onMouseOut={e => e.currentTarget.style.background = '#282c34'}
                 >
-                  <div className="flex justify-between items-start">
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                     <div>
-                      <h3 className="font-semibold text-white">
+                      <h3 style={{ fontWeight: 600, color: 'var(--primary)', fontSize: '1.15rem', margin: 0 }}>
                         {coach.team.name}
-                        <span className="text-slate-400 font-normal"> (2025-2026)</span>
+                        <span style={{ color: '#b6c2b7', fontWeight: 400, fontSize: '1rem' }}> (2025-2026)</span>
                       </h3>
-                      <p className="text-slate-400 text-sm">{coach.team.location}</p>
+                      <p style={{ color: '#b6c2b7', fontSize: '0.98rem', margin: '0.2rem 0 0 0' }}>{coach.team.location}</p>
                     </div>
-                    <div className="text-right">
-                      <span className="text-cyan-400 text-sm">
+                    <div style={{ textAlign: 'right' }}>
+                      <span style={{ color: 'var(--accent)', fontSize: '0.98rem', fontWeight: 500 }}>
                         Click to manage →
                       </span>
                     </div>
                   </div>
                 </div>
               ) : (
-                <div className="bg-slate-700 rounded p-4 text-center">
-                  <p className="text-slate-400">No team assigned yet</p>
+                <div style={{ background: '#282c34', borderRadius: '10px', padding: '1.2rem', textAlign: 'center', color: '#b6c2b7', fontSize: '1rem' }}>
+                  No team assigned yet
+                </div>
+              )}
+            </div>
+            {/* Upcoming Games */}
+            <div style={{ flex: '1 1 340px', background: '#222', borderRadius: '14px', boxShadow: '0 2px 12px rgba(0,0,0,0.10)', padding: '2rem 1.5rem', minWidth: '300px' }}>
+              <h2 style={{ fontSize: '1.4rem', fontWeight: 600, color: 'var(--primary)', marginBottom: '1.2rem' }}>Upcoming Games</h2>
+              {upcomingGames.length > 0 ? (
+                upcomingGames.slice(0, 2).map((game, index) => (
+                  <div key={game.gameId || index} style={{ background: '#282c34', borderRadius: '10px', padding: '1.2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.7rem', boxShadow: '0 1px 6px rgba(0,0,0,0.07)' }}>
+                    <div>
+                      <p style={{ color: 'var(--primary)', fontWeight: 600, fontSize: '1.08rem', margin: 0 }}>
+                        {game.isHome ? 'vs.' : '@'} {game.opponent?.name || 'TBD'}
+                      </p>
+                      <p style={{ color: '#b6c2b7', fontSize: '0.98rem', margin: '0.2rem 0 0 0' }}>
+                        {new Date(game.gameDate).toLocaleDateString('en-US', {
+                          month: 'short',
+                          day: 'numeric',
+                          year: 'numeric'
+                        })} - {new Date(game.gameDate).toLocaleTimeString('en-US', {
+                          hour: 'numeric',
+                          minute: '2-digit',
+                          hour12: true
+                        })}
+                      </p>
+                      {game.location && (
+                        <p style={{ color: '#b6c2b7', fontSize: '0.92rem', margin: '0.15rem 0 0 0' }}>{game.location}</p>
+                      )}
+                    </div>
+                    <button 
+                      onClick={() => router.push(`/coach/opponent/${game.opponent?.teamId}`)}
+                      style={{ background: 'var(--primary)', color: '#fff', padding: '0.5rem 1.1rem', borderRadius: '8px', fontWeight: 600, fontSize: '0.98rem', border: 'none', cursor: game.opponent?.teamId ? 'pointer' : 'not-allowed', opacity: game.opponent?.teamId ? 1 : 0.6, transition: 'background 0.2s' }}
+                      disabled={!game.opponent?.teamId}
+                    >
+                      Scout Team
+                    </button>
+                  </div>
+                ))
+              ) : (
+                <div style={{ background: '#282c34', borderRadius: '10px', padding: '1.2rem', textAlign: 'center', color: '#b6c2b7', fontSize: '1rem' }}>
+                  No upcoming games scheduled
                 </div>
               )}
             </div>
           </div>
-        </div>
-
-        {/* Upcoming Games */}
-        <div className="mt-8 bg-slate-800 rounded-lg p-6">
-          <h2 className="text-xl font-semibold text-white mb-4">Upcoming Games</h2>
-          <div className="space-y-3">
-            {upcomingGames.length > 0 ? (
-              upcomingGames.slice(0, 2).map((game, index) => (
-                <div key={game.gameId || index} className="bg-slate-700 rounded p-4 flex justify-between items-center">
-                  <div>
-                    <p className="text-white font-medium">
-                      {game.isHome ? 'vs.' : '@'} {game.opponent?.name || 'TBD'}
-                    </p>
-                    <p className="text-slate-400 text-sm">
-                      {new Date(game.gameDate).toLocaleDateString('en-US', {
-                        month: 'short',
-                        day: 'numeric',
-                        year: 'numeric'
-                      })} - {new Date(game.gameDate).toLocaleTimeString('en-US', {
-                        hour: 'numeric',
-                        minute: '2-digit',
-                        hour12: true
-                      })}
-                    </p>
-                    {game.location && (
-                      <p className="text-slate-400 text-xs">{game.location}</p>
-                    )}
-                  </div>
-                  <button 
-                    onClick={() => router.push(`/coach/opponent/${game.opponent?.teamId}`)}
-                    className="bg-slate-600 text-white px-3 py-1 rounded text-sm hover:bg-slate-500 transition-colors"
-                    disabled={!game.opponent?.teamId}
-                  >
-                    Scout Team
-                  </button>
-                </div>
-              ))
-            ) : (
-              <div className="bg-slate-700 rounded p-4 text-center">
-                <p className="text-slate-400">No upcoming games scheduled</p>
-              </div>
-            )}
-          </div>
-        </div>
+        </main>
       </main>
   )
 }

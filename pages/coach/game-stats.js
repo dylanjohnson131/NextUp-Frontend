@@ -2,31 +2,25 @@ import withAuth from '../../hocs/withAuth'
 
 function GameStats() {
   return (
-    <main className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold text-white mb-6">Game Stats</h1>
-        
-        <div className="bg-slate-800 rounded-lg p-6">
-          <h2 className="text-xl font-semibold text-white mb-4">Live Game Statistics</h2>
-          
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="bg-slate-700 rounded p-4">
-              <h3 className="text-white font-medium mb-3">Current Game</h3>
-              <p className="text-slate-400">No active game</p>
-            </div>
-            
-            <div className="bg-slate-700 rounded p-4">
-              <h3 className="text-white font-medium mb-3">Quick Stats Entry</h3>
-              <p className="text-slate-400">Real-time player statistics tracking interface coming soon...</p>
-            </div>
+    <main style={{ maxWidth: '900px', margin: '0 auto', padding: '2.5rem 1.5rem' }}>
+      <h1 style={{ fontSize: '2.5rem', fontWeight: 700, color: 'var(--primary)', marginBottom: '1.2rem', letterSpacing: '0.5px' }}>Game Stats</h1>
+      <div style={{ background: '#222', borderRadius: '14px', boxShadow: '0 2px 12px rgba(0,0,0,0.10)', padding: '2rem 1.5rem' }}>
+        <h2 style={{ fontSize: '1.4rem', fontWeight: 600, color: 'var(--primary)', marginBottom: '1.2rem' }}>Live Game Statistics</h2>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2rem', marginBottom: '2rem' }}>
+          <div style={{ background: '#282c34', borderRadius: '10px', padding: '1.5rem', minWidth: '280px', flex: '1 1 280px', boxShadow: '0 1px 6px rgba(0,0,0,0.07)' }}>
+            <h3 style={{ color: 'var(--primary)', fontWeight: 600, fontSize: '1.15rem', marginBottom: '0.7rem' }}>Current Game</h3>
+            <p style={{ color: '#b6c2b7', fontSize: '1.05rem', margin: 0 }}>No active game</p>
           </div>
-          
-          <div className="mt-6 p-4 bg-slate-700 rounded">
-            <p className="text-slate-400 text-center">
-              Live game statistics tracking features will allow you to update player stats in real-time during games.
-            </p>
+          <div style={{ background: '#282c34', borderRadius: '10px', padding: '1.5rem', minWidth: '280px', flex: '1 1 280px', boxShadow: '0 1px 6px rgba(0,0,0,0.07)' }}>
+            <h3 style={{ color: 'var(--primary)', fontWeight: 600, fontSize: '1.15rem', marginBottom: '0.7rem' }}>Quick Stats Entry</h3>
+            <p style={{ color: '#b6c2b7', fontSize: '1.05rem', margin: 0 }}>Real-time player statistics tracking interface coming soon...</p>
           </div>
         </div>
-      </main>
+        <div style={{ background: '#282c34', borderRadius: '10px', padding: '1.2rem', textAlign: 'center', color: '#b6c2b7', fontSize: '1.1rem' }}>
+          <span style={{ color: 'var(--accent)', fontWeight: 600 }}>Info:</span> Live game statistics tracking features will allow you to update player stats in real-time during games.
+        </div>
+      </div>
+    </main>
   )
 }
 

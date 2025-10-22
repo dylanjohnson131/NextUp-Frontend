@@ -98,217 +98,436 @@ function Register() {
   }
 
   return (
-    <main className="container">
-      <h1>Create Account</h1>
-      
-      <div className="mt-4">
-        <label className="block mb-2">I want to register as a:</label>
-        <div className="flex gap-4 mb-6">
-          <button 
-            type="button"
-            onClick={() => setUserType('player')}
-            className={`px-4 py-2 rounded ${userType === 'player' ? 'bg-cyan-400 text-slate-900' : 'bg-slate-700 text-white'}`}
-          >
-            Player
-          </button>
-          <button 
-            type="button"
-            onClick={() => setUserType('coach')}
-            className={`px-4 py-2 rounded ${userType === 'coach' ? 'bg-cyan-400 text-slate-900' : 'bg-slate-700 text-white'}`}
-          >
-            Coach
-          </button>
+    <main style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(135deg, #0a192f 0%, #1e293b 100%)', paddingTop: '7rem' }}>
+      <section style={{
+        background: 'rgba(20, 30, 50, 0.98)',
+        borderRadius: '18px',
+        boxShadow: '0 4px 32px rgba(0,0,0,0.18)',
+        padding: '2.5rem 2rem',
+        maxWidth: 440,
+        width: '100%',
+        textAlign: 'center',
+        border: '1.5px solid var(--primary, #00e0ff)'
+      }}>
+        <img
+          src="/nextup-logo.png"
+          alt="NextUp Logo"
+          style={{
+            width: 120,
+            height: 'auto',
+            margin: '0 auto 1.2rem',
+            display: 'block',
+            boxShadow: '0 4px 18px #00e0ff33, 0 1.5px 8px #000a',
+            background: 'transparent',
+            objectFit: 'contain',
+          }}
+        />
+        <h1 style={{
+          fontSize: '2rem',
+          fontWeight: 800,
+          color: 'var(--primary, #00e0ff)',
+          letterSpacing: '1px',
+          marginBottom: '1.5rem',
+          textShadow: '0 2px 8px #00e0ff33'
+        }}>Create Account</h1>
+        <div style={{ marginBottom: '1.5rem' }}>
+          <label style={{ color: '#b6c2d1', fontWeight: 600, marginBottom: 6, display: 'block' }}>I want to register as a:</label>
+          <div style={{ display: 'flex', gap: '1.2rem', justifyContent: 'center', marginTop: 8 }}>
+            <button
+              type="button"
+              onClick={() => setUserType('player')}
+              style={{
+                padding: '0.7rem 2.2rem',
+                borderRadius: '10px',
+                background: userType === 'player' ? 'var(--primary, #00e0ff)' : '#1e293b',
+                color: userType === 'player' ? '#1e293b' : '#b6c2d1',
+                fontWeight: 700,
+                fontSize: '1.05rem',
+                border: userType === 'player' ? 'none' : '1.5px solid #283e51',
+                boxShadow: userType === 'player' ? '0 2px 8px #00e0ff33' : 'none',
+                cursor: 'pointer',
+                transition: 'background 0.2s, color 0.2s'
+              }}
+            >Player</button>
+            <button
+              type="button"
+              onClick={() => setUserType('coach')}
+              style={{
+                padding: '0.7rem 2.2rem',
+                borderRadius: '10px',
+                background: userType === 'coach' ? 'var(--primary, #00e0ff)' : '#1e293b',
+                color: userType === 'coach' ? '#1e293b' : '#b6c2d1',
+                fontWeight: 700,
+                fontSize: '1.05rem',
+                border: userType === 'coach' ? 'none' : '1.5px solid #283e51',
+                boxShadow: userType === 'coach' ? '0 2px 8px #00e0ff33' : 'none',
+                cursor: 'pointer',
+                transition: 'background 0.2s, color 0.2s'
+              }}
+            >Coach</button>
+          </div>
         </div>
-      </div>
-
-      <form onSubmit={handleSubmit} className="max-w-md space-y-4">
-        {/* Common Fields */}
-        <div>
-          <label className="block">First Name *</label>
-          <input 
-            type="text" 
-            required
-            value={firstName} 
-            onChange={e => setFirstName(e.target.value)} 
-            className="w-full p-2 rounded bg-slate-800" 
-          />
-        </div>
-        
-        <div>
-          <label className="block">Last Name *</label>
-          <input 
-            type="text" 
-            required
-            value={lastName} 
-            onChange={e => setLastName(e.target.value)} 
-            className="w-full p-2 rounded bg-slate-800" 
-          />
-        </div>
-        
-        <div>
-          <label className="block">Email *</label>
-          <input 
-            type="email" 
-            required
-            value={email} 
-            onChange={e => setEmail(e.target.value)} 
-            className="w-full p-2 rounded bg-slate-800" 
-          />
-        </div>
-        
-        <div>
-          <label className="block">Password *</label>
-          <input 
-            type="password" 
-            required
-            value={password} 
-            onChange={e => setPassword(e.target.value)} 
-            className="w-full p-2 rounded bg-slate-800" 
-          />
-        </div>
-
-        {/* Player Specific Fields */}
-        {userType === 'player' && (
-          <>
-            <div>
-              <label className="block">Team *</label>
-              <select 
-                required
-                value={teamId} 
-                onChange={e => setTeamId(e.target.value)} 
-                className="w-full p-2 rounded bg-slate-800"
-              >
-                <option key="select-team" value="">Select a team</option>
-                {teams && teams.length > 0 ? (
-                  teams.map(team => (
-                    <option key={team.teamId} value={team.teamId}>
-                      {team.name} - {team.location}
-                    </option>
-                  ))
-                ) : (
-                  <option key="no-teams" value="" disabled>No teams available</option>
-                )}
-              </select>
-            </div>
-            
-            <div>
-              <label className="block">Position</label>
-              <input 
-                type="text" 
-                value={position} 
-                onChange={e => setPosition(e.target.value)} 
-                placeholder="e.g., Forward, Guard, etc."
-                className="w-full p-2 rounded bg-slate-800" 
-              />
-            </div>
-            
-            <div className="flex gap-4">
-              <div className="flex-1">
-                <label className="block">Age</label>
-                <input 
-                  type="number" 
-                  value={age} 
-                  onChange={e => setAge(e.target.value)} 
-                  className="w-full p-2 rounded bg-slate-800" 
+        <form onSubmit={handleSubmit} style={{ marginBottom: '1.5rem', textAlign: 'left' }}>
+          {/* Common Fields */}
+          <div>
+            <label style={{ color: '#b6c2d1', fontWeight: 600, marginBottom: 6, display: 'block' }}>First Name *</label>
+            <input
+              type="text"
+              required
+              value={firstName}
+              onChange={e => setFirstName(e.target.value)}
+              style={{
+                width: '100%',
+                padding: '0.7rem 1rem',
+                borderRadius: '8px',
+                background: '#1e293b',
+                color: '#fff',
+                border: '1.5px solid #283e51',
+                fontSize: '1rem',
+                marginBottom: '1.2rem',
+                outline: 'none',
+                boxShadow: '0 1px 4px #00e0ff11',
+                transition: 'border 0.2s'
+              }}
+              autoComplete="given-name"
+            />
+          </div>
+          <div>
+            <label style={{ color: '#b6c2d1', fontWeight: 600, marginBottom: 6, display: 'block' }}>Last Name *</label>
+            <input
+              type="text"
+              required
+              value={lastName}
+              onChange={e => setLastName(e.target.value)}
+              style={{
+                width: '100%',
+                padding: '0.7rem 1rem',
+                borderRadius: '8px',
+                background: '#1e293b',
+                color: '#fff',
+                border: '1.5px solid #283e51',
+                fontSize: '1rem',
+                marginBottom: '1.2rem',
+                outline: 'none',
+                boxShadow: '0 1px 4px #00e0ff11',
+                transition: 'border 0.2s'
+              }}
+              autoComplete="family-name"
+            />
+          </div>
+          <div>
+            <label style={{ color: '#b6c2d1', fontWeight: 600, marginBottom: 6, display: 'block' }}>Email *</label>
+            <input
+              type="email"
+              required
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              style={{
+                width: '100%',
+                padding: '0.7rem 1rem',
+                borderRadius: '8px',
+                background: '#1e293b',
+                color: '#fff',
+                border: '1.5px solid #283e51',
+                fontSize: '1rem',
+                marginBottom: '1.2rem',
+                outline: 'none',
+                boxShadow: '0 1px 4px #00e0ff11',
+                transition: 'border 0.2s'
+              }}
+              autoComplete="email"
+            />
+          </div>
+          <div>
+            <label style={{ color: '#b6c2d1', fontWeight: 600, marginBottom: 6, display: 'block' }}>Password *</label>
+            <input
+              type="password"
+              required
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              style={{
+                width: '100%',
+                padding: '0.7rem 1rem',
+                borderRadius: '8px',
+                background: '#1e293b',
+                color: '#fff',
+                border: '1.5px solid #283e51',
+                fontSize: '1rem',
+                marginBottom: '1.2rem',
+                outline: 'none',
+                boxShadow: '0 1px 4px #00e0ff11',
+                transition: 'border 0.2s'
+              }}
+              autoComplete="new-password"
+            />
+          </div>
+          {/* Player Specific Fields */}
+          {userType === 'player' && (
+            <>
+              <div>
+                <label style={{ color: '#b6c2d1', fontWeight: 600, marginBottom: 6, display: 'block' }}>Team *</label>
+                <select
+                  required
+                  value={teamId}
+                  onChange={e => setTeamId(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '0.7rem 1rem',
+                    borderRadius: '8px',
+                    background: '#1e293b',
+                    color: '#fff',
+                    border: '1.5px solid #283e51',
+                    fontSize: '1rem',
+                    marginBottom: '1.2rem',
+                    outline: 'none',
+                    boxShadow: '0 1px 4px #00e0ff11',
+                    transition: 'border 0.2s'
+                  }}
+                >
+                  <option key="select-team" value="">Select a team</option>
+                  {teams && teams.length > 0 ? (
+                    teams.map(team => (
+                      <option key={team.teamId} value={team.teamId}>
+                        {team.name} - {team.location}
+                      </option>
+                    ))
+                  ) : (
+                    <option key="no-teams" value="" disabled>No teams available</option>
+                  )}
+                </select>
+              </div>
+              <div>
+                <label style={{ color: '#b6c2d1', fontWeight: 600, marginBottom: 6, display: 'block' }}>Position</label>
+                <input
+                  type="text"
+                  value={position}
+                  onChange={e => setPosition(e.target.value)}
+                  placeholder="e.g., Forward, Guard, etc."
+                  style={{
+                    width: '100%',
+                    padding: '0.7rem 1rem',
+                    borderRadius: '8px',
+                    background: '#1e293b',
+                    color: '#fff',
+                    border: '1.5px solid #283e51',
+                    fontSize: '1rem',
+                    marginBottom: '1.2rem',
+                    outline: 'none',
+                    boxShadow: '0 1px 4px #00e0ff11',
+                    transition: 'border 0.2s'
+                  }}
                 />
               </div>
-              <div className="flex-1">
-                <label className="block">Jersey #</label>
-                <input 
-                  type="number" 
-                  value={jerseyNumber} 
-                  onChange={e => setJerseyNumber(e.target.value)} 
-                  className="w-full p-2 rounded bg-slate-800" 
+              <div style={{ display: 'flex', gap: '1.2rem' }}>
+                <div style={{ flex: 1 }}>
+                  <label style={{ color: '#b6c2d1', fontWeight: 600, marginBottom: 6, display: 'block' }}>Age</label>
+                  <input
+                    type="number"
+                    value={age}
+                    onChange={e => setAge(e.target.value)}
+                    style={{
+                      width: '100%',
+                      padding: '0.7rem 1rem',
+                      borderRadius: '8px',
+                      background: '#1e293b',
+                      color: '#fff',
+                      border: '1.5px solid #283e51',
+                      fontSize: '1rem',
+                      marginBottom: '1.2rem',
+                      outline: 'none',
+                      boxShadow: '0 1px 4px #00e0ff11',
+                      transition: 'border 0.2s'
+                    }}
+                  />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <label style={{ color: '#b6c2d1', fontWeight: 600, marginBottom: 6, display: 'block' }}>Jersey #</label>
+                  <input
+                    type="number"
+                    value={jerseyNumber}
+                    onChange={e => setJerseyNumber(e.target.value)}
+                    style={{
+                      width: '100%',
+                      padding: '0.7rem 1rem',
+                      borderRadius: '8px',
+                      background: '#1e293b',
+                      color: '#fff',
+                      border: '1.5px solid #283e51',
+                      fontSize: '1rem',
+                      marginBottom: '1.2rem',
+                      outline: 'none',
+                      boxShadow: '0 1px 4px #00e0ff11',
+                      transition: 'border 0.2s'
+                    }}
+                  />
+                </div>
+              </div>
+              <div style={{ display: 'flex', gap: '1.2rem' }}>
+                <div style={{ flex: 1 }}>
+                  <label style={{ color: '#b6c2d1', fontWeight: 600, marginBottom: 6, display: 'block' }}>Height</label>
+                  <input
+                    type="text"
+                    value={height}
+                    onChange={e => setHeight(e.target.value)}
+                    placeholder={'e.g., 6\'2"'}
+                    style={{
+                      width: '100%',
+                      padding: '0.7rem 1rem',
+                      borderRadius: '8px',
+                      background: '#1e293b',
+                      color: '#fff',
+                      border: '1.5px solid #283e51',
+                      fontSize: '1rem',
+                      marginBottom: '1.2rem',
+                      outline: 'none',
+                      boxShadow: '0 1px 4px #00e0ff11',
+                      transition: 'border 0.2s'
+                    }}
+                  />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <label style={{ color: '#b6c2d1', fontWeight: 600, marginBottom: 6, display: 'block' }}>Weight (lbs)</label>
+                  <input
+                    type="number"
+                    value={weight}
+                    onChange={e => setWeight(e.target.value)}
+                    style={{
+                      width: '100%',
+                      padding: '0.7rem 1rem',
+                      borderRadius: '8px',
+                      background: '#1e293b',
+                      color: '#fff',
+                      border: '1.5px solid #283e51',
+                      fontSize: '1rem',
+                      marginBottom: '1.2rem',
+                      outline: 'none',
+                      boxShadow: '0 1px 4px #00e0ff11',
+                      transition: 'border 0.2s'
+                    }}
+                  />
+                </div>
+              </div>
+            </>
+          )}
+          {/* Coach Specific Fields */}
+          {userType === 'coach' && (
+            <>
+              <div>
+                <label style={{ color: '#b6c2d1', fontWeight: 600, marginBottom: 6, display: 'block' }}>Years of Experience</label>
+                <input
+                  type="number"
+                  value={experienceYears}
+                  onChange={e => setExperienceYears(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '0.7rem 1rem',
+                    borderRadius: '8px',
+                    background: '#1e293b',
+                    color: '#fff',
+                    border: '1.5px solid #283e51',
+                    fontSize: '1rem',
+                    marginBottom: '1.2rem',
+                    outline: 'none',
+                    boxShadow: '0 1px 4px #00e0ff11',
+                    transition: 'border 0.2s'
+                  }}
                 />
               </div>
-            </div>
-            
-            <div className="flex gap-4">
-              <div className="flex-1">
-                <label className="block">Height</label>
-                <input 
-                  type="text" 
-                  value={height} 
-                  onChange={e => setHeight(e.target.value)} 
-                  placeholder="e.g., 6'2&quot;"
-                  className="w-full p-2 rounded bg-slate-800" 
+              <div>
+                <label style={{ color: '#b6c2d1', fontWeight: 600, marginBottom: 6, display: 'block' }}>Specialty</label>
+                <input
+                  type="text"
+                  value={specialty}
+                  onChange={e => setSpecialty(e.target.value)}
+                  placeholder="e.g., Offensive Strategy, Defense"
+                  style={{
+                    width: '100%',
+                    padding: '0.7rem 1rem',
+                    borderRadius: '8px',
+                    background: '#1e293b',
+                    color: '#fff',
+                    border: '1.5px solid #283e51',
+                    fontSize: '1rem',
+                    marginBottom: '1.2rem',
+                    outline: 'none',
+                    boxShadow: '0 1px 4px #00e0ff11',
+                    transition: 'border 0.2s'
+                  }}
                 />
               </div>
-              <div className="flex-1">
-                <label className="block">Weight (lbs)</label>
-                <input 
-                  type="number" 
-                  value={weight} 
-                  onChange={e => setWeight(e.target.value)} 
-                  className="w-full p-2 rounded bg-slate-800" 
+              <div>
+                <label style={{ color: '#b6c2d1', fontWeight: 600, marginBottom: 6, display: 'block' }}>Certification</label>
+                <input
+                  type="text"
+                  value={certification}
+                  onChange={e => setCertification(e.target.value)}
+                  placeholder="e.g., Level 3 Coach"
+                  style={{
+                    width: '100%',
+                    padding: '0.7rem 1rem',
+                    borderRadius: '8px',
+                    background: '#1e293b',
+                    color: '#fff',
+                    border: '1.5px solid #283e51',
+                    fontSize: '1rem',
+                    marginBottom: '1.2rem',
+                    outline: 'none',
+                    boxShadow: '0 1px 4px #00e0ff11',
+                    transition: 'border 0.2s'
+                  }}
                 />
               </div>
-            </div>
-          </>
-        )}
-
-        {/* Coach Specific Fields */}
-        {userType === 'coach' && (
-          <>
-            <div>
-              <label className="block">Years of Experience</label>
-              <input 
-                type="number" 
-                value={experienceYears} 
-                onChange={e => setExperienceYears(e.target.value)} 
-                className="w-full p-2 rounded bg-slate-800" 
-              />
-            </div>
-            
-            <div>
-              <label className="block">Specialty</label>
-              <input 
-                type="text" 
-                value={specialty} 
-                onChange={e => setSpecialty(e.target.value)} 
-                placeholder="e.g., Offensive Strategy, Defense"
-                className="w-full p-2 rounded bg-slate-800" 
-              />
-            </div>
-            
-            <div>
-              <label className="block">Certification</label>
-              <input 
-                type="text" 
-                value={certification} 
-                onChange={e => setCertification(e.target.value)} 
-                placeholder="e.g., Level 3 Coach"
-                className="w-full p-2 rounded bg-slate-800" 
-              />
-            </div>
-            
-            <div>
-              <label className="block">Bio</label>
-              <textarea 
-                value={bio} 
-                onChange={e => setBio(e.target.value)} 
-                placeholder="Tell us about yourself..."
-                rows={3}
-                className="w-full p-2 rounded bg-slate-800" 
-              />
-            </div>
-          </>
-        )}
-
-        <button 
-          type="submit" 
-          disabled={loading}
-          className="w-full bg-cyan-400 text-slate-900 px-4 py-2 rounded font-medium disabled:opacity-50"
-        >
-          {loading ? 'Creating Account...' : `Register as ${userType === 'player' ? 'Player' : 'Coach'}`}
-        </button>
-        
-        {error && <p className="text-red-400 mt-2">{error}</p>}
-      </form>
-
-      <div className="mt-6">
-        <p>Already have an account? <a href="/login" className="text-cyan-400 hover:underline">Sign in</a></p>
-      </div>
+              <div>
+                <label style={{ color: '#b6c2d1', fontWeight: 600, marginBottom: 6, display: 'block' }}>Bio</label>
+                <textarea
+                  value={bio}
+                  onChange={e => setBio(e.target.value)}
+                  placeholder="Tell us about yourself..."
+                  rows={3}
+                  style={{
+                    width: '100%',
+                    padding: '0.7rem 1rem',
+                    borderRadius: '8px',
+                    background: '#1e293b',
+                    color: '#fff',
+                    border: '1.5px solid #283e51',
+                    fontSize: '1rem',
+                    marginBottom: '1.2rem',
+                    outline: 'none',
+                    boxShadow: '0 1px 4px #00e0ff11',
+                    transition: 'border 0.2s'
+                  }}
+                />
+              </div>
+            </>
+          )}
+          <button
+            type="submit"
+            disabled={loading}
+            style={{
+              width: '100%',
+              background: 'var(--primary, #00e0ff)',
+              color: '#1e293b',
+              fontWeight: 700,
+              fontSize: '1.1rem',
+              padding: '0.8rem 0',
+              borderRadius: '10px',
+              border: 'none',
+              boxShadow: '0 2px 8px #00e0ff33',
+              marginTop: '0.5rem',
+              cursor: 'pointer',
+              transition: 'background 0.2s, color 0.2s',
+              opacity: loading ? 0.7 : 1
+            }}
+          >{loading ? 'Creating Account...' : `Register as ${userType === 'player' ? 'Player' : 'Coach'}`}</button>
+          {error && <p style={{ color: '#f87171', marginTop: '1rem', fontWeight: 600 }}>{error}</p>}
+        </form>
+        <div style={{ marginTop: '1.5rem', color: '#b6c2d1', fontSize: '1rem' }}>
+          <p>Already have an account?{' '}
+            <a href="/login" style={{ color: 'var(--primary, #00e0ff)', fontWeight: 700, textDecoration: 'underline', marginLeft: 4 }}>Sign in</a>
+          </p>
+        </div>
+      </section>
     </main>
   )
 }

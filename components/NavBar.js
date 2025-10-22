@@ -1,128 +1,136 @@
-import Link from 'next/link'
-import { useEffect, useState } from 'react'
-import { getCurrentUser, logout as apiLogout } from '../lib/api'
-import { useAuth } from '../contexts/AuthContext'
+
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { getCurrentUser, logout as apiLogout } from '../lib/api';
+import { useAuth } from '../contexts/AuthContext';
+
+function getInitials(name) {
+  if (!name) return '';
+  const parts = name.trim().split(' ');
+  if (parts.length === 1) return parts[0][0].toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+const navLinks = {
+  Coach: [
+    { href: '/coach/dashboard', label: 'Dashboard' },
+    { href: '/coach/my-team', label: 'My Team' },
+    { href: '/coach/schedule', label: 'Schedule' },
+    { href: '/coach/game-stats', label: 'Game Stats' },
+  ],
+  Player: [
+    { href: '/player/dashboard', label: 'Dashboard' },
+    { href: '/player/my-stats', label: 'My Stats' },
+    { href: '/player/my-goals', label: 'My Goals' },
+    { href: '/player/team-info', label: 'Team Info' },
+    { href: '/player/matchup', label: 'Matchup' },
+  ],
+};
 
 export default function NavBar() {
-  const [user, setUser] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const { logout } = useAuth()
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const { logout } = useAuth();
+  const router = useRouter();
 
   useEffect(() => {
     getCurrentUser()
       .then(userData => {
-        setUser(userData)
-        setLoading(false)
+        setUser(userData);
+        setLoading(false);
       })
       .catch(() => {
-        setUser(null)
-        setLoading(false)
-      })
-  }, [])
+        setUser(null);
+        setLoading(false);
+      });
+  }, []);
 
   const handleLogout = async () => {
     try {
-      logout()
-      await apiLogout()
+      await apiLogout();
+      logout();
     } catch (err) {
-      window.location.href = '/'
+      logout();
     }
-  }
+  };
 
+  const handleAvatarClick = () => setShowDropdown(v => !v);
+  const closeDropdown = () => setShowDropdown(false);
+
+  // Highlight active link
+  const isActive = (href) => router.pathname === href;
+
+  // Loading state
   if (loading) {
     return (
-      <nav className="bg-slate-900 border-b border-slate-700 px-4 py-3">
-        <div className="flex items-center justify-between">
-          <Link href="/" className="text-xl font-bold text-cyan-400">NextUp</Link>
-          <div className="text-slate-400">Loading...</div>
+      <nav className="navbar">
+        <div className="navbar-content">
+          <span className="navbar-logo" style={{ display: 'flex', alignItems: 'center', gap: '0.7rem' }}>
+            <img src="/nextup-logo.png" alt="NextUp Logo" style={{ height: '5rem', width: 'auto', display: 'inline-block', verticalAlign: 'middle', marginRight: 16 }} />
+            NextUp
+          </span>
+          <div style={{ color: 'var(--muted)' }}>Loading...</div>
         </div>
       </nav>
-    )
+    );
   }
 
-  if (!user || !user.IsAuthenticated) {
+  // Not authenticated
+  const isAuthed = user && (user.IsAuthenticated || user.isAuthenticated);
+  if (!isAuthed) {
     return (
-      <nav className="bg-slate-900 border-b border-slate-700 px-4 py-3">
-        <div className="flex items-center justify-between">
-          <Link href="/" className="text-xl font-bold text-cyan-400">NextUp</Link>
-          <div className="flex gap-4">
-            <Link href="/login" className="text-slate-300 hover:text-white">Login</Link>
-            <Link href="/register" className="bg-cyan-400 text-slate-900 px-3 py-1 rounded">Sign Up</Link>
+      <nav className="navbar">
+        <div className="navbar-content">
+          <span className="navbar-logo" style={{ display: 'flex', alignItems: 'center', gap: '0.7rem' }}>
+            <img src="/nextup-logo.png" alt="NextUp Logo" style={{ height: '5rem', width: 'auto', display: 'inline-block', verticalAlign: 'middle', marginRight: 16 }} />
+            NextUp
+          </span>
+          <div className="navbar-links">
+            <Link href="/login" className="button">Login</Link>
+            <Link href="/register" className="button">Sign Up</Link>
           </div>
         </div>
       </nav>
-    )
+    );
   }
 
-  if (user.Role === 'Coach') {
-    return (
-      <nav className="bg-slate-900 border-b border-slate-700 px-4 py-3">
-        <div className="flex items-center justify-between">
-          <Link href="/" className="text-xl font-bold text-cyan-400">NextUp</Link>
-          
-          <div className="flex items-center gap-6">
-            <Link href="/coach/dashboard" className="text-slate-300 hover:text-white">Dashboard</Link>
-            <Link href="/coach/my-team" className="text-slate-300 hover:text-white">My Team</Link>
-            <Link href="/coach/schedule" className="text-slate-300 hover:text-white">Schedule</Link>
-            <Link href="/coach/game-stats" className="text-slate-300 hover:text-white">Game Stats</Link>
-            
-            <div className="flex items-center gap-3 ml-6 border-l border-slate-700 pl-6">
-              <span className="text-slate-400">Coach {user.Name}</span>
-              <button 
-                onClick={handleLogout}
-                className="text-slate-300 hover:text-white text-sm"
-              >
-                Logout
-              </button>
-            </div>
-          </div>
-        </div>
-      </nav>
-    )
-  }
-
-  if (user.Role === 'Player') {
-    return (
-      <nav className="bg-slate-900 border-b border-slate-700 px-4 py-3">
-        <div className="flex items-center justify-between">
-          <Link href="/" className="text-xl font-bold text-cyan-400">NextUp</Link>
-          
-          <div className="flex items-center gap-6">
-            <Link href="/player/dashboard" className="text-slate-300 hover:text-white">Dashboard</Link>
-            <Link href="/player/my-stats" className="text-slate-300 hover:text-white">My Stats</Link>
-            <Link href="/player/my-goals" className="text-slate-300 hover:text-white">My Goals</Link>
-            <Link href="/player/team-info" className="text-slate-300 hover:text-white">Team Info</Link>
-            <Link href="/player/matchup" className="text-slate-300 hover:text-white">Matchup</Link>
-            
-            <div className="flex items-center gap-3 ml-6 border-l border-slate-700 pl-6">
-              <span className="text-slate-400">{user.Name}</span>
-              <button 
-                onClick={handleLogout}
-                className="text-slate-300 hover:text-white text-sm"
-              >
-                Logout
-              </button>
-            </div>
-          </div>
-        </div>
-      </nav>
-    )
-  }
+  // Authenticated
+  const role = user.Role || user.role;
+  const links = navLinks[role] || [];
+  const initials = getInitials(user.Name || user.name);
 
   return (
-    <nav className="bg-slate-900 border-b border-slate-700 px-4 py-3">
-      <div className="flex items-center justify-between">
-        <Link href="/" className="text-xl font-bold text-cyan-400">NextUp</Link>
-        <div className="flex items-center gap-3">
-          <span className="text-slate-400">{user.Name}</span>
-          <button 
-            onClick={handleLogout}
-            className="text-slate-300 hover:text-white text-sm"
-          >
-            Logout
-          </button>
+    <nav className="navbar">
+      <div className="navbar-content">
+        <span className="navbar-logo" style={{ display: 'flex', alignItems: 'center', gap: '0.7rem' }}>
+          <img src="/nextup-logo.png" alt="NextUp Logo" style={{ height: '5rem', width: 'auto', display: 'inline-block', verticalAlign: 'middle', marginRight: 16 }} />
+          NextUp
+        </span>
+        <div className="navbar-links">
+          {links.map(link => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className={`navbar-link${isActive(link.href) ? ' active' : ''}`}
+            >
+              {link.label}
+            </Link>
+          ))}
+        </div>
+        <div className="navbar-user" tabIndex={0} onBlur={closeDropdown}>
+          <div className="navbar-avatar" onClick={handleAvatarClick} title={user.Name || user.name}>
+            {initials}
+          </div>
+          {showDropdown && (
+            <div style={{ position: 'absolute', right: '2rem', top: '60px', background: 'var(--card)', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.15)', padding: '0.5rem 1rem', zIndex: 2000 }}>
+              <div style={{ color: 'var(--text)', marginBottom: '0.5rem' }}>{user.Name || user.name}</div>
+              <button className="navbar-logout" onMouseDown={handleLogout}>Logout</button>
+            </div>
+          )}
         </div>
       </div>
     </nav>
-  )
+  );
 }

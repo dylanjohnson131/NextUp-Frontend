@@ -42,65 +42,53 @@ function Schedule() {
     )
   }
   return (
-    <main className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold text-white mb-6">Schedule</h1>
-        
-        <div className="bg-slate-800 rounded-lg p-6">
-          <h2 className="text-xl font-semibold text-white mb-4">Upcoming Matchups</h2>
-          
-          <div className="space-y-4">
-            {upcomingGames.length > 0 ? (
-              upcomingGames.map((game, index) => (
-                <div key={game.gameId || index} className="bg-slate-700 rounded p-4">
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <p className="text-white font-medium">
-                        {game.isHome ? 'vs.' : '@'} {game.opponent?.name || 'TBD'}
-                      </p>
-                      <p className="text-slate-400 text-sm">
-                        {new Date(game.gameDate).toLocaleDateString('en-US', {
-                          month: 'short',
-                          day: 'numeric',
-                          year: 'numeric'
-                        })} - {new Date(game.gameDate).toLocaleTimeString('en-US', {
-                          hour: 'numeric',
-                          minute: '2-digit',
-                          hour12: true
-                        })}
-                      </p>
-                      <p className="text-slate-500 text-xs">
-                        {game.isHome ? 'Home Game' : 'Away Game'}
-                      </p>
-                      {game.location && (
-                        <p className="text-slate-500 text-xs">
-                          Location: {game.location}
-                        </p>
-                      )}
-                    </div>
-                    <button 
-                      onClick={() => router.push(`/coach/opponent/${game.opponent?.teamId}`)}
-                      className="bg-cyan-400 text-slate-900 px-3 py-1 rounded text-sm hover:bg-cyan-300 transition-colors"
-                      disabled={!game.opponent?.teamId}
-                    >
-                      View Team Stats
-                    </button>
-                  </div>
+    <main style={{ maxWidth: '900px', margin: '0 auto', padding: '2.5rem 1.5rem' }}>
+      <h1 style={{ fontSize: '2.5rem', fontWeight: 700, color: 'var(--primary)', marginBottom: '1.2rem', letterSpacing: '0.5px' }}>Schedule</h1>
+      <div style={{ background: '#222', borderRadius: '14px', boxShadow: '0 2px 12px rgba(0,0,0,0.10)', padding: '2rem 1.5rem' }}>
+        <h2 style={{ fontSize: '1.4rem', fontWeight: 600, color: 'var(--primary)', marginBottom: '1.2rem' }}>Upcoming Matchups</h2>
+        {upcomingGames.length > 0 ? (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            {upcomingGames.map((game, index) => (
+              <div key={game.gameId || index} style={{ background: '#282c34', borderRadius: '10px', padding: '1.5rem', boxShadow: '0 1px 6px rgba(0,0,0,0.07)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', transition: 'background 0.2s' }}>
+                <div>
+                  <p style={{ color: 'var(--primary)', fontWeight: 600, fontSize: '1.15rem', margin: 0 }}>
+                    {game.isHome ? 'vs.' : '@'} {game.opponent?.name || 'TBD'}
+                  </p>
+                  <p style={{ color: '#b6c2b7', fontSize: '1rem', margin: '0.2rem 0 0 0' }}>
+                    {new Date(game.gameDate).toLocaleDateString('en-US', {
+                      month: 'short',
+                      day: 'numeric',
+                      year: 'numeric'
+                    })} - {new Date(game.gameDate).toLocaleTimeString('en-US', {
+                      hour: 'numeric',
+                      minute: '2-digit',
+                      hour12: true
+                    })}
+                  </p>
+                  <p style={{ color: '#b6c2b7', fontSize: '0.98rem', margin: '0.15rem 0 0 0' }}>
+                    {game.isHome ? 'Home Game' : 'Away Game'}
+                  </p>
+                  {game.location && (
+                    <p style={{ color: '#b6c2b7', fontSize: '0.92rem', margin: '0.15rem 0 0 0' }}>Location: {game.location}</p>
+                  )}
                 </div>
-              ))
-            ) : (
-              <div className="bg-slate-700 rounded p-4 text-center">
-                <p className="text-slate-400">No upcoming games scheduled</p>
+                <button
+                  onClick={() => router.push(`/coach/opponent/${game.opponent?.teamId}`)}
+                  style={{ background: 'var(--primary)', color: '#fff', padding: '0.7rem 1.3rem', borderRadius: '8px', fontWeight: 600, fontSize: '1rem', border: 'none', cursor: game.opponent?.teamId ? 'pointer' : 'not-allowed', opacity: game.opponent?.teamId ? 1 : 0.6, transition: 'background 0.2s' }}
+                  disabled={!game.opponent?.teamId}
+                >
+                  Scout Team
+                </button>
               </div>
-            )}
+            ))}
           </div>
-          
-          <div className="mt-6 p-4 bg-slate-700 rounded">
-            <p className="text-slate-400 text-center">
-              Read-only schedule view with opponent analysis features coming soon...
-            </p>
+        ) : (
+          <div style={{ background: '#282c34', borderRadius: '10px', padding: '1.5rem', textAlign: 'center', color: '#b6c2b7', fontSize: '1.1rem' }}>
+            No upcoming games scheduled
           </div>
-        </div>
-      </main>
+        )}
+      </div>
+    </main>
   )
 }
 

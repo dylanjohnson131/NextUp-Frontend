@@ -30,42 +30,88 @@ const PlayerStatsCard = ({ player }) => {
   const summaryStats = statKeys.slice(0, 4);
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-6 max-w-2xl mx-auto mt-8">
+    <div style={{
+      background: 'var(--card)',
+      borderRadius: 14,
+      boxShadow: '0 2px 16px #00e0ff22, 0 1.5px 8px #000a',
+      padding: '2rem',
+      maxWidth: 600,
+      margin: '0 auto',
+      marginTop: '1.5rem',
+      color: 'var(--text)'
+    }}>
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between border-b pb-4 mb-4">
+      <div style={{
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        borderBottom: '1.5px solid #1e293b',
+        paddingBottom: '1.2rem',
+        marginBottom: '1.2rem'
+      }}>
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">{player.name}</h2>
-          <div className="text-gray-600 text-sm mt-1">
+          <h2 style={{
+            fontSize: '2rem',
+            fontWeight: 700,
+            margin: 0,
+            background: 'var(--text-gradient)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+            textFillColor: 'transparent',
+            letterSpacing: '1px',
+            textShadow: '0 1px 2px #222, 0 0 10px #283e5133'
+          }}>{player.name}</h2>
+          <div style={{ color: 'var(--muted)', fontSize: '1rem', marginTop: 6 }}>
             {player.team?.name && <span>{player.team.name} • </span>}
             #{player.jerseyNumber} • {canonicalPosition}
           </div>
         </div>
-        <div className="text-right mt-4 md:mt-0">
-          <div className="text-xs text-gray-500">HT/WT</div>
-          <div className="font-semibold text-gray-800">{player.height || '--'} / {player.weight ? `${player.weight} lbs` : '--'}</div>
-          <div className="text-xs text-gray-500 mt-1">AGE</div>
-          <div className="font-semibold text-gray-800">{player.age || '--'}</div>
+        <div style={{ textAlign: 'right', marginLeft: 24 }}>
+          <div style={{ color: 'var(--muted)', fontSize: '0.9rem' }}>HT/WT</div>
+          <div style={{ fontWeight: 600 }}>{player.height || '--'} / {player.weight ? `${player.weight} lbs` : '--'}</div>
+          <div style={{ color: 'var(--muted)', fontSize: '0.9rem', marginTop: 4 }}>AGE</div>
+          <div style={{ fontWeight: 600 }}>{player.age || '--'}</div>
         </div>
       </div>
       {/* Stat Summary Bar */}
-      <div className="flex justify-between bg-slate-100 rounded p-4 mb-4">
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        background: 'linear-gradient(90deg, #111827 60%, #00e0ff22 100%)',
+        borderRadius: 10,
+        padding: '1.2rem 1rem',
+        marginBottom: '1.2rem',
+        boxShadow: '0 2px 8px #00e0ff22'
+      }}>
         {summaryStats.map((stat) => (
-          <div key={stat} className="flex-1 text-center">
-            <div className="text-xl font-bold text-cyan-700">
+          <div key={stat} style={{ flex: 1, textAlign: 'center' }}>
+            <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#00e0ff', textShadow: '0 1px 8px #00e0ff33' }}>
               {player.stats && player.stats[stat] !== undefined ? player.stats[stat] : '--'}
             </div>
-            <div className="text-xs text-gray-500 mt-1">{formatStatLabel(stat)}</div>
+            <div style={{ color: 'var(--muted)', fontSize: '0.95rem', marginTop: 4 }}>{formatStatLabel(stat)}</div>
           </div>
         ))}
       </div>
       {/* Full Stat List */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
+        gap: '1.1rem'
+      }}>
         {statKeys.map((stat) => (
-          <div key={stat} className="bg-slate-50 rounded p-3 text-center">
-            <div className="text-lg font-semibold text-gray-800">
+          <div key={stat} style={{
+            background: 'linear-gradient(180deg, #1e293b 80%, #00e0ff11 100%)',
+            borderRadius: 8,
+            padding: '1rem',
+            textAlign: 'center',
+            boxShadow: '0 1px 6px #00e0ff22'
+          }}>
+            <div style={{ fontSize: '1.15rem', fontWeight: 600, color: 'var(--text)' }}>
               {player.stats && player.stats[stat] !== undefined ? player.stats[stat] : '--'}
             </div>
-            <div className="text-xs text-gray-500 mt-1">{formatStatLabel(stat)}</div>
+            <div style={{ color: 'var(--muted)', fontSize: '0.9rem', marginTop: 4 }}>{formatStatLabel(stat)}</div>
           </div>
         ))}
       </div>

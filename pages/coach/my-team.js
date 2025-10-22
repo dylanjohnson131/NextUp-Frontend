@@ -4,31 +4,37 @@ import withAuth from '../../hocs/withAuth'
 import Link from 'next/link'
 
 function MyTeam() {
-  const [coach, setCoach] = useState(null)
-  const [teamData, setTeamData] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const [coach, setCoach] = useState(null);
+  const [teamData, setTeamData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState('offense');
+  const [notes, setNotes] = useState('');
+  const [saved, setSaved] = useState(false);
 
   useEffect(() => {
     const loadTeamData = async () => {
       try {
-        const coachInfo = await getCurrentCoach()
-        setCoach(coachInfo)
-        
-        // Fetch detailed team data if coach has a team
+        const coachInfo = await getCurrentCoach();
+        setCoach(coachInfo);
         if (coachInfo?.team?.teamId) {
-          const teamDetails = await fetchTeamById(coachInfo.team.teamId)
-          setTeamData(teamDetails)
+          const teamDetails = await fetchTeamById(coachInfo.team.teamId);
+          setTeamData(teamDetails);
         }
       } catch (error) {
-        } finally {
-        setLoading(false)
+      } finally {
+        setLoading(false);
       }
-    }
-    
-    loadTeamData()
-  }, [])
+    };
+    loadTeamData();
+    // Load coach notes from localStorage
+    const stored = localStorage.getItem('coachNotes');
+    if (stored) setNotes(stored);
+  }, []);
 
   if (loading) {
+    // Coach notes effect
+    const stored = localStorage.getItem('coachNotes');
+    if (stored) setNotes(stored);
     return (
       <main className="container mx-auto px-4 py-8">
         <div className="text-center">Loading...</div>
@@ -47,96 +53,195 @@ function MyTeam() {
     )
   }
 
+  // Depth chart logic (from depth-chart.js)
+  const groupPlayersByPosition = (players) => {
+    const groups = {};
+    players?.forEach(player => {
+      const canonicalPosition = player.position ? player.position.toUpperCase().replace(/\s+/g, '') : 'Unknown';
+      if (!groups[canonicalPosition]) groups[canonicalPosition] = [];
+      groups[canonicalPosition].push(player);
+    });
+    return groups;
+  };
+  const offenseCanonical = new Set(['QB', 'RB', 'WR', 'TE', 'LT', 'LG', 'C', 'RG', 'RT', 'OL']);
+  const defenseCanonical = new Set(['DE', 'RDE','LDE','RDT', 'LDT', 'DT','WLB', 'MLB','SLB', 'LB' ,'CB', 'S', 'FS', 'SS', 'DL']);
+  const specialTeamsCanonical = new Set(['K', 'P']);
+  const categorizePositions = (positionGroups) => {
+    const offense = {}, defense = {}, specialTeams = {}, other = {};
+    Object.entries(positionGroups).forEach(([pos, players]) => {
+      if (offenseCanonical.has(pos)) offense[pos] = players;
+      else if (defenseCanonical.has(pos)) defense[pos] = players;
+      else if (specialTeamsCanonical.has(pos)) specialTeams[pos] = players;
+      else other[pos] = players;
+    });
+    return { offense, defense, specialTeams, other };
+  };
+  const positionGroups = teamData?.players ? groupPlayersByPosition(teamData.players) : {};
+  const categorizedPositions = categorizePositions(positionGroups);
+  const renderPositionRow = (positionName, players) => {
+    const slots = [0, 1, 2, 3].map(i => players[i] || null);
+    return (
+      <tr key={positionName}>
+        <td style={{ color: 'var(--primary)', fontWeight: 600 }}>{positionName}</td>
+        {slots.map((player, idx) => (
+          <td key={idx} style={{ padding: '0.5rem', color: '#333' }}>
+            {player ? player.name : <span style={{ color: '#888' }}>-</span>}
+          </td>
+        ))}
+      </tr>
+    );
+  };
+  // Coach notes logic
+  const handleSave = () => {
+    localStorage.setItem('coachNotes', notes);
+    setSaved(true);
+    setTimeout(() => setSaved(false), 1500);
+  };
   return (
-    <main className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-white mb-6">My Team</h1>
-      
+    <main style={{ maxWidth: '900px', margin: '0 auto', padding: '2.5rem 1.5rem' }}>
+      <h1 style={{ fontSize: '2.5rem', fontWeight: 700, color: 'var(--primary)', marginBottom: '1.2rem', letterSpacing: '0.5px' }}>My Team</h1>
       {/* Team Overview */}
-      <div className="bg-slate-800 rounded-lg p-6 mb-6">
-        <h2 className="text-2xl font-semibold text-white mb-4">{coach.team.name}</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          <div className="bg-slate-700 rounded-lg p-4">
-            <h3 className="text-lg font-medium text-white mb-2">Location</h3>
-            <p className="text-slate-300">{coach.team.location || 'Not specified'}</p>
+      <div style={{ background: '#222', borderRadius: '14px', boxShadow: '0 2px 12px rgba(0,0,0,0.10)', padding: '2rem 1.5rem', marginBottom: '2rem' }}>
+        <h2 style={{ fontSize: '1.7rem', fontWeight: 600, color: 'var(--primary)', marginBottom: '1.2rem' }}>{coach.team.name}</h2>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2rem' }}>
+          <div style={{ background: '#282c34', borderRadius: '10px', padding: '1.2rem', minWidth: '180px', flex: '1 1 180px' }}>
+            <h3 style={{ fontSize: '1.1rem', fontWeight: 500, color: '#b6c2b7', marginBottom: '0.5rem' }}>Location</h3>
+            <p style={{ color: '#eaeaea', fontSize: '1rem', margin: 0 }}>{coach.team.location || 'Not specified'}</p>
           </div>
-          <div className="bg-slate-700 rounded-lg p-4">
-            <h3 className="text-lg font-medium text-white mb-2">Season</h3>
-            <p className="text-slate-300">{coach.team.season || 'Current'}</p>
+          <div style={{ background: '#282c34', borderRadius: '10px', padding: '1.2rem', minWidth: '180px', flex: '1 1 180px' }}>
+            <h3 style={{ fontSize: '1.1rem', fontWeight: 500, color: '#b6c2b7', marginBottom: '0.5rem' }}>Season</h3>
+            <p style={{ color: '#eaeaea', fontSize: '1rem', margin: 0 }}>{coach.team.season || 'Current'}</p>
           </div>
-          <div className="bg-slate-700 rounded-lg p-4">
-            <h3 className="text-lg font-medium text-white mb-2">Total Players</h3>
-            <p className="text-slate-300">{teamData?.players?.length || 0}</p>
+          <div style={{ background: '#282c34', borderRadius: '10px', padding: '1.2rem', minWidth: '180px', flex: '1 1 180px' }}>
+            <h3 style={{ fontSize: '1.1rem', fontWeight: 500, color: '#b6c2b7', marginBottom: '0.5rem' }}>Total Players</h3>
+            <p style={{ color: '#eaeaea', fontSize: '1rem', margin: 0 }}>{teamData?.players?.length || 0}</p>
           </div>
         </div>
       </div>
-
-      {/* Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-        <Link href="/coach/depth-chart" className="bg-cyan-600 hover:bg-cyan-700 rounded-lg p-6 text-center transition-colors">
-          <h3 className="text-xl font-semibold text-white mb-2">Depth Chart</h3>
-          <p className="text-cyan-100">View and manage player positions</p>
-        </Link>
-        
-        <Link href="/coach/schedule" className="bg-green-600 hover:bg-green-700 rounded-lg p-6 text-center transition-colors">
-          <h3 className="text-xl font-semibold text-white mb-2">Schedule</h3>
-          <p className="text-green-100">View upcoming games and results</p>
-        </Link>
-        
-        <Link href="/coach/game-stats" className="bg-purple-600 hover:bg-purple-700 rounded-lg p-6 text-center transition-colors">
-          <h3 className="text-xl font-semibold text-white mb-2">Game Stats</h3>
-          <p className="text-purple-100">Track player and team statistics</p>
-        </Link>
-      </div>
-
-      {/* Recent Players */}
-      {teamData?.players && teamData.players.length > 0 && (
-        <div className="bg-slate-800 rounded-lg p-6">
-          <h2 className="text-xl font-semibold text-white mb-4">Recent Players</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {teamData.players.slice(0, 6).map(player => (
-              <div key={player.playerId} className="bg-slate-700 rounded-lg p-4">
-                <div className="flex justify-between items-start mb-2">
-                  <h3 className="font-medium text-white">
-                    #{player.jerseyNumber} 
-                    <Link href={`/coach/player/${player.playerId}`} className="text-cyan-400 hover:text-cyan-300 transition-colors ml-1">
-                      {player.name}
-                    </Link>
-                  </h3>
-                  <span className="text-xs bg-slate-600 px-2 py-1 rounded text-slate-300">
-                    {player.position || 'No Position'}
-                  </span>
-                </div>
-                <div className="text-sm text-slate-400 mb-2">
-                  Age: {player.age}
-                  {player.height && ` • ${player.height}`}
-                  {player.weight && ` • ${player.weight}lbs`}
-                </div>
-                <div className="text-right">
-                  <Link href={`/coach/player/${player.playerId}`} className="text-xs text-cyan-400 hover:text-cyan-300 transition-colors">
-                    View Stats →
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
-          {teamData.players.length > 6 && (
-            <div className="mt-4 text-center">
-              <Link href="/coach/depth-chart" className="text-cyan-400 hover:text-cyan-300 transition-colors">
-                View all {teamData.players.length} players →
-              </Link>
-            </div>
+      {/* Depth Chart Section */}
+      <div style={{ background: '#222', borderRadius: '14px', boxShadow: '0 2px 12px rgba(0,0,0,0.10)', padding: '2rem 1.5rem', marginBottom: '2rem' }}>
+        <h2 style={{ fontSize: '1.4rem', fontWeight: 600, color: 'var(--primary)', marginBottom: '1.2rem' }}>Depth Chart</h2>
+        {/* Tab Navigation */}
+        <div style={{ marginBottom: '1.2rem', borderBottom: '1px solid #333' }}>
+          <nav style={{ display: 'flex', gap: '2rem' }}>
+            <button
+              onClick={() => setActiveTab('offense')}
+              style={{
+                background: 'none',
+                border: 'none',
+                borderBottom: activeTab === 'offense' ? '2px solid var(--primary)' : '2px solid transparent',
+                color: activeTab === 'offense' ? 'var(--primary)' : '#b6c2b7',
+                fontWeight: 600,
+                fontSize: '1rem',
+                padding: '0.7rem 0',
+                cursor: 'pointer',
+                transition: 'color 0.2s, border-bottom 0.2s',
+              }}
+            >
+              Offense
+            </button>
+            <button
+              onClick={() => setActiveTab('defense')}
+              style={{
+                background: 'none',
+                border: 'none',
+                borderBottom: activeTab === 'defense' ? '2px solid var(--primary)' : '2px solid transparent',
+                color: activeTab === 'defense' ? 'var(--primary)' : '#b6c2b7',
+                fontWeight: 600,
+                fontSize: '1rem',
+                padding: '0.7rem 0',
+                cursor: 'pointer',
+                transition: 'color 0.2s, border-bottom 0.2s',
+              }}
+            >
+              Defense
+            </button>
+            <button
+              onClick={() => setActiveTab('special')}
+              style={{
+                background: 'none',
+                border: 'none',
+                borderBottom: activeTab === 'special' ? '2px solid var(--primary)' : '2px solid transparent',
+                color: activeTab === 'special' ? 'var(--primary)' : '#b6c2b7',
+                fontWeight: 600,
+                fontSize: '1rem',
+                padding: '0.7rem 0',
+                cursor: 'pointer',
+                transition: 'color 0.2s, border-bottom 0.2s',
+              }}
+            >
+              Special Teams
+            </button>
+          </nav>
+        </div>
+        {/* Depth Chart Table */}
+        <div style={{ overflowX: 'auto' }}>
+          <table style={{ width: '100%', background: '#fff', borderRadius: '8px', marginBottom: '1rem' }}>
+            <thead>
+              <tr>
+                <th style={{ padding: '0.5rem', textAlign: 'left' }}>POS</th>
+                <th style={{ padding: '0.5rem', textAlign: 'left' }}>STARTER</th>
+                <th style={{ padding: '0.5rem', textAlign: 'left' }}>2ND</th>
+                <th style={{ padding: '0.5rem', textAlign: 'left' }}>3RD</th>
+                <th style={{ padding: '0.5rem', textAlign: 'left' }}>4TH</th>
+              </tr>
+            </thead>
+            <tbody>
+              {activeTab === 'offense' && Object.entries(categorizedPositions.offense).map(([position, players]) => renderPositionRow(position, players))}
+              {activeTab === 'defense' && Object.entries(categorizedPositions.defense).map(([position, players]) => renderPositionRow(position, players))}
+              {activeTab === 'special' && Object.entries(categorizedPositions.specialTeams).map(([position, players]) => renderPositionRow(position, players))}
+            </tbody>
+          </table>
+          {activeTab === 'offense' && Object.keys(categorizedPositions.offense).length === 0 && (
+            <div style={{ textAlign: 'center', padding: '2rem', color: '#888' }}>No offensive players on the roster yet.</div>
+          )}
+          {activeTab === 'defense' && Object.keys(categorizedPositions.defense).length === 0 && (
+            <div style={{ textAlign: 'center', padding: '2rem', color: '#888' }}>No defensive players on the roster yet.</div>
+          )}
+          {activeTab === 'special' && Object.keys(categorizedPositions.specialTeams).length === 0 && (
+            <div style={{ textAlign: 'center', padding: '2rem', color: '#888' }}>No special teams players on the roster yet.</div>
           )}
         </div>
-      )}
-
+      </div>
+      {/* Coach Notes Section */}
+      <div style={{ background: '#222', borderRadius: '14px', boxShadow: '0 2px 12px rgba(0,0,0,0.10)', padding: '2rem 1.5rem', marginBottom: '2rem' }}>
+        <h2 style={{ fontSize: '1.2rem', fontWeight: 600, color: 'var(--primary)', marginBottom: '1rem' }}>Coach Notes</h2>
+        <textarea
+          value={notes}
+          onChange={e => setNotes(e.target.value)}
+          rows={6}
+          style={{ width: '100%', padding: '1rem', borderRadius: '8px', fontSize: '1rem', background: '#222', color: '#fff', border: '1px solid #444', resize: 'vertical' }}
+          placeholder="Enter your notes here..."
+        />
+        <button
+          onClick={handleSave}
+          style={{ marginTop: '1rem', padding: '0.6rem 1.5rem', background: 'var(--primary)', color: '#fff', borderRadius: '8px', border: 'none', fontWeight: 'bold', cursor: 'pointer' }}
+        >
+          Save Notes
+        </button>
+        {saved && <span style={{ marginLeft: '1rem', color: 'var(--accent)' }}>Notes saved!</span>}
+      </div>
       {/* Empty State */}
       {(!teamData?.players || teamData.players.length === 0) && (
-        <div className="bg-slate-800 rounded-lg p-6 text-center">
-          <h2 className="text-xl font-semibold text-white mb-2">No Players Yet</h2>
-          <p className="text-slate-400 mb-4">Your team roster is empty. Players will appear here once they're added to your team.</p>
-          <Link href="/coach/depth-chart" className="inline-block bg-cyan-600 hover:bg-cyan-700 px-4 py-2 rounded text-white transition-colors">
+        <div style={{ background: '#222', borderRadius: '14px', boxShadow: '0 2px 12px rgba(0,0,0,0.10)', padding: '2rem 1.5rem', textAlign: 'center' }}>
+          <h2 style={{ fontSize: '1.3rem', fontWeight: 600, color: 'var(--primary)', marginBottom: '0.7rem' }}>No Players Yet</h2>
+          <p style={{ color: '#b6c2b7', fontSize: '1rem', marginBottom: '1.2rem' }}>Your team roster is empty. Players will appear here once they're added to your team.</p>
+          <a href="/coach/depth-chart" style={{
+            display: 'inline-block',
+            background: 'var(--primary)',
+            color: '#fff',
+            borderRadius: '8px',
+            padding: '0.7rem 1.5rem',
+            fontWeight: 600,
+            fontSize: '1rem',
+            textDecoration: 'none',
+            boxShadow: '0 1px 6px rgba(0,0,0,0.07)',
+            transition: 'background 0.2s',
+          }}
+          onMouseOver={e => e.currentTarget.style.background = 'var(--accent)'}
+          onMouseOut={e => e.currentTarget.style.background = 'var(--primary)'}>
             Manage Roster
-          </Link>
+          </a>
         </div>
       )}
     </main>

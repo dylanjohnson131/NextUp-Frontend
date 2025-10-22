@@ -82,73 +82,72 @@ function PlayerDashboard() {
 
   if (loading) {
     return (
-      <main className="container mx-auto px-4 py-8">
-        <div className="text-center">Loading...</div>
+      <main style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(135deg, #0a192f 0%, #1e293b 100%)', paddingTop: '7rem' }}>
+        <div style={{ color: '#b6c2d1', fontSize: '1.2rem' }}>Loading...</div>
       </main>
     )
   }
 
   return (
-    <main className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-white mb-2">Player Dashboard</h1>
-          <p className="text-slate-400">Welcome back, {user?.name ? user.name.split(' ')[0] : 'Player'} Track your progress and team performance.</p>
+    <main style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #0a192f 0%, #1e293b 100%)', paddingTop: '7rem', paddingBottom: '3rem' }}>
+      <section style={{ maxWidth: 950, margin: '0 auto', padding: '0 1.5rem' }}>
+        <div style={{ textAlign: 'center', marginBottom: '2.2rem' }}>
+          <h1 style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--primary, #00e0ff)', letterSpacing: '2px', marginBottom: '0.5rem', textShadow: '0 2px 12px #00e0ff33' }}>Player Dashboard</h1>
+          <p style={{ color: '#b6c2d1', fontSize: '1.15rem', fontWeight: 500 }}>
+            Welcome back, {user?.name ? user.name.split(' ')[0] : 'Player'}! Track your progress and team performance.
+          </p>
         </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2.2rem', marginBottom: '2.2rem' }}>
           {/* Player Quick Stats */}
-          <div className="bg-slate-800 rounded-lg p-6">
-            <h2 className="text-xl font-semibold text-white mb-4">Your Profile</h2>
-
+          <div style={{ background: 'var(--card, #222)', borderRadius: '16px', boxShadow: '0 2px 16px #00e0ff11', padding: '2rem 1.5rem' }}>
+            <h2 style={{ fontSize: '1.35rem', fontWeight: 700, color: 'var(--primary, #00e0ff)', marginBottom: '1.2rem' }}>Your Profile</h2>
             {playerData ? (
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-slate-400">Position:</span>
-                  <span className="text-white text-right">{playerData.position && playerData.position.trim() !== '' ? playerData.position : 'Not set'}</span>
+              <div style={{ display: 'grid', rowGap: '1.1rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ color: '#b6c2d1' }}>Position:</span>
+                  <span style={{ color: '#fff', fontWeight: 600 }}>{playerData.position && playerData.position.trim() !== '' ? playerData.position : 'Not set'}</span>
                 </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-slate-400">Jersey #:</span>
-                  <span className="text-white text-right">{playerData.jerseyNumber ? playerData.jerseyNumber : 'Not assigned'}</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ color: '#b6c2d1' }}>Jersey #:</span>
+                  <span style={{ color: '#fff', fontWeight: 600 }}>{playerData.jerseyNumber ? playerData.jerseyNumber : 'Not assigned'}</span>
                 </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-slate-400">Age:</span>
-                  <span className="text-white text-right">{playerData.age ? playerData.age : 'Not set'}</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ color: '#b6c2d1' }}>Age:</span>
+                  <span style={{ color: '#fff', fontWeight: 600 }}>{playerData.age ? playerData.age : 'Not set'}</span>
                 </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-slate-400">Team:</span>
-                  <span className="text-white text-right">{playerData.team?.name || 'No team'}</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ color: '#b6c2d1' }}>Team:</span>
+                  <span style={{ color: '#fff', fontWeight: 600 }}>{playerData.team?.name || 'No team'}</span>
                 </div>
               </div>
             ) : (
-              <p className="text-slate-400">Player data not found</p>
+              <p style={{ color: '#b6c2d1' }}>Player data not found</p>
             )}
           </div>
+          {/* Recent Performance Chart */}
+          <div style={{ background: 'var(--card, #222)', borderRadius: '16px', boxShadow: '0 2px 16px #00e0ff11', padding: '2rem 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <PlayerPerformanceChart
+              data={[
+                { label: 'Game 1', grade: 75 },
+                { label: 'Game 2', grade: 80 },
+                { label: 'Game 3', grade: 85 },
+                { label: 'Game 4', grade: 90 },
+                { label: 'Game 5', grade: 88 },
+              ]}
+            />
+          </div>
         </div>
-
-        {/* Recent Performance */}
-        <div className="mt-8">
-          <PlayerPerformanceChart
-            data={[
-              { label: 'Game 1', grade: 75 },
-              { label: 'Game 2', grade: 80 },
-              { label: 'Game 3', grade: 85 },
-              { label: 'Game 4', grade: 90 },
-              { label: 'Game 5', grade: 88 },
-            ]}
-          />
-        </div>
-
         {/* Next Game */}
-        <div className="mt-8 bg-slate-800 rounded-lg p-6">
-          <h2 className="text-xl font-semibold text-white mb-4">Next Game</h2>
-          <div className="bg-slate-700 rounded p-4">
+        <div style={{ background: 'var(--card, #222)', borderRadius: '16px', boxShadow: '0 2px 16px #00e0ff11', padding: '2rem 1.5rem', marginBottom: '2rem' }}>
+          <h2 style={{ fontSize: '1.35rem', fontWeight: 700, color: 'var(--primary, #00e0ff)', marginBottom: '1.2rem' }}>Next Game</h2>
+          <div style={{ background: '#1e293b', borderRadius: '10px', padding: '1.2rem 1rem' }}>
             {nextGame ? (
-              <div className="flex justify-between items-center">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
-                  <p className="text-white font-medium">
+                  <p style={{ color: '#fff', fontWeight: 600, fontSize: '1.08rem' }}>
                     vs. {opponent?.name || opponent?.Name || 'TBD'}
                   </p>
-                  <p className="text-slate-400 text-sm">
+                  <p style={{ color: '#b6c2d1', fontSize: '1rem' }}>
                     {nextGame.gameDate ? new Date(nextGame.gameDate).toLocaleDateString('en-US', {
                       year: 'numeric',
                       month: 'short',
@@ -156,25 +155,26 @@ function PlayerDashboard() {
                     }) : 'Date TBD'} - {nextGame.gameTime || 'Time TBD'}
                   </p>
                   {nextGame.location && (
-                    <p className="text-slate-500 text-sm">{nextGame.location}</p>
+                    <p style={{ color: '#7dd3fc', fontSize: '0.98rem' }}>{nextGame.location}</p>
                   )}
                 </div>
                 <button
                   onClick={() => router.push('/player/matchup')}
-                  className="bg-cyan-400 text-slate-900 px-3 py-1 rounded text-sm hover:bg-cyan-300"
+                  style={{ background: 'var(--primary, #00e0ff)', color: '#1e293b', fontWeight: 700, fontSize: '1rem', padding: '0.7rem 1.5rem', borderRadius: '8px', border: 'none', boxShadow: '0 2px 8px #00e0ff33', cursor: 'pointer', transition: 'background 0.2s, color 0.2s' }}
                 >
                   Scout Opponent
                 </button>
               </div>
             ) : (
-              <div className="text-center">
-                <p className="text-slate-400">No upcoming games scheduled</p>
-                <p className="text-slate-500 text-sm mt-1">Check back later for game updates</p>
+              <div style={{ textAlign: 'center' }}>
+                <p style={{ color: '#b6c2d1' }}>No upcoming games scheduled</p>
+                <p style={{ color: '#7dd3fc', fontSize: '0.98rem', marginTop: '0.7rem' }}>Check back later for game updates</p>
               </div>
             )}
           </div>
         </div>
-      </main>
+      </section>
+    </main>
   )
 }
 
