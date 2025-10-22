@@ -115,155 +115,114 @@ function MyGoals() {
 
   if (loading) {
     return (
-      <main className="container mx-auto px-4 py-8">
-        <div className="text-white text-center">Loading goals...</div>
+      <main>
+        <div>Loading goals...</div>
       </main>
     )
   }
 
   return (
-    <main className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-white mb-6">My Goals</h1>
-      
+    <main>
+      <h1>My Goals</h1>
       {error && (
-        <div className="bg-red-900 border border-red-700 text-red-100 px-4 py-3 rounded mb-4">
+        <div>
           {error}
-          <button 
-            onClick={() => setError(null)} 
-            className="float-right text-red-300 hover:text-red-100"
-          >
-            ×
-          </button>
+          <button onClick={() => setError(null)}>×</button>
         </div>
       )}
-      
-      <div className="mb-6">
-        <button 
-          onClick={() => setShowForm(true)}
-          className="bg-cyan-400 text-slate-900 px-4 py-2 rounded font-medium hover:bg-cyan-300"
-        >
+      <div>
+        <button onClick={() => setShowForm(true)}>
           + Create New Goal
         </button>
       </div>
-
       {/* Goal Form */}
       {showForm && (
-        <div className="bg-slate-800 rounded-lg p-6 mb-6">
-          <h2 className="text-xl font-semibold text-white mb-4">
-            {editingGoal ? 'Edit Goal' : 'Create New Goal'}
-          </h2>
-          
-          <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <h2>{editingGoal ? 'Edit Goal' : 'Create New Goal'}</h2>
+          <form onSubmit={handleSubmit}>
             <div>
-              <label className="block text-white font-medium mb-2">Goal Type</label>
+              <label>Goal Type</label>
               <input
                 type="text"
                 value={formData.goalType}
                 onChange={(e) => setFormData({...formData, goalType: e.target.value})}
-                className="w-full p-3 bg-slate-700 text-white rounded border border-slate-600 focus:border-cyan-400"
                 placeholder="e.g., Rushing Yards, Touchdowns, Tackles"
                 required
               />
             </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
               <div>
-                <label className="block text-white font-medium mb-2">Target Value</label>
+                <label>Target Value</label>
                 <input
                   type="number"
                   value={formData.targetValue}
                   onChange={(e) => setFormData({...formData, targetValue: e.target.value})}
-                  className="w-full p-3 bg-slate-700 text-white rounded border border-slate-600 focus:border-cyan-400"
                   placeholder="100"
                   required
                 />
               </div>
-
               <div>
-                <label className="block text-white font-medium mb-2">Current Value</label>
+                <label>Current Value</label>
                 <input
                   type="number"
                   value={formData.currentValue}
                   onChange={(e) => setFormData({...formData, currentValue: e.target.value})}
-                  className="w-full p-3 bg-slate-700 text-white rounded border border-slate-600 focus:border-cyan-400"
                   placeholder="0"
                 />
               </div>
             </div>
-
             <div>
-              <label className="block text-white font-medium mb-2">Season</label>
+              <label>Season</label>
               <input
                 type="text"
                 value={formData.season}
                 onChange={(e) => setFormData({...formData, season: e.target.value})}
-                className="w-full p-3 bg-slate-700 text-white rounded border border-slate-600 focus:border-cyan-400"
                 placeholder="2024"
               />
             </div>
-
-            <div className="flex gap-4">
-              <button
-                type="submit"
-                className="bg-cyan-400 text-slate-900 px-6 py-2 rounded font-medium hover:bg-cyan-300"
-              >
+            <div>
+              <button type="submit">
                 {editingGoal ? 'Update Goal' : 'Create Goal'}
               </button>
-              <button
-                type="button"
-                onClick={resetForm}
-                className="bg-slate-600 text-white px-6 py-2 rounded font-medium hover:bg-slate-500"
-              >
+              <button type="button" onClick={resetForm}>
                 Cancel
               </button>
             </div>
           </form>
         </div>
       )}
-      
-      <div className="bg-slate-800 rounded-lg p-6">
-        <h2 className="text-xl font-semibold text-white mb-4">Your Goals</h2>
-        
+      <div>
+        <h2>Your Goals</h2>
         {goals.length === 0 ? (
-          <div className="text-center py-8">
-            <p className="text-slate-400">No goals created yet.</p>
-            <p className="text-slate-500 text-sm mt-1">Click "Create New Goal" to get started!</p>
+          <div>
+            <p>No goals created yet.</p>
+            <p>Click "Create New Goal" to get started!</p>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div>
             {goals.map((goal) => {
               const progress = calculateProgress(goal.currentValue, goal.targetValue)
-              
               return (
-                <div key={goal.playerGoalId} className="bg-slate-700 rounded p-4">
-                  <div className="flex justify-between items-start">
-                    <div className="flex-1">
-                      <h3 className="text-white font-medium">{goal.goalType}</h3>
-                      <p className="text-slate-400 text-sm mt-1">
+                <div key={goal.playerGoalId}>
+                  <div>
+                    <div>
+                      <h3>{goal.goalType}</h3>
+                      <p>
                         {goal.currentValue} / {goal.targetValue} 
                         {goal.season && ` (${goal.season})`}
                       </p>
-                      <div className="mt-2">
-                        <div className="bg-slate-600 rounded-full h-2">
-                          <div 
-                            className="bg-cyan-400 h-2 rounded-full transition-all" 
-                            style={{width: `${progress}%`}}
-                          ></div>
+                      <div>
+                        <div>
+                          <div style={{width: `${progress}%`}}></div>
                         </div>
-                        <p className="text-slate-400 text-xs mt-1">{progress.toFixed(1)}% Complete</p>
+                        <p>{progress.toFixed(1)}% Complete</p>
                       </div>
                     </div>
-                    <div className="flex gap-2 ml-4">
-                      <button 
-                        onClick={() => handleEdit(goal)}
-                        className="text-cyan-400 hover:text-cyan-300 text-sm px-2 py-1"
-                      >
+                    <div>
+                      <button onClick={() => handleEdit(goal)}>
                         Edit
                       </button>
-                      <button 
-                        onClick={() => handleDelete(goal.playerGoalId)}
-                        className="text-red-400 hover:text-red-300 text-sm px-2 py-1"
-                      >
+                      <button onClick={() => handleDelete(goal.playerGoalId)}>
                         Delete
                       </button>
                     </div>
