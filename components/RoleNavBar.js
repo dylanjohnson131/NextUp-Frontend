@@ -2,8 +2,18 @@ import Link from 'next/link'
 import { logout as apiLogout } from '../lib/api'
 import { useAuth } from '../contexts/AuthContext'
 
+import { useState } from 'react'
+
+function getInitials(name) {
+  if (!name) return '';
+  const parts = name.trim().split(' ');
+  if (parts.length === 1) return parts[0][0].toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
 export default function RoleNavBar() {
   const { user, loading, isAuthenticated, logout } = useAuth()
+  const [showDropdown, setShowDropdown] = useState(false)
 
   const handleLogout = async () => {
     try {
@@ -14,42 +24,35 @@ export default function RoleNavBar() {
     }
   }
 
-  if (loading) {
-    return (
-      <nav className="bg-slate-900/95 backdrop-blur-sm border-b border-slate-700/50 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-8">
-          <div className="flex items-center justify-between h-16">
-            <Link href="/" className="text-2xl font-bold text-cyan-400 hover:text-cyan-300 transition-colors">
-              NextUp
-            </Link>
-            <div className="text-slate-400 animate-pulse">Loading...</div>
-          </div>
-        </div>
-      </nav>
-    )
+  const handleAvatarClick = () => setShowDropdown(v => !v)
+  const closeDropdown = () => setShowDropdown(false)
+
+  if (loading || !user || !user.role) {
+    return null;
   }
 
-  if (!isAuthenticated) {
+  if (user.role === 'Player') {
     return (
-      <nav className="bg-slate-900/95 backdrop-blur-sm border-b border-slate-700/50 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-8">
-          <div className="flex items-center justify-between h-16">
-            <Link href="/" className="text-2xl font-bold text-cyan-400 hover:text-cyan-300 transition-colors">
-              NextUp
-            </Link>
-            <div className="flex items-center space-x-4">
-              <Link 
-                href="/login" 
-                className="text-slate-300 hover:text-white px-3 py-2 rounded-md transition-colors duration-200"
-              >
-                Login
-              </Link>
-              <Link 
-                href="/register" 
-                className="bg-cyan-500 hover:bg-cyan-600 text-white px-4 py-2 rounded-md font-medium transition-colors duration-200 shadow-lg shadow-cyan-500/25"
-              >
-                Sign Up
-              </Link>
+      <nav className="navbar">
+        <div className="navbar-content">
+          <div className="navbar-row">
+            <img src="/nextup-logo.png" alt="NextUp Logo" className="navbar-logo" style={{ height: '7rem', width: 'auto', display: 'inline-block', verticalAlign: 'middle' }} />
+            <div className="navbar-links">
+              <Link href="/player/dashboard" className="navbar-link">Dashboard</Link>
+              <Link href="/player/my-stats" className="navbar-link">My Stats</Link>
+              <Link href="/player/my-goals" className="navbar-link">My Goals</Link>
+              <Link href="/player/team-info" className="navbar-link">My Team</Link>
+              <Link href="/player/matchup" className="navbar-link">Matchup</Link>
+            </div>
+            <div className="navbar-user" tabIndex={0} onBlur={closeDropdown} style={{ position: 'relative', marginLeft: '2rem' }}>
+              <div className="navbar-avatar" onClick={handleAvatarClick} style={{ cursor: 'pointer', background: '#1976d2', color: '#fff', borderRadius: '50%', width: 48, height: 48, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 600, fontSize: 22, boxShadow: '0 2px 8px rgba(0,0,0,0.10)' }} title={user.name}>
+                {getInitials(user.name)}
+              </div>
+              {showDropdown && (
+                <div style={{ position: 'absolute', right: 0, top: 56, background: '#fff', borderRadius: 8, boxShadow: '0 2px 8px rgba(0,0,0,0.15)', padding: '0.5rem 1rem', zIndex: 2000, minWidth: 120 }}>
+                  <button className="button" style={{ width: '100%' }} onMouseDown={handleLogout}>Logout</button>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -59,105 +62,25 @@ export default function RoleNavBar() {
 
   if (user.role === 'Coach') {
     return (
-      <nav className="bg-slate-900/95 backdrop-blur-sm border-b border-slate-700/50 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-8">
-          <div className="flex items-center justify-between h-16">
-            <Link href="/" className="text-2xl font-bold text-cyan-400 hover:text-cyan-300 transition-colors">
-              NextUp
-            </Link>
-            
-            <div className="flex items-center space-x-8">
-              <Link 
-                href="/coach/dashboard" 
-                className="text-slate-300 hover:text-cyan-400 px-3 py-2 rounded-md font-medium transition-colors duration-200"
-              >
-                Dashboard
-              </Link>
-              <Link 
-                href="/coach/depth-chart" 
-                className="text-slate-300 hover:text-cyan-400 px-3 py-2 rounded-md font-medium transition-colors duration-200"
-              >
-                Depth Chart
-              </Link>
-              <Link 
-                href="/coach/schedule" 
-                className="text-slate-300 hover:text-cyan-400 px-3 py-2 rounded-md font-medium transition-colors duration-200"
-              >
-                Schedule
-              </Link>
-              <Link 
-                href="/coach/game-stats" 
-                className="text-slate-300 hover:text-cyan-400 px-3 py-2 rounded-md font-medium transition-colors duration-200"
-              >
-                Game Stats
-              </Link>
-              
-              <div className="flex items-center space-x-4 ml-8 pl-8 border-l border-slate-700">
-                <span className="text-slate-400 font-medium">Coach {user.name}</span>
-                <button 
-                  onClick={handleLogout}
-                  className="bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white px-4 py-2 rounded-md transition-colors duration-200 border border-slate-600"
-                >
-                  Logout
-                </button>
-              </div>
+      <nav className="navbar">
+        <div className="navbar-content">
+          <div className="navbar-row">
+            <img src="/nextup-logo.png" alt="NextUp Logo" className="navbar-logo" style={{ height: '7rem', width: 'auto', display: 'inline-block', verticalAlign: 'middle' }} />
+            <div className="navbar-links">
+              <Link href="/coach/dashboard" className="navbar-link">Dashboard</Link>
+              <Link href="/coach/schedule" className="navbar-link">Schedule</Link>
+              <Link href="/coach/game-stats" className="navbar-link">Game Stats</Link>
+              <Link href="/coach/my-team" className="navbar-link">My Team</Link>
             </div>
-          </div>
-        </div>
-      </nav>
-    )
-  }
-
-  if (user.role === 'Player') {
-    return (
-      <nav className="bg-slate-900/95 backdrop-blur-sm border-b border-slate-700/50 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-8">
-          <div className="flex items-center justify-between h-16">
-            <Link href="/" className="text-2xl font-bold text-cyan-400 hover:text-cyan-300 transition-colors">
-              NextUp
-            </Link>
-            
-            <div className="flex items-center space-x-8">
-              <Link 
-                href="/player/dashboard" 
-                className="text-slate-300 hover:text-cyan-400 px-3 py-2 rounded-md font-medium transition-colors duration-200"
-              >
-                Dashboard
-              </Link>
-              <Link 
-                href="/player/my-stats" 
-                className="text-slate-300 hover:text-cyan-400 px-3 py-2 rounded-md font-medium transition-colors duration-200"
-              >
-                My Stats
-              </Link>
-              <Link 
-                href="/player/my-goals" 
-                className="text-slate-300 hover:text-cyan-400 px-3 py-2 rounded-md font-medium transition-colors duration-200"
-              >
-                My Goals
-              </Link>
-              <Link 
-                href="/player/team-info" 
-                className="text-slate-300 hover:text-cyan-400 px-3 py-2 rounded-md font-medium transition-colors duration-200"
-              >
-                My Team
-              </Link>
-              <Link 
-                href="/player/matchup" 
-                className="text-slate-300 hover:text-cyan-400 px-3 py-2 rounded-md font-medium transition-colors duration-200"
-              >
-                Matchup
-              </Link>
-              
-              <div className="flex items-center space-x-4 ml-8 pl-8 border-l border-slate-700">
-                <span className="text-slate-400 font-medium">{user.name}</span>
-                <button 
-                  onClick={handleLogout}
-                  className="bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white px-4 py-2 rounded-md transition-colors duration-200 border border-slate-600"
-                >
-                  Logout
-                </button>
+            <div className="navbar-user" tabIndex={0} onBlur={closeDropdown} style={{ position: 'relative', marginLeft: '2rem' }}>
+              <div className="navbar-avatar" onClick={handleAvatarClick} style={{ cursor: 'pointer', background: '#1976d2', color: '#fff', borderRadius: '50%', width: 48, height: 48, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 600, fontSize: 22, boxShadow: '0 2px 8px rgba(0,0,0,0.10)' }} title={user.name}>
+                {getInitials(user.name)}
               </div>
+              {showDropdown && (
+                <div style={{ position: 'absolute', right: 0, top: 56, background: '#fff', borderRadius: 8, boxShadow: '0 2px 8px rgba(0,0,0,0.15)', padding: '0.5rem 1rem', zIndex: 2000, minWidth: 120 }}>
+                  <button className="button" style={{ width: '100%' }} onMouseDown={handleLogout}>Logout</button>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -167,48 +90,25 @@ export default function RoleNavBar() {
 
   if (user.role === 'AthleticDirector') {
     return (
-      <nav className="bg-slate-900/95 backdrop-blur-sm border-b border-slate-700/50 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-8">
-          <div className="flex items-center justify-between h-16">
-            <Link href="/" className="text-2xl font-bold text-cyan-400 hover:text-cyan-300 transition-colors">
-              NextUp
-            </Link>
-            
-            <div className="flex items-center space-x-8">
-              <Link 
-                href="/athletic-director/dashboard" 
-                className="text-slate-300 hover:text-cyan-400 px-3 py-2 rounded-md font-medium transition-colors duration-200"
-              >
-                Dashboard
-              </Link>
-              <Link 
-                href="/athletic-director/teams" 
-                className="text-slate-300 hover:text-cyan-400 px-3 py-2 rounded-md font-medium transition-colors duration-200"
-              >
-                Teams
-              </Link>
-              <Link 
-                href="/athletic-director/games" 
-                className="text-slate-300 hover:text-cyan-400 px-3 py-2 rounded-md font-medium transition-colors duration-200"
-              >
-                Games
-              </Link>
-              <Link 
-                href="/athletic-director/season" 
-                className="text-slate-300 hover:text-cyan-400 px-3 py-2 rounded-md font-medium transition-colors duration-200"
-              >
-                Season Overview
-              </Link>
-              
-              <div className="flex items-center space-x-4 ml-8 pl-8 border-l border-slate-700">
-                <span className="text-slate-400 font-medium">Athletic Director {user.name}</span>
-                <button 
-                  onClick={handleLogout}
-                  className="bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white px-4 py-2 rounded-md transition-colors duration-200 border border-slate-600"
-                >
-                  Logout
-                </button>
+      <nav className="navbar">
+        <div className="navbar-content">
+          <div className="navbar-row">
+            <img src="/nextup-logo.png" alt="NextUp Logo" className="navbar-logo" style={{ height: '7rem', width: 'auto', display: 'inline-block', verticalAlign: 'middle' }} />
+            <div className="navbar-links">
+              <Link href="/athletic-director/dashboard" className="navbar-link">Dashboard</Link>
+              <Link href="/athletic-director/teams" className="navbar-link">Teams</Link>
+              <Link href="/athletic-director/games" className="navbar-link">Games</Link>
+              <Link href="/athletic-director/schedule" className="navbar-link">Schedule</Link>
+            </div>
+            <div className="navbar-user" tabIndex={0} onBlur={closeDropdown} style={{ position: 'relative', marginLeft: '2rem' }}>
+              <div className="navbar-avatar" onClick={handleAvatarClick} style={{ cursor: 'pointer', background: '#1976d2', color: '#fff', borderRadius: '50%', width: 48, height: 48, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 600, fontSize: 22, boxShadow: '0 2px 8px rgba(0,0,0,0.10)' }} title={user.name}>
+                {getInitials(user.name)}
               </div>
+              {showDropdown && (
+                <div style={{ position: 'absolute', right: 0, top: 56, background: '#fff', borderRadius: 8, boxShadow: '0 2px 8px rgba(0,0,0,0.15)', padding: '0.5rem 1rem', zIndex: 2000, minWidth: 120 }}>
+                  <button className="button" style={{ width: '100%' }} onMouseDown={handleLogout}>Logout</button>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -217,20 +117,19 @@ export default function RoleNavBar() {
   }
 
   return (
-    <nav className="bg-slate-900/95 backdrop-blur-sm border-b border-slate-700/50 sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-8">
-        <div className="flex items-center justify-between h-16">
-          <Link href="/" className="text-2xl font-bold text-cyan-400 hover:text-cyan-300 transition-colors">
-            NextUp
-          </Link>
-          <div className="flex items-center space-x-4">
-            <span className="text-slate-400 font-medium">{user.name}</span>
-            <button 
-              onClick={handleLogout}
-              className="bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white px-4 py-2 rounded-md transition-colors duration-200 border border-slate-600"
-            >
-              Logout
-            </button>
+    <nav className="navbar">
+      <div className="navbar-content">
+        <div className="navbar-row">
+          <img src="/nextup-logo.png" alt="NextUp Logo" className="navbar-logo" style={{ height: '7rem', width: 'auto', display: 'inline-block', verticalAlign: 'middle' }} />
+          <div className="navbar-user" tabIndex={0} onBlur={closeDropdown} style={{ position: 'relative', marginLeft: '2rem' }}>
+            <div className="navbar-avatar" onClick={handleAvatarClick} style={{ cursor: 'pointer', background: '#1976d2', color: '#fff', borderRadius: '50%', width: 48, height: 48, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 600, fontSize: 22, boxShadow: '0 2px 8px rgba(0,0,0,0.10)' }} title={user.name}>
+              {getInitials(user.name)}
+            </div>
+            {showDropdown && (
+              <div style={{ position: 'absolute', right: 0, top: 56, background: '#fff', borderRadius: 8, boxShadow: '0 2px 8px rgba(0,0,0,0.15)', padding: '0.5rem 1rem', zIndex: 2000, minWidth: 120 }}>
+                <button className="button" style={{ width: '100%' }} onMouseDown={handleLogout}>Logout</button>
+              </div>
+            )}
           </div>
         </div>
       </div>

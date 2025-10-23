@@ -43,7 +43,7 @@ function Login() {
         background: 'rgba(20, 30, 50, 0.98)',
         borderRadius: '22px',
         boxShadow: '0 8px 40px rgba(0,0,0,0.22)',
-        padding: '2.8rem 2.2rem',
+        padding: '2.2rem 1.2rem',
         maxWidth: 410,
         width: '100%',
         textAlign: 'center',
@@ -65,14 +65,14 @@ function Login() {
             value={email}
             onChange={e => setEmail(e.target.value)}
             style={{
-              width: '100%',
-              padding: '0.8rem 1.1rem',
+              width: '93%',
+              padding: '0.8rem 0.7rem',
               borderRadius: '10px',
               background: '#1e293b',
               color: '#fff',
               border: '1.5px solid #283e51',
               fontSize: '1.08rem',
-              marginBottom: '1.3rem',
+              marginBottom: '1.1rem',
               outline: 'none',
               boxShadow: '0 1px 4px #00e0ff11',
               transition: 'border 0.2s'
@@ -85,14 +85,14 @@ function Login() {
             value={password}
             onChange={e => setPassword(e.target.value)}
             style={{
-              width: '100%',
-              padding: '0.8rem 1.1rem',
+              width: '93%',
+              padding: '0.8rem 0.7rem',
               borderRadius: '10px',
               background: '#1e293b',
               color: '#fff',
               border: '1.5px solid #283e51',
               fontSize: '1.08rem',
-              marginBottom: '1.3rem',
+              marginBottom: '1.1rem',
               outline: 'none',
               boxShadow: '0 1px 4px #00e0ff11',
               transition: 'border 0.2s'

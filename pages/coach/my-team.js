@@ -36,18 +36,18 @@ function MyTeam() {
     const stored = localStorage.getItem('coachNotes');
     if (stored) setNotes(stored);
     return (
-      <main className="container mx-auto px-4 py-8">
-        <div className="text-center">Loading...</div>
+      <main style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ color: '#b6c2d1', fontSize: '1.2rem', textAlign: 'center' }}>Loading...</div>
       </main>
     )
   }
 
   if (!coach?.team) {
     return (
-      <main className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold text-white mb-6">My Team</h1>
-        <div className="bg-slate-800 rounded-lg p-6 text-center">
-          <p className="text-slate-400">You are not currently assigned to a team.</p>
+      <main style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
+        <h1 style={{ fontSize: '2.5rem', fontWeight: 700, color: '#fff', marginBottom: '2rem' }}>My Team</h1>
+        <div style={{ background: '#222', borderRadius: '14px', padding: '2rem 1.5rem', textAlign: 'center', color: '#b6c2b7', fontSize: '1.15rem' }}>
+          You are not currently assigned to a team.
         </div>
       </main>
     )
@@ -98,7 +98,7 @@ function MyTeam() {
     setTimeout(() => setSaved(false), 1500);
   };
   return (
-    <main style={{ maxWidth: '900px', margin: '0 auto', padding: '2.5rem 1.5rem' }}>
+  <main style={{ maxWidth: '900px', margin: '9rem auto 0 auto', padding: '2.5rem 1.5rem' }}>
       <h1 style={{ fontSize: '2.5rem', fontWeight: 700, color: 'var(--primary)', marginBottom: '1.2rem', letterSpacing: '0.5px' }}>My Team</h1>
       {/* Team Overview */}
       <div style={{ background: '#222', borderRadius: '14px', boxShadow: '0 2px 12px rgba(0,0,0,0.10)', padding: '2rem 1.5rem', marginBottom: '2rem' }}>
@@ -210,7 +210,7 @@ function MyTeam() {
           value={notes}
           onChange={e => setNotes(e.target.value)}
           rows={6}
-          style={{ width: '100%', padding: '1rem', borderRadius: '8px', fontSize: '1rem', background: '#222', color: '#fff', border: '1px solid #444', resize: 'vertical' }}
+          style={{ width: '93%', padding: '1rem', borderRadius: '8px', fontSize: '1rem', background: '#222', color: '#fff', border: '1px solid #444', resize: 'vertical' }}
           placeholder="Enter your notes here..."
         />
         <button

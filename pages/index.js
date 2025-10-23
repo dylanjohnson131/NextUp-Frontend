@@ -46,6 +46,7 @@ export default function Home() {
         width: '100%',
         textAlign: 'center'
       }}>
+        <img src="/nextup-logo.png" alt="NextUp Logo" style={{ width: '120px', marginBottom: '2rem', filter: 'drop-shadow(0 2px 8px #00e0ff33)' }} />
         <h1 style={{
           fontSize: '2.5rem',
           fontWeight: 800,

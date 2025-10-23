@@ -42,7 +42,7 @@ function Schedule() {
     )
   }
   return (
-    <main style={{ maxWidth: '900px', margin: '0 auto', padding: '2.5rem 1.5rem' }}>
+  <main style={{ maxWidth: '900px', margin: '9rem auto 0 auto', padding: '2.5rem 1.5rem' }}>
       <h1 style={{ fontSize: '2.5rem', fontWeight: 700, color: 'var(--primary)', marginBottom: '1.2rem', letterSpacing: '0.5px' }}>Schedule</h1>
       <div style={{ background: '#222', borderRadius: '14px', boxShadow: '0 2px 12px rgba(0,0,0,0.10)', padding: '2rem 1.5rem' }}>
         <h2 style={{ fontSize: '1.4rem', fontWeight: 600, color: 'var(--primary)', marginBottom: '1.2rem' }}>Upcoming Matchups</h2>

@@ -10,13 +10,12 @@ function PlayerDashboard() {
   const router = useRouter()
   const [user, setUser] = useState(null)
   const [playerData, setPlayerData] = useState(null)
+  const [playerStats, setPlayerStats] = useState([])
   const [nextGame, setNextGame] = useState(null)
   const [opponent, setOpponent] = useState(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    console.log('Player dashboard useEffect running');
-    // Debug: log userInfo after fetching, and log errors
     const logUserInfo = (userInfo) => {
       if (userInfo) {
         console.log('Fetched userInfo:', userInfo);
@@ -42,29 +41,29 @@ function PlayerDashboard() {
         logUserInfo(userInfo);
         setUser(userInfo)
         setPlayerData(currentPlayer)
-        console.log('Current player:', currentPlayer);
-        console.log('Current player team:', currentPlayer?.team);
-        console.log('Current player teamId:', currentPlayer?.team?.teamId);
-
+        // Fetch player stats if we have a playerId
+        if (currentPlayer?.playerId) {
+          try {
+            const stats = await import('../../lib/api').then(api => api.fetchPlayerStats(currentPlayer.playerId));
+            setPlayerStats(stats || []);
+          } catch (err) {
+            console.error('Error fetching player stats:', err);
+          }
+        }
         // Fetch next game if player has a team
         if (currentPlayer?.team?.teamId) {
           try {
             const upcomingGames = await fetchUpcomingGames(currentPlayer.team.teamId)
-            console.log('Upcoming games:', upcomingGames);
             if (upcomingGames && upcomingGames.length > 0) {
               const game = upcomingGames[0];
-              console.log('Next game:', game);
               setNextGame(game);
-              // Determine opponent based on backend's HomeTeamId/AwayTeamId and HomeTeam/AwayTeam
               const myTeamId = currentPlayer.team.teamId;
               let opp = null;
-              // Backend returns HomeTeam and AwayTeam with homeTeamId/awayTeamId (lowercase in JSON)
               if (game.homeTeam?.homeTeamId === myTeamId) {
                 opp = game.awayTeam;
               } else if (game.awayTeam?.awayTeamId === myTeamId) {
                 opp = game.homeTeam;
               }
-              console.log('Opponent:', opp);
               setOpponent(opp);
             }
           } catch (error) {
@@ -72,24 +71,23 @@ function PlayerDashboard() {
           }
         }
       } catch (error) {
-        } finally {
+      } finally {
         setLoading(false)
       }
     }
-    
     loadData()
   }, [])
 
   if (loading) {
     return (
-      <main style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(135deg, #0a192f 0%, #1e293b 100%)', paddingTop: '7rem' }}>
+      <main style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(135deg, #0a192f 0%, #1e293b 100%)', paddingTop: '9rem' }}>
         <div style={{ color: '#b6c2d1', fontSize: '1.2rem' }}>Loading...</div>
       </main>
     )
   }
 
   return (
-    <main style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #0a192f 0%, #1e293b 100%)', paddingTop: '7rem', paddingBottom: '3rem' }}>
+    <main style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #0a192f 0%, #1e293b 100%)', paddingTop: '9rem', paddingBottom: '3rem' }}>
       <section style={{ maxWidth: 950, margin: '0 auto', padding: '0 1.5rem' }}>
         <div style={{ textAlign: 'center', marginBottom: '2.2rem' }}>
           <h1 style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--primary, #00e0ff)', letterSpacing: '2px', marginBottom: '0.5rem', textShadow: '0 2px 12px #00e0ff33' }}>Player Dashboard</h1>
@@ -97,9 +95,9 @@ function PlayerDashboard() {
             Welcome back, {user?.name ? user.name.split(' ')[0] : 'Player'}! Track your progress and team performance.
           </p>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2.2rem', marginBottom: '2.2rem' }}>
-          {/* Player Quick Stats */}
-          <div style={{ background: 'var(--card, #222)', borderRadius: '16px', boxShadow: '0 2px 16px #00e0ff11', padding: '2rem 1.5rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '2.2rem' }}>
+          {/* Player Quick Stats - flush with Next Game card */}
+          <div style={{ background: 'var(--card, #222)', borderRadius: '16px', boxShadow: '0 2px 16px #00e0ff11', padding: '2rem 1.5rem', marginBottom: '0', width: '190%' }}>
             <h2 style={{ fontSize: '1.35rem', fontWeight: 700, color: 'var(--primary, #00e0ff)', marginBottom: '1.2rem' }}>Your Profile</h2>
             {playerData ? (
               <div style={{ display: 'grid', rowGap: '1.1rem' }}>
@@ -124,18 +122,7 @@ function PlayerDashboard() {
               <p style={{ color: '#b6c2d1' }}>Player data not found</p>
             )}
           </div>
-          {/* Recent Performance Chart */}
-          <div style={{ background: 'var(--card, #222)', borderRadius: '16px', boxShadow: '0 2px 16px #00e0ff11', padding: '2rem 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <PlayerPerformanceChart
-              data={[
-                { label: 'Game 1', grade: 75 },
-                { label: 'Game 2', grade: 80 },
-                { label: 'Game 3', grade: 85 },
-                { label: 'Game 4', grade: 90 },
-                { label: 'Game 5', grade: 88 },
-              ]}
-            />
-          </div>
+          {/* Recent Performance Chart removed as requested */}
         </div>
         {/* Next Game */}
         <div style={{ background: 'var(--card, #222)', borderRadius: '16px', boxShadow: '0 2px 16px #00e0ff11', padding: '2rem 1.5rem', marginBottom: '2rem' }}>

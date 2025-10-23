@@ -12,9 +12,35 @@ function MyStats() {
     const loadPlayer = async () => {
       try {
         setLoading(true)
-  const playerData = await getCurrentPlayer()
-        const stats = await fetchPlayerStats(playerData.playerId).catch(() => null)
-        setPlayer({ ...playerData, stats })
+        const playerData = await getCurrentPlayer()
+        const statsArr = await fetchPlayerStats(playerData.playerId).catch(() => []);
+        // Calculate averages for each stat
+        // Helper to convert PascalCase to camelCase
+        function toCamelCase(str) {
+          return str.charAt(0).toLowerCase() + str.slice(1);
+        }
+        const statSums = {};
+        const statCounts = {};
+        let totalCompletions = 0;
+        let totalAttempts = 0;
+        statsArr.forEach(gameStats => {
+          Object.entries(gameStats).forEach(([key, value]) => {
+            const camelKey = toCamelCase(key);
+            if (typeof value === 'number') {
+              statSums[camelKey] = (statSums[camelKey] || 0) + value;
+              statCounts[camelKey] = (statCounts[camelKey] || 0) + 1;
+              if (camelKey === 'completions') totalCompletions += value;
+              if (camelKey === 'passingAttempts') totalAttempts += value;
+            }
+          });
+        });
+        const statAverages = {};
+        Object.keys(statSums).forEach(key => {
+          statAverages[key] = statCounts[key] ? (statSums[key] / statCounts[key]) : 0;
+        });
+        // Calculate season completion percentage
+        statAverages.completionPercentage = totalAttempts > 0 ? (totalCompletions / totalAttempts) * 100 : 0;
+        setPlayer({ ...playerData, stats: statAverages })
       } catch (err) {
         console.error('Player info error:', err)
         setError('Failed to load your player information')
@@ -42,7 +68,7 @@ function MyStats() {
   }
 
   return (
-    <main className="container" style={{ maxWidth: 700, margin: '4rem auto', padding: '2.5rem 2rem', background: 'var(--card)', borderRadius: 16, boxShadow: '0 4px 24px #00e0ff22, 0 1.5px 8px #000a' }}>
+  <main className="container" style={{ maxWidth: 700, margin: '9rem auto 4rem auto', padding: '2.5rem 2rem', background: 'var(--card)', borderRadius: 16, boxShadow: '0 4px 24px #00e0ff22, 0 1.5px 8px #000a' }}>
       <h1 style={{
         fontSize: '2.6rem',
         fontWeight: 800,

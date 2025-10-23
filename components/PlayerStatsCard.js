@@ -29,6 +29,19 @@ const PlayerStatsCard = ({ player }) => {
   // Pick 3-5 key stats for summary bar (customize per position as needed)
   const summaryStats = statKeys.slice(0, 4);
 
+  // Helper to convert PascalCase to camelCase
+  function toCamelCase(str) {
+    return str.charAt(0).toLowerCase() + str.slice(1);
+  }
+  // Normalize stats keys for display
+  const normalizedStats = {};
+  if (player.stats) {
+    Object.entries(player.stats).forEach(([key, value]) => {
+      normalizedStats[toCamelCase(key)] = value;
+    });
+  }
+
+  // Use normalizedStats for stat display
   return (
     <div style={{
       background: 'var(--card)',
@@ -88,7 +101,7 @@ const PlayerStatsCard = ({ player }) => {
         {summaryStats.map((stat) => (
           <div key={stat} style={{ flex: 1, textAlign: 'center' }}>
             <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#00e0ff', textShadow: '0 1px 8px #00e0ff33' }}>
-              {player.stats && player.stats[stat] !== undefined ? player.stats[stat] : '--'}
+              {normalizedStats[stat] !== undefined ? normalizedStats[stat] : '--'}
             </div>
             <div style={{ color: 'var(--muted)', fontSize: '0.95rem', marginTop: 4 }}>{formatStatLabel(stat)}</div>
           </div>
@@ -109,7 +122,7 @@ const PlayerStatsCard = ({ player }) => {
             boxShadow: '0 1px 6px #00e0ff22'
           }}>
             <div style={{ fontSize: '1.15rem', fontWeight: 600, color: 'var(--text)' }}>
-              {player.stats && player.stats[stat] !== undefined ? player.stats[stat] : '--'}
+              {normalizedStats[stat] !== undefined ? normalizedStats[stat] : '--'}
             </div>
             <div style={{ color: 'var(--muted)', fontSize: '0.9rem', marginTop: 4 }}>{formatStatLabel(stat)}</div>
           </div>
