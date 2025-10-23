@@ -69,6 +69,9 @@ npm start
 yarn build
 yarn start
 # Project Structure
+
+```
+
 nextup-client/
 ├── .gitignore
 ├── next.config.js
@@ -122,6 +125,9 @@ nextup-client/
 │   ├── ad-dashboard.css
 │   ├── globals.css
 │   └── navbar-modern.css
+
+```
+
 # Key Pages
 
 Landing Page (/ or index.js): The main entry point introducing the app.
