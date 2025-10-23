@@ -230,283 +230,286 @@ function GamesManagement() {
     )
   }
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-      <div className="container mx-auto px-6 py-8">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-4xl font-bold text-white mb-2">Games Management</h1>
-          </div>
-          {!showCreateForm && (
-            <button
-              onClick={() => setShowCreateForm(true)}
-              className="bg-cyan-500 hover:bg-cyan-600 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 flex items-center gap-2 shadow-lg"
-              style={{ boxShadow: '0 2px 12px #00e0ff33' }}
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-              </svg>
-              Schedule Game
-            </button>
-          )}
-        </div>
-
-        {/* Error Display */}
-        {error && (
-          <div className="mb-6 p-4 bg-red-900/20 border border-red-700/50 rounded-lg">
-            <p className="text-red-400">{error}</p>
-          </div>
-        )}
-
-        {/* Create/Edit Form */}
-        {showCreateForm && (
-          <div className="mb-8 bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6">
-            <h2 className="text-2xl font-semibold text-white mb-6">
-              {editingGame ? 'Edit Game' : 'Schedule New Game'}
-            </h2>
-            
-            {teams.length < 2 && (
-              <div className="mb-6 p-4 bg-yellow-900/20 border border-yellow-700/50 rounded-lg">
-                <p className="text-yellow-400">
-                  You need at least 2 teams to schedule a game. 
-                  <a href="/athletic-director/teams" className="underline ml-1">Create teams first</a>
-                </p>
-              </div>
-            )}
-            
-            <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">
-                  Home Team *
-                </label>
-                <select
-                  required
-                  value={formData.homeTeamId}
-                  onChange={(e) => setFormData({ ...formData, homeTeamId: e.target.value })}
-                  className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
-                >
-                  <option value="">Select Home Team</option>
-                  {teams.map((team, index) => (
-                    <option key={team.teamId || `home-team-${index}`} value={team.teamId}>
-                      {team.name} ({team.school || team.location})
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">
-                  Away Team *
-                </label>
-                <select
-                  required
-                  value={formData.awayTeamId}
-                  onChange={(e) => setFormData({ ...formData, awayTeamId: e.target.value })}
-                  className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
-                >
-                  <option value="">Select Away Team</option>
-                  {teams.map((team, index) => (
-                    <option key={team.teamId || `away-team-${index}`} value={team.teamId} disabled={team.teamId && team.teamId.toString() === formData.homeTeamId}>
-                      {team.name} ({team.school || team.location})
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">
-                  Game Date *
-                </label>
-                <input
-                  type="date"
-                  required
-                  value={formData.gameDate}
-                  onChange={(e) => setFormData({ ...formData, gameDate: e.target.value })}
-                  className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">
-                  Game Time *
-                </label>
-                <input
-                  type="time"
-                  required
-                  value={formData.gameTime}
-                  onChange={(e) => setFormData({ ...formData, gameTime: e.target.value })}
-                  className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">
-                  Location
-                </label>
-                <input
-                  type="text"
-                  value={formData.location}
-                  onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                  className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
-                  placeholder="Enter game location"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">
-                  Week
-                </label>
-                <input
-                  type="number"
-                  min="1"
-                  max="17"
-                  value={formData.week}
-                  onChange={(e) => setFormData({ ...formData, week: e.target.value })}
-                  className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
-                  placeholder="Enter week number"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">
-                  Season *
-                </label>
-                <input
-                  type="number"
-                  required
-                  min="2020"
-                  max="2030"
-                  value={formData.season}
-                  onChange={(e) => setFormData({ ...formData, season: e.target.value })}
-                  className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">
-                  Status *
-                </label>
-                <select
-                  required
-                  value={formData.status}
-                  onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                  className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
-                >
-                  <option value="Scheduled">Scheduled</option>
-                  <option value="InProgress">In Progress</option>
-                  <option value="Completed">Completed</option>
-                  <option value="Cancelled">Cancelled</option>
-                </select>
-              </div>
-
-              <div className="md:col-span-2 flex gap-4">
-                <button
-                  type="submit"
-                  disabled={teams.length < 2}
-                  className="bg-cyan-500 hover:bg-cyan-600 disabled:bg-slate-600 disabled:cursor-not-allowed text-white px-8 py-3 rounded-lg font-medium transition-colors duration-200"
-                >
-                  {editingGame ? 'Update Game' : 'Schedule Game'}
-                </button>
-                <button
-                  type="button"
-                  onClick={cancelForm}
-                  className="bg-slate-600 hover:bg-slate-700 text-white px-8 py-3 rounded-lg font-medium transition-colors duration-200"
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
-          </div>
-        )}
-
-        {/* Games List */}
-        <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-xl overflow-hidden">
-          <div className="px-6 py-4 border-b border-slate-700/50">
-            <h2 className="text-xl font-semibold text-white">All Games ({games.length})</h2>
-            <input
-              type="text"
-              placeholder="Filter by team, location, or week..."
-              value={filter}
-              onChange={e => setFilter(e.target.value)}
-              style={{ marginTop: 12, width: '100%', maxWidth: 350, padding: 8, borderRadius: 6, border: '1px solid #334155', background: '#1e293b', color: '#fff' }}
-            />
-          </div>
-          {games.length === 0 ? (
-            <div className="p-8 text-center">
-              <div className="text-6xl mb-4">📅</div>
-              <h3 className="text-xl font-semibold text-white mb-2">No Games Scheduled</h3>
-              <p className="text-slate-400 mb-6">Schedule your first game to get started</p>
+    return (
+      <div style={{ minHeight: '100vh', background: 'var(--background-gradient)' }}>
+        <div className="main-container" style={{ paddingTop: '7rem' }}>
+          {/* Header */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32 }}>
+            <div>
+              <h1 style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: 8 }}>Games Management</h1>
+            </div>
+            {!showCreateForm && (
               <button
                 onClick={() => setShowCreateForm(true)}
-                disabled={teams.length < 2}
-                className="bg-cyan-500 hover:bg-cyan-600 disabled:bg-slate-600 disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200"
+                className="btn-accent"
+                style={{ display: 'flex', alignItems: 'center', gap: 8, boxShadow: '0 2px 12px #00e0ff33', padding: '12px 24px', borderRadius: 10, fontWeight: 500, fontSize: '1rem', color: '#fff', background: 'var(--accent)', border: 'none', cursor: 'pointer' }}
               >
-                {teams.length < 2 ? 'Create Teams First' : 'Schedule Game'}
+                <svg width={20} height={20} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                </svg>
+                Schedule Game
               </button>
+            )}
+          </div>
+
+          {/* Error Display */}
+          {error && (
+            <div style={{ marginBottom: 24, padding: 16, background: 'rgba(180,0,0,0.08)', border: '1px solid #a00', borderRadius: 10 }}>
+              <p style={{ color: '#e44' }}>{error}</p>
             </div>
-          ) : (
-            <div className="divide-y divide-slate-700/50">
-              {games
-                .filter(game => {
-                  const search = filter.toLowerCase();
-                  return (
-                    (game.awayTeam?.name && game.awayTeam.name.toLowerCase().includes(search)) ||
-                    (game.homeTeam?.name && game.homeTeam.name.toLowerCase().includes(search)) ||
-                    (game.location && game.location.toLowerCase().includes(search)) ||
-                    (game.week && game.week.toString().includes(search))
-                  );
-                })
-                .map((game, index) => (
-                  <div key={`game-${game.gameId || index}`} className="p-6 hover:bg-slate-700/30 transition-colors duration-200">
-                    <div className="flex justify-between items-start">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-3">
-                          <h3 className="text-xl font-semibold text-white">
+          )}
+
+          {/* Create/Edit Form */}
+          {showCreateForm && (
+            <div style={{ marginBottom: 32, background: 'rgba(30,40,60,0.7)', border: '1px solid #334', borderRadius: 16, padding: 24, backdropFilter: 'blur(2px)' }}>
+              <h2 style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: 24 }}>
+                {editingGame ? 'Edit Game' : 'Schedule New Game'}
+              </h2>
+              {teams.length < 2 && (
+                <div style={{ marginBottom: 24, padding: 16, background: 'rgba(180,180,0,0.08)', border: '1px solid #aa0', borderRadius: 10 }}>
+                  <p style={{ color: '#e4e400' }}>
+                    You need at least 2 teams to schedule a game. 
+                    <a href="/athletic-director/teams" style={{ textDecoration: 'underline', marginLeft: 4, color: 'var(--accent)' }}>Create teams first</a>
+                  </p>
+                </div>
+              )}
+              <form onSubmit={handleSubmit} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.95rem', fontWeight: 500, color: 'var(--text-secondary)', marginBottom: 8 }}>
+                    Home Team *
+                  </label>
+                  <select
+                    required
+                    value={formData.homeTeamId}
+                    onChange={(e) => setFormData({ ...formData, homeTeamId: e.target.value })}
+                    style={{ width: '100%', padding: '12px', background: 'var(--input-bg)', border: '1px solid #334', borderRadius: 8, color: '#fff', fontSize: '1rem' }}
+                  >
+                    <option value="">Select Home Team</option>
+                    {teams.map((team, index) => (
+                      <option key={team.teamId || `home-team-${index}`} value={team.teamId}>
+                        {team.name} ({team.school || team.location})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.95rem', fontWeight: 500, color: 'var(--text-secondary)', marginBottom: 8 }}>
+                    Away Team *
+                  </label>
+                  <select
+                    required
+                    value={formData.awayTeamId}
+                    onChange={(e) => setFormData({ ...formData, awayTeamId: e.target.value })}
+                    style={{ width: '100%', padding: '12px', background: 'var(--input-bg)', border: '1px solid #334', borderRadius: 8, color: '#fff', fontSize: '1rem' }}
+                  >
+                    <option value="">Select Away Team</option>
+                    {teams.map((team, index) => (
+                      <option key={team.teamId || `away-team-${index}`} value={team.teamId} disabled={team.teamId && team.teamId.toString() === formData.homeTeamId}>
+                        {team.name} ({team.school || team.location})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.95rem', fontWeight: 500, color: 'var(--text-secondary)', marginBottom: 8 }}>
+                    Game Date *
+                  </label>
+                  <input
+                    type="date"
+                    required
+                    value={formData.gameDate}
+                    onChange={(e) => setFormData({ ...formData, gameDate: e.target.value })}
+                    style={{ width: '100%', padding: '12px', background: 'var(--input-bg)', border: '1px solid #334', borderRadius: 8, color: '#fff', fontSize: '1rem' }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.95rem', fontWeight: 500, color: 'var(--text-secondary)', marginBottom: 8 }}>
+                    Game Time *
+                  </label>
+                  <input
+                    type="time"
+                    required
+                    value={formData.gameTime}
+                    onChange={(e) => setFormData({ ...formData, gameTime: e.target.value })}
+                    style={{ width: '100%', padding: '12px', background: 'var(--input-bg)', border: '1px solid #334', borderRadius: 8, color: '#fff', fontSize: '1rem' }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.95rem', fontWeight: 500, color: 'var(--text-secondary)', marginBottom: 8 }}>
+                    Location
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.location}
+                    onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                    style={{ width: '100%', padding: '12px', background: 'var(--input-bg)', border: '1px solid #334', borderRadius: 8, color: '#fff', fontSize: '1rem' }}
+                    placeholder="Enter game location"
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.95rem', fontWeight: 500, color: 'var(--text-secondary)', marginBottom: 8 }}>
+                    Week
+                  </label>
+                  <input
+                    type="number"
+                    min="1"
+                    max="17"
+                    value={formData.week}
+                    onChange={(e) => setFormData({ ...formData, week: e.target.value })}
+                    style={{ width: '100%', padding: '12px', background: 'var(--input-bg)', border: '1px solid #334', borderRadius: 8, color: '#fff', fontSize: '1rem' }}
+                    placeholder="Enter week number"
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.95rem', fontWeight: 500, color: 'var(--text-secondary)', marginBottom: 8 }}>
+                    Season *
+                  </label>
+                  <input
+                    type="number"
+                    required
+                    min="2020"
+                    max="2030"
+                    value={formData.season}
+                    onChange={(e) => setFormData({ ...formData, season: e.target.value })}
+                    style={{ width: '100%', padding: '12px', background: 'var(--input-bg)', border: '1px solid #334', borderRadius: 8, color: '#fff', fontSize: '1rem' }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.95rem', fontWeight: 500, color: 'var(--text-secondary)', marginBottom: 8 }}>
+                    Status *
+                  </label>
+                  <select
+                    required
+                    value={formData.status}
+                    onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                    style={{ width: '100%', padding: '12px', background: 'var(--input-bg)', border: '1px solid #334', borderRadius: 8, color: '#fff', fontSize: '1rem' }}
+                  >
+                    <option value="Scheduled">Scheduled</option>
+                    <option value="InProgress">In Progress</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Cancelled">Cancelled</option>
+                  </select>
+                </div>
+
+                <div style={{ gridColumn: 'span 2', display: 'flex', gap: 16, marginTop: 8 }}>
+                  <button
+                    type="submit"
+                    disabled={teams.length < 2}
+                    className="btn-accent"
+                    style={{ padding: '12px 32px', borderRadius: 10, fontWeight: 500, fontSize: '1rem', color: '#fff', background: 'var(--accent)', border: 'none', cursor: teams.length < 2 ? 'not-allowed' : 'pointer', opacity: teams.length < 2 ? 0.6 : 1 }}
+                  >
+                    {editingGame ? 'Update Game' : 'Schedule Game'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={cancelForm}
+                    className="btn-secondary"
+                    style={{ padding: '12px 32px', borderRadius: 10, fontWeight: 500, fontSize: '1rem', color: '#fff', background: '#334', border: 'none', cursor: 'pointer' }}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+          )}
+
+          {/* Games List */}
+          <div style={{ background: 'rgba(30,40,60,0.7)', border: '1px solid #334', borderRadius: 20, boxShadow: '0 4px 24px #00e0ff22, 0 1.5px 8px #000a', overflow: 'hidden', marginBottom: 32, marginTop: 24 }}>
+            <div style={{ padding: '24px 32px', borderBottom: '1px solid #334', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '1px' }}>All Games <span style={{ color: 'var(--accent)' }}>({games.length})</span></h2>
+              <input
+                type="text"
+                placeholder="Filter by team, location, or week..."
+                value={filter}
+                onChange={e => setFilter(e.target.value)}
+                style={{ background: 'var(--input-bg)', border: '1px solid #334', borderRadius: 8, padding: '10px 16px', color: '#fff', fontSize: '1rem', width: '100%', maxWidth: 260, marginLeft: 16 }}
+              />
+            </div>
+            {games.length === 0 ? (
+              <div style={{ padding: 48, textAlign: 'center' }}>
+                <div style={{ fontSize: '3rem', marginBottom: 16 }}>📅</div>
+                <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: 8 }}>No Games Scheduled</h3>
+                <p style={{ color: 'var(--text-secondary)', marginBottom: 24 }}>Schedule your first game to get started</p>
+                <button
+                  onClick={() => setShowCreateForm(true)}
+                  disabled={teams.length < 2}
+                  className="btn-accent"
+                  style={{ padding: '16px 32px', borderRadius: 12, fontWeight: 700, fontSize: '1.1rem', color: '#fff', background: 'var(--accent)', border: 'none', cursor: teams.length < 2 ? 'not-allowed' : 'pointer', opacity: teams.length < 2 ? 0.6 : 1 }}
+                >
+                  <span style={{ fontSize: '1.5rem', marginRight: 8 }}>+</span> Schedule Game
+                </button>
+              </div>
+            ) : (
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 32, padding: 32 }}>
+                {games
+                  .filter(game => {
+                    const search = filter.toLowerCase();
+                    return (
+                      (game.awayTeam?.name && game.awayTeam.name.toLowerCase().includes(search)) ||
+                      (game.homeTeam?.name && game.homeTeam.name.toLowerCase().includes(search)) ||
+                      (game.location && game.location.toLowerCase().includes(search)) ||
+                      (game.week && game.week.toString().includes(search))
+                    );
+                  })
+                  .map((game, index) => (
+                    <div key={`game-${game.gameId || index}`} style={{ borderRadius: 16, background: 'rgba(20,30,40,0.85)', border: '1px solid #334', boxShadow: '0 2px 12px #00e0ff33', padding: 24, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', position: 'relative', transition: 'box-shadow 0.2s' }}>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+                          <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-primary)' }}>
                             {game.awayTeam?.name || 'Away Team'} @ {game.homeTeam?.name || 'Home Team'}
                           </h3>
-                          <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(game.isCompleted ? 'Completed' : 'Scheduled')}`}>
+                          <span style={{ padding: '4px 12px', borderRadius: 12, fontSize: '0.85rem', fontWeight: 600, background: game.isCompleted ? 'var(--success-bg)' : 'var(--accent-bg)', color: game.isCompleted ? 'var(--success)' : 'var(--accent)' }}>
                             {game.isCompleted ? 'Completed' : 'Scheduled'}
                           </span>
                         </div>
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 16, fontSize: '0.95rem', marginBottom: 8 }}>
                           <div>
-                            <span className="text-slate-400">Date & Time:</span>
-                            <p className="text-white">{formatGameDate(game.gameDate)}</p>
+                            <span style={{ color: 'var(--text-secondary)' }}>Date & Time:</span>
+                            <p style={{ color: '#fff', fontWeight: 500 }}>{formatGameDate(game.gameDate)}</p>
                           </div>
                           <div>
-                            <span className="text-slate-400">Location:</span>
-                            <p className="text-white">{game.location || 'N/A'}</p>
+                            <span style={{ color: 'var(--text-secondary)' }}>Location:</span>
+                            <p style={{ color: '#fff', fontWeight: 500 }}>{game.location || 'N/A'}</p>
                           </div>
                           <div>
-                            <span className="text-slate-400">Week:</span>
-                            <p className="text-white">{game.week !== undefined && game.week !== null ? game.week : 'N/A'}</p>
+                            <span style={{ color: 'var(--text-secondary)' }}>Week:</span>
+                            <p style={{ color: '#fff', fontWeight: 500 }}>{game.week !== undefined && game.week !== null ? game.week : 'N/A'}</p>
                           </div>
                         </div>
                       </div>
-                      <div className="flex gap-2 ml-4">
+                      <div style={{ display: 'flex', gap: 12, marginTop: 24 }}>
                         <button
                           onClick={() => handleEdit(game)}
-                          className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200"
+                          className="btn-primary"
+                          style={{ padding: '10px 20px', borderRadius: 8, fontWeight: 500, fontSize: '0.95rem', color: '#fff', background: 'var(--primary)', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8 }}
                         >
+                          <svg width={16} height={16} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536M9 13l6.293-6.293a1 1 0 011.414 0l1.586 1.586a1 1 0 010 1.414L11 15H9v-2z" /></svg>
                           Edit
                         </button>
                         <button
                           onClick={() => handleDelete(game.gameId)}
-                          className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200"
+                          className="btn-danger"
+                          style={{ padding: '10px 20px', borderRadius: 8, fontWeight: 500, fontSize: '0.95rem', color: '#fff', background: 'var(--danger)', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8 }}
                         >
+                          <svg width={16} height={16} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
                           Delete
                         </button>
                       </div>
                     </div>
-                  </div>
-                ))}
-            </div>
-          )}
+                  ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
-    </div>
-  )
+    )
 }
 
 // Only Athletic Directors can access this page

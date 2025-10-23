@@ -37,8 +37,8 @@ function SchedulePage() {
   return (
     <div className="ad-dashboard-bg">
       <div className="ad-dashboard-container">
-        <h1 className="ad-dashboard-title">Season Schedule</h1>
-        <p className="ad-dashboard-welcome">View all games by week. Each team should have a bye week each season.</p>
+  <h1 className="ad-dashboard-title">Season Schedule</h1>
+  {/* Removed redundant text below header */}
         {loading ? (
           <div className="ad-dashboard-loading-spinner" />
         ) : error ? (
