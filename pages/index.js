@@ -44,33 +44,16 @@ export default function Home() {
         padding: '3rem 2.5rem',
         maxWidth: 420,
         width: '100%',
-        textAlign: 'center',
-        border: '1.5px solid var(--primary, #00e0ff)'
+        textAlign: 'center'
       }}>
-        <img
-          src="/nextup-logo.png"
-          alt="NextUp Logo"
-          style={{
-            width: 220,
-            height: 'auto',
-            margin: '0 auto 2rem',
-            display: 'block',
-            boxShadow: '0 6px 32px #00e0ff33, 0 1.5px 8px #000a',
-            background: 'transparent',
-            objectFit: 'contain',
-          }}
-        />
         <h1 style={{
           fontSize: '2.5rem',
           fontWeight: 800,
           color: 'var(--primary, #00e0ff)',
           letterSpacing: '2px',
-          marginBottom: '0.5rem',
+          marginBottom: '2.5rem',
           textShadow: '0 2px 8px #00e0ff33'
         }}>NextUp</h1>
-        <p style={{ color: '#b6c2d1', fontSize: '1.15rem', marginBottom: '2rem', fontWeight: 500 }}>
-          Elevate your game with professional sports team management
-        </p>
         <div style={{ display: 'flex', gap: '1.2rem', justifyContent: 'center', marginBottom: '2rem' }}>
           <Link href="/login" legacyBehavior>
             <a style={{

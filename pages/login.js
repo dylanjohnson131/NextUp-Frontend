@@ -50,19 +50,7 @@ function Login() {
         border: '2px solid var(--primary, #00e0ff)',
         position: 'relative',
       }}>
-        <img
-          src="/nextup-logo.png"
-          alt="NextUp Logo"
-          style={{
-            width: 120,
-            height: 'auto',
-            margin: '0 auto 1.2rem',
-            display: 'block',
-            boxShadow: '0 4px 18px #00e0ff33, 0 1.5px 8px #000a',
-            background: 'transparent',
-            objectFit: 'contain',
-          }}
-        />
+        {/* Logo removed as requested */}
         <h1 style={{
           fontSize: '2.2rem',
           fontWeight: 800,

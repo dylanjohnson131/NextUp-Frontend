@@ -5,14 +5,14 @@ import { fetchAthleticDirectorGames, fetchAthleticDirectorTeams, createAthleticD
 import withAuth from '../../hocs/withAuth'
 
 function GamesManagement() {
-  const { user } = useAuth()
-  const router = useRouter()
-  const [games, setGames] = useState([])
-  const [teams, setTeams] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
-  const [showCreateForm, setShowCreateForm] = useState(false)
-  const [editingGame, setEditingGame] = useState(null)
+  const { user } = useAuth();
+  const router = useRouter();
+  const [games, setGames] = useState([]);
+  const [teams, setTeams] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [editingGame, setEditingGame] = useState(null);
   const [formData, setFormData] = useState({
     homeTeamId: '',
     awayTeamId: '',
@@ -22,7 +22,8 @@ function GamesManagement() {
     week: '',
     season: new Date().getFullYear(),
     status: 'Scheduled'
-  })
+  });
+  const [filter, setFilter] = useState('');
 
   useEffect(() => {
     fetchGames()
@@ -75,17 +76,18 @@ function GamesManagement() {
     }
 
     try {
-      // Combine date and time into a single DateTime string with UTC timezone
-      const gameDateTime = `${formData.gameDate}T${formData.gameTime}:00.000Z`
-      
+      // Combine date and time into a single DateTime object in local time, then convert to UTC ISO string
+      const localDateTime = new Date(`${formData.gameDate}T${formData.gameTime}`);
+      const gameDateTime = localDateTime.toISOString();
+
       // Convert to integers and validate
-      const homeTeamId = parseInt(formData.homeTeamId)
-      const awayTeamId = parseInt(formData.awayTeamId)
-      const season = parseInt(formData.season)
-      
+      const homeTeamId = parseInt(formData.homeTeamId);
+      const awayTeamId = parseInt(formData.awayTeamId);
+      const season = parseInt(formData.season);
+
       if (isNaN(homeTeamId) || isNaN(awayTeamId) || isNaN(season)) {
-        setError(`Invalid values - homeTeamId: ${homeTeamId}, awayTeamId: ${awayTeamId}, season: ${season}`)
-        return
+        setError(`Invalid values - homeTeamId: ${homeTeamId}, awayTeamId: ${awayTeamId}, season: ${season}`);
+        return;
       }
 
       const submitData = {
@@ -93,8 +95,13 @@ function GamesManagement() {
         awayTeamId,
         gameDate: gameDateTime,
         location: formData.location,
-        season: season.toString()
-      }
+        season: season.toString(),
+        Week: formData.week === '' ? null : parseInt(formData.week),
+        status: formData.status,
+        HomeScore: formData.homeScore ? parseInt(formData.homeScore) : null,
+        AwayScore: formData.awayScore ? parseInt(formData.awayScore) : null
+      };
+      console.log('Submitting game update:', submitData);
 
       if (editingGame) {
         await updateAthleticDirectorGame(editingGame.gameId, submitData)
@@ -141,10 +148,10 @@ function GamesManagement() {
       gameDate: dateString,
       gameTime: timeString,
       location: game.location || '',
-      week: game.week?.toString() || '',
+      week: (game.week !== undefined && game.week !== null) ? game.week.toString() : '',
       season: game.season || new Date().getFullYear(),
       status: game.isCompleted ? 'Completed' : 'Scheduled'
-    })
+    });
     setShowCreateForm(true)
   }
 
@@ -230,12 +237,12 @@ function GamesManagement() {
         <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-4xl font-bold text-white mb-2">Games Management</h1>
-            <p className="text-slate-400 text-lg">Schedule and manage football games</p>
           </div>
           {!showCreateForm && (
             <button
               onClick={() => setShowCreateForm(true)}
-              className="bg-cyan-500 hover:bg-cyan-600 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 flex items-center gap-2"
+              className="bg-cyan-500 hover:bg-cyan-600 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 flex items-center gap-2 shadow-lg"
+              style={{ boxShadow: '0 2px 12px #00e0ff33' }}
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -417,8 +424,14 @@ function GamesManagement() {
         <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-xl overflow-hidden">
           <div className="px-6 py-4 border-b border-slate-700/50">
             <h2 className="text-xl font-semibold text-white">All Games ({games.length})</h2>
+            <input
+              type="text"
+              placeholder="Filter by team, location, or week..."
+              value={filter}
+              onChange={e => setFilter(e.target.value)}
+              style={{ marginTop: 12, width: '100%', maxWidth: 350, padding: 8, borderRadius: 6, border: '1px solid #334155', background: '#1e293b', color: '#fff' }}
+            />
           </div>
-          
           {games.length === 0 ? (
             <div className="p-8 text-center">
               <div className="text-6xl mb-4">📅</div>
@@ -434,46 +447,60 @@ function GamesManagement() {
             </div>
           ) : (
             <div className="divide-y divide-slate-700/50">
-              {games.map((game, index) => (
-                <div key={`game-${game.gameId || index}`} className="p-6 hover:bg-slate-700/30 transition-colors duration-200">
-                  <div className="flex justify-between items-start">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-3">
-                        <h3 className="text-xl font-semibold text-white">
-                          {game.awayTeam?.name || 'Away Team'} @ {game.homeTeam?.name || 'Home Team'}
-                        </h3>
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(game.isCompleted ? 'Completed' : 'Scheduled')}`}>
-                          {game.isCompleted ? 'Completed' : 'Scheduled'}
-                        </span>
-                      </div>
-                      <div className="grid grid-cols-2 md:grid-cols-2 gap-4 text-sm">
-                        <div>
-                          <span className="text-slate-400">Date & Time:</span>
-                          <p className="text-white">{formatGameDate(game.gameDate)}</p>
+              {games
+                .filter(game => {
+                  const search = filter.toLowerCase();
+                  return (
+                    (game.awayTeam?.name && game.awayTeam.name.toLowerCase().includes(search)) ||
+                    (game.homeTeam?.name && game.homeTeam.name.toLowerCase().includes(search)) ||
+                    (game.location && game.location.toLowerCase().includes(search)) ||
+                    (game.week && game.week.toString().includes(search))
+                  );
+                })
+                .map((game, index) => (
+                  <div key={`game-${game.gameId || index}`} className="p-6 hover:bg-slate-700/30 transition-colors duration-200">
+                    <div className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-3">
+                          <h3 className="text-xl font-semibold text-white">
+                            {game.awayTeam?.name || 'Away Team'} @ {game.homeTeam?.name || 'Home Team'}
+                          </h3>
+                          <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(game.isCompleted ? 'Completed' : 'Scheduled')}`}>
+                            {game.isCompleted ? 'Completed' : 'Scheduled'}
+                          </span>
                         </div>
-                        <div>
-                          <span className="text-slate-400">Location:</span>
-                          <p className="text-white">{game.location || 'N/A'}</p>
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+                          <div>
+                            <span className="text-slate-400">Date & Time:</span>
+                            <p className="text-white">{formatGameDate(game.gameDate)}</p>
+                          </div>
+                          <div>
+                            <span className="text-slate-400">Location:</span>
+                            <p className="text-white">{game.location || 'N/A'}</p>
+                          </div>
+                          <div>
+                            <span className="text-slate-400">Week:</span>
+                            <p className="text-white">{game.week !== undefined && game.week !== null ? game.week : 'N/A'}</p>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div className="flex gap-2 ml-4">
-                      <button
-                        onClick={() => handleEdit(game)}
-                        className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDelete(game.gameId)}
-                        className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200"
-                      >
-                        Delete
-                      </button>
+                      <div className="flex gap-2 ml-4">
+                        <button
+                          onClick={() => handleEdit(game)}
+                          className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDelete(game.gameId)}
+                          className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200"
+                        >
+                          Delete
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
             </div>
           )}
         </div>

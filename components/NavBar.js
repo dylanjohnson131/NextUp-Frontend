@@ -26,6 +26,12 @@ const navLinks = {
     { href: '/player/team-info', label: 'Team Info' },
     { href: '/player/matchup', label: 'Matchup' },
   ],
+  AthleticDirector: [
+    { href: '/athletic-director/dashboard', label: 'Dashboard' },
+    { href: '/athletic-director/teams', label: 'Teams' },
+    { href: '/athletic-director/games', label: 'Games' },
+    { href: '/athletic-director/schedule', label: 'Schedule' },
+  ],
 };
 
 export default function NavBar() {

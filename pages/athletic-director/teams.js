@@ -165,12 +165,14 @@ function TeamsManagement() {
         <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-4xl font-bold text-white mb-2">Teams Management</h1>
-            <p className="text-slate-400 text-lg">Create and manage football teams</p>
+            <p className="text-slate-400 text-lg">Create and manage football teams. Assign a coach to each team to enable stat tracking and game management.</p>
+            <div className="mt-2 text-cyan-400 text-base font-medium">To assign a coach, select one from the dropdown when creating or editing a team. Coaches will be able to update player stats for their assigned teams once games are scheduled.</div>
           </div>
           {!showCreateForm && (
             <button
               onClick={() => setShowCreateForm(true)}
-              className="bg-cyan-500 hover:bg-cyan-600 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 flex items-center gap-2"
+              className="bg-cyan-500 hover:bg-cyan-600 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 flex items-center gap-2 shadow-lg"
+              style={{ boxShadow: '0 2px 12px #00e0ff33' }}
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -193,6 +195,7 @@ function TeamsManagement() {
             <h2 className="text-2xl font-semibold text-white mb-6">
               {editingTeam ? 'Edit Team' : 'Create New Team'}
             </h2>
+            <div className="mb-4 text-slate-300 text-base">Fill out all required fields. Assign a coach to enable stat tracking and game management for this team.</div>
             <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-2">
