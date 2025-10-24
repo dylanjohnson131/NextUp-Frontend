@@ -165,7 +165,7 @@ function Register() {
               value={firstName}
               onChange={e => setFirstName(e.target.value)}
               style={{
-                width: '100%',
+                width: '93%',
                 padding: '0.7rem 1rem',
                 borderRadius: '8px',
                 background: '#1e293b',
@@ -188,7 +188,7 @@ function Register() {
               value={lastName}
               onChange={e => setLastName(e.target.value)}
               style={{
-                width: '100%',
+                width: '93%',
                 padding: '0.7rem 1rem',
                 borderRadius: '8px',
                 background: '#1e293b',
@@ -211,7 +211,7 @@ function Register() {
               value={email}
               onChange={e => setEmail(e.target.value)}
               style={{
-                width: '100%',
+                width: '93%',
                 padding: '0.7rem 1rem',
                 borderRadius: '8px',
                 background: '#1e293b',
@@ -234,7 +234,7 @@ function Register() {
               value={password}
               onChange={e => setPassword(e.target.value)}
               style={{
-                width: '100%',
+                width: '93%',
                 padding: '0.7rem 1rem',
                 borderRadius: '8px',
                 background: '#1e293b',
@@ -292,7 +292,7 @@ function Register() {
                   onChange={e => setPosition(e.target.value)}
                   placeholder="e.g., Forward, Guard, etc."
                   style={{
-                    width: '100%',
+                    width: '93%',
                     padding: '0.7rem 1rem',
                     borderRadius: '8px',
                     background: '#1e293b',
@@ -314,7 +314,7 @@ function Register() {
                     value={age}
                     onChange={e => setAge(e.target.value)}
                     style={{
-                      width: '100%',
+                      width: '87%',
                       padding: '0.7rem 1rem',
                       borderRadius: '8px',
                       background: '#1e293b',
@@ -335,7 +335,7 @@ function Register() {
                     value={jerseyNumber}
                     onChange={e => setJerseyNumber(e.target.value)}
                     style={{
-                      width: '100%',
+                      width: '85%',
                       padding: '0.7rem 1rem',
                       borderRadius: '8px',
                       background: '#1e293b',
@@ -359,7 +359,7 @@ function Register() {
                     onChange={e => setHeight(e.target.value)}
                     placeholder={'e.g., 6\'2"'}
                     style={{
-                      width: '100%',
+                      width: '87%',
                       padding: '0.7rem 1rem',
                       borderRadius: '8px',
                       background: '#1e293b',
@@ -380,7 +380,7 @@ function Register() {
                     value={weight}
                     onChange={e => setWeight(e.target.value)}
                     style={{
-                      width: '100%',
+                      width: '85%',
                       padding: '0.7rem 1rem',
                       borderRadius: '8px',
                       background: '#1e293b',
@@ -407,7 +407,7 @@ function Register() {
                   value={experienceYears}
                   onChange={e => setExperienceYears(e.target.value)}
                   style={{
-                    width: '100%',
+                    width: '93%',
                     padding: '0.7rem 1rem',
                     borderRadius: '8px',
                     background: '#1e293b',
@@ -429,7 +429,7 @@ function Register() {
                   onChange={e => setSpecialty(e.target.value)}
                   placeholder="e.g., Offensive Strategy, Defense"
                   style={{
-                    width: '100%',
+                    width: '93%',
                     padding: '0.7rem 1rem',
                     borderRadius: '8px',
                     background: '#1e293b',
@@ -451,7 +451,7 @@ function Register() {
                   onChange={e => setCertification(e.target.value)}
                   placeholder="e.g., Level 3 Coach"
                   style={{
-                    width: '100%',
+                    width: '93%',
                     padding: '0.7rem 1rem',
                     borderRadius: '8px',
                     background: '#1e293b',
@@ -473,7 +473,7 @@ function Register() {
                   placeholder="Tell us about yourself..."
                   rows={3}
                   style={{
-                    width: '100%',
+                    width: '93%',
                     padding: '0.7rem 1rem',
                     borderRadius: '8px',
                     background: '#1e293b',

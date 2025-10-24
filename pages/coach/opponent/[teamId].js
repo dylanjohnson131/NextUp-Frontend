@@ -100,7 +100,7 @@ function OpponentNotes({ teamId }) {
         value={notes}
         onChange={e => setNotes(e.target.value)}
         rows={6}
-        style={{ width: '100%', padding: '1rem', borderRadius: '8px', fontSize: '1rem', background: '#222', color: '#fff', border: '1px solid #444', resize: 'vertical' }}
+        style={{ width: '93%', padding: '1rem', borderRadius: '8px', fontSize: '1rem', background: '#222', color: '#fff', border: '1px solid #444', resize: 'vertical' }}
         placeholder="Enter your scouting notes here..."
       />
       <button

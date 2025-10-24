@@ -32,9 +32,6 @@ function MyTeam() {
   }, []);
 
   if (loading) {
-    // Coach notes effect
-    const stored = localStorage.getItem('coachNotes');
-    if (stored) setNotes(stored);
     return (
       <main style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <div style={{ color: '#b6c2d1', fontSize: '1.2rem', textAlign: 'center' }}>Loading...</div>

@@ -1,9 +1,6 @@
-
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import withAuth from '../../hocs/withAuth'
-
-import PlayerPerformanceChart from '../../components/PlayerPerformanceChart'
 import { getCurrentUser, getCurrentPlayer, fetchUpcomingGames } from '../../lib/api'
 
 function PlayerDashboard() {

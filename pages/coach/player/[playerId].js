@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-
 import withAuth from '../../../hocs/withAuth'
 import PlayerStatsCard from '../../../components/PlayerStatsCard'
 import { fetchPlayerById, fetchPlayerStats } from '../../../lib/api'
@@ -20,6 +19,20 @@ function PlayerStats() {
     }
   }, [playerId])
 
+  const aggregateStats = (statsArr) => {
+    if (!Array.isArray(statsArr) || statsArr.length === 0) return {};
+    const result = {};
+    statsArr.forEach(game => {
+      Object.entries(game).forEach(([key, value]) => {
+        if (typeof value === 'number') {
+          result[key] = (result[key] || 0) + value;
+        }
+      });
+    });
+    // Optionally, handle averages for percentage fields here
+    return result;
+  };
+
   const loadPlayerData = async () => {
     try {
       setLoading(true)
@@ -27,8 +40,9 @@ function PlayerStats() {
         fetchPlayerById(playerId),
         fetchPlayerStats(playerId).catch(() => null)
       ])
-      // Merge stats into player object for PlayerStatsCard
-      setPlayer({ ...playerData, stats: playerStats })
+      // Aggregate stats array into a summary object
+      const summaryStats = aggregateStats(playerStats);
+      setPlayer({ ...playerData, stats: summaryStats })
       setStats(playerStats)
     } catch (error) {
       console.error('Failed to load player data:', error)
