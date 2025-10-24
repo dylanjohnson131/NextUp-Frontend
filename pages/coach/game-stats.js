@@ -189,9 +189,9 @@ function GameStats() {
                   style={{ display: 'flex', flexWrap: 'wrap', gap: '2rem' }}
                 >
                   {existingStats && typeof existingStats === 'object' ? (
-                    getStatsForPosition(selectedPlayer.position).map(statName => {
-                      // Only render stat fields relevant to the player's position
-                      return (
+                    getStatsForPosition(selectedPlayer.position)
+                      .filter(statName => statName !== 'completionPercentage')
+                      .map(statName => (
                         <div key={statName} style={{ marginBottom: '1rem', minWidth: '200px' }}>
                           <label style={{ color: '#b6c2b7', fontWeight: 600, marginRight: '0.5rem' }}>{statName.replace(/([A-Z])/g, ' $1').replace(/^./, s => s.toUpperCase())}:</label>
                           <input
@@ -201,11 +201,16 @@ function GameStats() {
                             style={{ width: '90px', padding: '0.4rem', borderRadius: '6px', border: '1px solid #444', background: '#222', color: '#fff' }}
                           />
                         </div>
-                      );
-                    })
+                      ))
                   ) : (
                     <div style={{ color: '#b6c2b7', fontStyle: 'italic', marginBottom: '1rem' }}>
                       No stats recorded for this player in this game yet.
+                    </div>
+                  )}
+                  {/* Optionally show calculated completion percentage as read-only */}
+                  {existingStats && typeof existingStats === 'object' && typeof existingStats.completionPercentage !== 'undefined' && (
+                    <div style={{ marginBottom: '1rem', color: '#b6c2b7' }}>
+                      <strong>Completion Percentage:</strong> {existingStats.completionPercentage || 0}%
                     </div>
                   )}
                   <div style={{ width: '100%' }}>
