@@ -1,0 +1,136 @@
+.ad-dashboard-bg {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0a192f 0%, #1e293b 100%);
+  padding-top: 64px;
+}
+
+.ad-dashboard-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 16px 48px 16px;
+}
+
+.ad-dashboard-header {
+  margin-bottom: 32px;
+}
+
+.ad-dashboard-title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.ad-dashboard-welcome {
+  color: #b8c6db;
+  font-size: 1.1rem;
+}
+
+.ad-dashboard-error {
+  margin-bottom: 24px;
+  padding: 16px;
+  background: rgba(180, 30, 30, 0.12);
+  border: 1px solid rgba(180, 30, 30, 0.3);
+  border-radius: 10px;
+  color: #ffb3b3;
+}
+
+.ad-dashboard-stats-wrapper {
+  background: rgba(17, 24, 39, 0.92);
+  border: 1px solid #0ea5e9;
+  border-radius: 18px;
+  padding: 24px 18px 18px 18px;
+  margin-bottom: 32px;
+  box-shadow: 0 4px 24px 0 rgba(0,0,0,0.12);
+}
+
+.ad-dashboard-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 20px;
+}
+@media (min-width: 700px) {
+  .ad-dashboard-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 1100px) {
+  .ad-dashboard-stats-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.ad-dashboard-card {
+  background: rgba(30, 41, 59, 0.85);
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 18px 16px;
+  transition: background 0.2s;
+  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.10);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  cursor: default;
+}
+.ad-dashboard-card:hover {
+  background: rgba(30, 41, 59, 1);
+}
+.ad-dashboard-card-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.ad-dashboard-card-label {
+  color: #b8c6db;
+  font-size: 0.95rem;
+  font-weight: 500;
+  margin-bottom: 0.2rem;
+}
+.ad-dashboard-card-value {
+  color: #fff;
+  font-size: 1.7rem;
+  font-weight: bold;
+  margin-top: 0.2rem;
+}
+.ad-dashboard-card-icon {
+  padding: 8px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ad-dashboard-card-icon-blue {
+  background: rgba(14, 165, 233, 0.18);
+  color: #38bdf8;
+}
+.ad-dashboard-card-icon-green {
+  background: rgba(34, 197, 94, 0.18);
+  color: #4ade80;
+}
+.ad-dashboard-card-icon-purple {
+  background: rgba(168, 85, 247, 0.18);
+  color: #a855f7;
+}
+.ad-dashboard-card-icon-orange {
+  background: rgba(251, 146, 60, 0.18);
+  color: #fb923c;
+}
+
+.ad-dashboard-loading-spinner {
+  margin: 120px auto 0 auto;
+  border: 4px solid #0ea5e9;
+  border-top: 4px solid #fff;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  animation: ad-spin 1s linear infinite;
+}
+@keyframes ad-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+option {
+  background: #1e293b;
+  color: #b8c6db;
+}
