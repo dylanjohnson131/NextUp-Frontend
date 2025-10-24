@@ -46,16 +46,17 @@ export default function Home() {
         width: '100%',
         textAlign: 'center'
       }}>
-        <img src="/nextup-logo.png" alt="NextUp Logo" style={{ width: '120px', marginBottom: '2rem', filter: 'drop-shadow(0 2px 8px #00e0ff33)' }} />
+        <img src="/nextup-logo.png" alt="NextUp Logo" style={{ width: '220px', marginBottom: '-0.5rem', filter: 'drop-shadow(0 2px 8px #00e0ff33)' }} />
         <h1 style={{
           fontSize: '2.5rem',
           fontWeight: 800,
           color: 'var(--primary, #00e0ff)',
           letterSpacing: '2px',
+          marginTop: '0',
           marginBottom: '2.5rem',
           textShadow: '0 2px 8px #00e0ff33'
         }}>NextUp</h1>
-        <div style={{ display: 'flex', gap: '1.2rem', justifyContent: 'center', marginBottom: '2rem' }}>
+        <div style={{ display: 'flex', gap: '1.2rem', justifyContent: 'center', marginBottom: '2.5rem' }}>
           <Link href="/login" legacyBehavior>
             <a style={{
               background: 'var(--primary, #00e0ff)',
