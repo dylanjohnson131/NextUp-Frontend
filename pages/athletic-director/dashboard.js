@@ -120,5 +120,4 @@ function AthleticDirectorDashboard() {
   );
 }
 
-// Only Athletic Directors can access this page
 export default withAuth(AthleticDirectorDashboard, ['AthleticDirector']);

@@ -27,7 +27,6 @@ function BrowseOpponents() {
     loadData()
   }, [])
 
-  // Filter out the coach's own team from the opponents list
   const opponentTeams = teams.filter(team => 
     coach?.Team ? team.TeamId !== coach.Team.TeamId : true
   )

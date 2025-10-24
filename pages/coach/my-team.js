@@ -26,7 +26,6 @@ function MyTeam() {
       }
     };
     loadTeamData();
-    // Load coach notes from localStorage
     const stored = localStorage.getItem('coachNotes');
     if (stored) setNotes(stored);
   }, []);
@@ -50,7 +49,6 @@ function MyTeam() {
     )
   }
 
-  // Depth chart logic (from depth-chart.js)
   const groupPlayersByPosition = (players) => {
     const groups = {};
     players?.forEach(player => {
@@ -88,7 +86,6 @@ function MyTeam() {
       </tr>
     );
   };
-  // Coach notes logic
   const handleSave = () => {
     localStorage.setItem('coachNotes', notes);
     setSaved(true);

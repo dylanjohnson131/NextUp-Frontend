@@ -1,7 +1,6 @@
 import React from 'react';
 import { normalizePosition, getStatsForPosition } from '../lib/positions';
 
-// Helper to format stat labels (e.g., 'passingYards' => 'PASS YDS')
 const formatStatLabel = (key) => {
   const map = {
     passingYards: 'YDS',
@@ -18,7 +17,6 @@ const formatStatLabel = (key) => {
     receivingTDs: 'REC TD',
     tackles: 'TACK',
     sacks: 'SACKS',
-    // Add more as needed
   };
   return map[key] || key.replace(/([A-Z])/g, ' $1').toUpperCase();
 };
@@ -26,14 +24,12 @@ const formatStatLabel = (key) => {
 const PlayerStatsCard = ({ player }) => {
   const canonicalPosition = normalizePosition(player.position);
   const statKeys = getStatsForPosition(canonicalPosition);
-  // Pick 3-5 key stats for summary bar (customize per position as needed)
   const summaryStats = statKeys.slice(0, 4);
 
-  // Helper to convert PascalCase to camelCase
+
   function toCamelCase(str) {
     return str.charAt(0).toLowerCase() + str.slice(1);
   }
-  // Normalize stats keys for display
   const normalizedStats = {};
   if (player.stats) {
     Object.entries(player.stats).forEach(([key, value]) => {
@@ -41,7 +37,6 @@ const PlayerStatsCard = ({ player }) => {
     });
   }
 
-  // Use normalizedStats for stat display
   return (
     <div style={{
       background: 'var(--card)',

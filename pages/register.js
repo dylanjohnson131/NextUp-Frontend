@@ -8,13 +8,11 @@ function Register() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   
-  // Common fields
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   
-  // Player specific fields
   const [teamId, setTeamId] = useState('')
   const [position, setPosition] = useState('')
   const [age, setAge] = useState('')
@@ -22,7 +20,6 @@ function Register() {
   const [weight, setWeight] = useState('')
   const [jerseyNumber, setJerseyNumber] = useState('')
   
-  // Coach specific fields
   const [experienceYears, setExperienceYears] = useState('')
   const [specialty, setSpecialty] = useState('')
   const [certification, setCertification] = useState('')
@@ -68,10 +65,8 @@ function Register() {
         }
         res = await registerCoach(coachData)
       }
-
-      // Log the response for debugging
       console.log('Registration response:', res);
-      // Accept any response with a user or player object, or a message containing 'registered'
+     
       const success =
         (res && (res.Message?.toLowerCase().includes('registered') || res.message?.toLowerCase().includes('registered')))
         || (res && (res.User || res.Player));
@@ -85,7 +80,6 @@ function Register() {
         setError(res?.error || 'Registration failed');
       }
     } catch (err) {
-      // Try to get a more specific error message
       if (err.response && err.response.data && err.response.data.error) {
         setError(err.response.data.error);
       } else {

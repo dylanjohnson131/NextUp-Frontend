@@ -13,14 +13,12 @@ function Matchup() {
     const loadMatchupData = async () => {
       try {
         const currentPlayer = await getCurrentPlayer()
-        // Fetch next game if player has a team
         if (currentPlayer?.team?.teamId) {
           try {
             const upcomingGames = await fetchUpcomingGames(currentPlayer.team.teamId)
             if (upcomingGames && upcomingGames.length > 0) {
               const game = upcomingGames[0];
               setNextGame(game);
-              // Determine opponent based on backend's homeTeam/awayTeam and homeTeamId/awayTeamId
               const myTeamId = currentPlayer.team.teamId;
               let opp = null;
               if (game.homeTeam?.homeTeamId === myTeamId) {
@@ -29,9 +27,7 @@ function Matchup() {
                 opp = game.homeTeam;
               }
               setOpponent(opp);
-              // Debug: log opponent object
               console.log('Opponent:', opp);
-              // Use awayTeamId or homeTeamId for opponent team
               const oppTeamId = opp?.awayTeamId || opp?.homeTeamId;
               console.log('Opponent teamId used for API call:', oppTeamId);
               if (oppTeamId) {
@@ -59,7 +55,6 @@ function Matchup() {
     }
     loadMatchupData()
   }, [])
-  // Helper to group roster by position
   const { groupPlayersByPosition, categorizePositions } = require('../../lib/positions');
   const grouped = groupPlayersByPosition(opponentRoster);
   const categorized = categorizePositions(grouped);

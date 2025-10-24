@@ -28,7 +28,6 @@ function GamesManagement() {
   useEffect(() => {
     fetchGames()
     fetchTeams()
-    // Check if we should show create form from URL params
     if (router.query.action === 'create') {
       setShowCreateForm(true)
     }
@@ -59,7 +58,6 @@ function GamesManagement() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     
-    // Validate required fields
     if (!formData.homeTeamId || !formData.awayTeamId) {
       setError('Please select both home and away teams')
       return
@@ -76,11 +74,9 @@ function GamesManagement() {
     }
 
     try {
-      // Combine date and time into a single DateTime object in local time, then convert to UTC ISO string
       const localDateTime = new Date(`${formData.gameDate}T${formData.gameTime}`);
       const gameDateTime = localDateTime.toISOString();
 
-      // Convert to integers and validate
       const homeTeamId = parseInt(formData.homeTeamId);
       const awayTeamId = parseInt(formData.awayTeamId);
       const season = parseInt(formData.season);
@@ -109,7 +105,6 @@ function GamesManagement() {
         await createAthleticDirectorGame(submitData)
       }
 
-      // Reset form and refetch games
       setFormData({
         homeTeamId: '',
         awayTeamId: '',
@@ -125,7 +120,6 @@ function GamesManagement() {
       setError('')
       await fetchGames()
       
-      // Clear URL param if present
       if (router.query.action) {
         router.replace('/athletic-director/games', undefined, { shallow: true })
       }
@@ -137,7 +131,6 @@ function GamesManagement() {
   const handleEdit = (game) => {
     setEditingGame(game)
     
-    // Convert gameDate back to separate date and time fields
     const gameDate = new Date(game.gameDate)
     const dateString = gameDate.toISOString().split('T')[0]
     const timeString = gameDate.toTimeString().slice(0, 5)
@@ -512,5 +505,4 @@ function GamesManagement() {
     )
 }
 
-// Only Athletic Directors can access this page
 export default withAuth(GamesManagement, ['AthleticDirector'])

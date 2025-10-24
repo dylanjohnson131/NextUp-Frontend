@@ -16,7 +16,6 @@ function MyGoals() {
     season: ''
   })
 
-  // Load goals and player info on component mount
   useEffect(() => {
     loadPlayerAndGoals()
   }, [])
@@ -74,7 +73,6 @@ function MyGoals() {
       if (editingGoal) {
         await updatePlayerGoal(editingGoal.playerGoalId, goalData)
       } else {
-        // Add playerId for new goals
         goalData.playerId = currentPlayer.playerId
         await createPlayerGoal(goalData)
       }

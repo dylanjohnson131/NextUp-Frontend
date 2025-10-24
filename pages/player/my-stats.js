@@ -14,8 +14,6 @@ function MyStats() {
         setLoading(true)
         const playerData = await getCurrentPlayer()
         const statsArr = await fetchPlayerStats(playerData.playerId).catch(() => []);
-        // Calculate averages for each stat
-        // Helper to convert PascalCase to camelCase
         function toCamelCase(str) {
           return str.charAt(0).toLowerCase() + str.slice(1);
         }
@@ -38,7 +36,6 @@ function MyStats() {
         Object.keys(statSums).forEach(key => {
           statAverages[key] = statCounts[key] ? (statSums[key] / statCounts[key]) : 0;
         });
-        // Calculate season completion percentage
         statAverages.completionPercentage = totalAttempts > 0 ? (totalCompletions / totalAttempts) * 100 : 0;
         setPlayer({ ...playerData, stats: statAverages })
       } catch (err) {

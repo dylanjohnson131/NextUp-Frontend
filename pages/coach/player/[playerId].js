@@ -29,7 +29,6 @@ function PlayerStats() {
         }
       });
     });
-    // Optionally, handle averages for percentage fields here
     return result;
   };
 
@@ -40,7 +39,6 @@ function PlayerStats() {
         fetchPlayerById(playerId),
         fetchPlayerStats(playerId).catch(() => null)
       ])
-      // Aggregate stats array into a summary object
       const summaryStats = aggregateStats(playerStats);
       setPlayer({ ...playerData, stats: summaryStats })
       setStats(playerStats)

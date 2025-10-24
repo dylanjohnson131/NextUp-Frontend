@@ -4,7 +4,6 @@ import { normalizePosition } from '../../../lib/positions';
 import { fetchTeamById } from '../../../lib/api';
 import withAuth from '../../../hocs/withAuth';
 
-// Read-only depth chart for opponent
 function OpponentDepthChart({ roster }) {
   const positionDisplayMap = {
     QB: 'Quarterback', RB: 'Running Back', WR: 'Wide Receiver', TE: 'Tight End',
@@ -79,8 +78,6 @@ function OpponentDepthChart({ roster }) {
     </div>
   );
 }
-
-// Notes section for scouting opponent
 function OpponentNotes({ teamId }) {
   const [notes, setNotes] = useState('');
   const [saved, setSaved] = useState(false);
@@ -173,7 +170,7 @@ function OpponentOverview() {
           }}>{teamData?.team?.name || 'Team'}</h1>
           <span style={{
             fontSize: '1.15rem',
-            color: '#b6c2b7', // matches navbar text color
+            color: '#b6c2b7', 
             marginTop: '0.3rem',
             fontWeight: 500,
             letterSpacing: '0.2px',

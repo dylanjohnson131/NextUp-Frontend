@@ -1,4 +1,3 @@
-
 :root {
   --primary: #0076b6;
   --accent: #F8E43F;
@@ -40,7 +39,6 @@ p { color: var(--muted); }
   cursor: pointer;
 }
 
-/* NavBar styles */
 .navbar {
   background: var(--navbar-gradient);
   color: var(--text);

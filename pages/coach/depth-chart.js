@@ -3,7 +3,7 @@ import { getCurrentCoach, fetchTeamById } from '../../lib/api'
 import { normalizePosition, getStatsForPosition } from '../../lib/positions'
 import withAuth from '../../hocs/withAuth'
 import Link from 'next/link'
-// Notes section for coach
+
 function CoachNotes() {
   const [notes, setNotes] = useState('');
   const [saved, setSaved] = useState(false);
@@ -54,7 +54,6 @@ function DepthChart() {
         const coachInfo = await getCurrentCoach()
         setCoach(coachInfo)
         
-        // Fetch detailed team data if coach has a team
         if (coachInfo?.team?.teamId) {
           const teamDetails = await fetchTeamById(coachInfo.team.teamId)
           setTeamData(teamDetails)
@@ -68,7 +67,6 @@ function DepthChart() {
     loadTeamData()
   }, [])
 
-  // Group players by normalized position
   const groupPlayersByPosition = (players) => {
     const groups = {}
     players?.forEach(player => {
@@ -81,7 +79,6 @@ function DepthChart() {
     return groups
   }
 
-  // Canonical position sets for categorization
   const offenseCanonical = new Set(['QB', 'RB', 'WR', 'TE', 'LT', 'LG', 'C', 'RG', 'RT', 'OL'])
   const defenseCanonical = new Set(['DE', 'RDE','LDE','RDT', 'LDT', 'DT','WLB', 'MLB','SLB', 'LB' ,'CB', 'S', 'FS', 'SS', 'DL'])
   const specialTeamsCanonical = new Set(['K', 'P'])
@@ -110,9 +107,7 @@ function DepthChart() {
   const positionGroups = teamData?.players ? groupPlayersByPosition(teamData.players) : {}
   const categorizedPositions = categorizePositions(positionGroups)
 
-  // Render a table row for a position and up to 4 players (starter, 2nd, 3rd, 4th)
   const renderPositionRow = (positionName, players) => {
-    // Fill up to 4 slots with players or dashes
     const slots = [0, 1, 2, 3].map(i => players[i] || null);
     return (
       <tr key={positionName}>

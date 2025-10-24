@@ -9,7 +9,6 @@ export default function Home() {
 
   useEffect(() => {
     if (!loading && isAuthenticated && user) {
-      // Redirect authenticated users to their role-specific dashboard
       if (user.role === 'Coach') {
         router.push('/coach/dashboard')
       } else if (user.role === 'Player') {
@@ -20,7 +19,6 @@ export default function Home() {
     }
   }, [loading, isAuthenticated, user, router])
 
-  // Show loading while checking authentication
   if (loading) {
     return (
       <main>
@@ -29,12 +27,10 @@ export default function Home() {
     )
   }
 
-  // Don't render anything if user is authenticated (will redirect)
   if (isAuthenticated) {
     return null
   }
 
-  // Show landing page for unauthenticated users
   return (
     <main style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(135deg, #0a192f 0%, #1e293b 100%)' }}>
       <section style={{

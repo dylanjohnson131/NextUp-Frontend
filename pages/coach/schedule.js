@@ -16,7 +16,6 @@ function Schedule() {
         const coachInfo = await getCurrentCoach()
         setCoach(coachInfo)
         
-        // Fetch upcoming games if coach has a team
         if (coachInfo?.team?.teamId) {
           try {
             const gamesData = await fetchUpcomingGames(coachInfo.team.teamId)

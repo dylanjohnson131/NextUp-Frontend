@@ -8,7 +8,7 @@ function GameStats() {
   const [selectedGame, setSelectedGame] = useState(null);
   const [teamPlayers, setTeamPlayers] = useState([]);
   const [selectedPlayer, setSelectedPlayer] = useState(null);
-  const [stats, setStats] = useState({}); // { statName: value, ... }
+  const [stats, setStats] = useState({}); 
   const [existingStats, setExistingStats] = useState(null);
   const [coach, setCoach] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -28,7 +28,6 @@ function GameStats() {
           setTeamPlayers(teamDetails?.players || []);
         }
       } catch (err) {
-        // handle error
       } finally {
         setLoading(false);
       }
@@ -44,7 +43,6 @@ function GameStats() {
   };
 
   useEffect(() => {
-    // Helper to convert PascalCase to camelCase
     function toCamelCase(str) {
       return str.charAt(0).toLowerCase() + str.slice(1);
     }
@@ -53,14 +51,12 @@ function GameStats() {
         try {
           const { fetchPlayerGameStats } = await import('../../lib/api');
           const gameStats = await fetchPlayerGameStats(selectedGame.gameId, selectedPlayer.playerId);
-          // Normalize backend keys to camelCase
           const normalizedExistingStats = {};
           if (gameStats) {
             Object.entries(gameStats).forEach(([key, value]) => {
               normalizedExistingStats[toCamelCase(key)] = value;
             });
             setExistingStats(normalizedExistingStats);
-            // Only map relevant stat fields for the selected position
             const statFields = getStatsForPosition(selectedPlayer.position);
             const normalizedStats = {};
             statFields.forEach(field => {
@@ -81,19 +77,16 @@ function GameStats() {
       }
     };
     fetchStats();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedGame, selectedPlayer]);
 
   const handleSaveStats = async () => {
     if (!selectedGame || !selectedPlayer) return;
     setSaving(true);
     setSaveError("");
-    // Ensure all position-specific stat fields are sent in PascalCase
     const statFields = getStatsForPosition(selectedPlayer.position);
     const { toPascalCase } = await import('../../lib/positions');
     const payload = {};
     statFields.forEach(field => {
-      // Send 0 if blank, otherwise the value
       payload[toPascalCase(field)] = stats[field] === undefined || stats[field] === "" ? 0 : Number(stats[field]);
     });
     try {

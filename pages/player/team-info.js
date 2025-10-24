@@ -24,7 +24,6 @@ function TeamInfo() {
     loadTeamInfo();
   }, []);
 
-  // Helper for rendering position rows
   function renderPositionRow(position, players) {
     return (
       <tr key={position}>

@@ -23,7 +23,6 @@ function CoachDashboard() {
         setCoach(coachInfo)
         setTeams(teamsData || [])
         
-        // Fetch upcoming games if coach has a team
         if (coachInfo && coachInfo.team) {
           try {
             const gamesData = await fetchUpcomingGames(coachInfo.team.teamId)

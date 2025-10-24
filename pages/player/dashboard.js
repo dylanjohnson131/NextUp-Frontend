@@ -38,7 +38,7 @@ function PlayerDashboard() {
         logUserInfo(userInfo);
         setUser(userInfo)
         setPlayerData(currentPlayer)
-        // Fetch player stats if we have a playerId
+
         if (currentPlayer?.playerId) {
           try {
             const stats = await import('../../lib/api').then(api => api.fetchPlayerStats(currentPlayer.playerId));
@@ -47,7 +47,6 @@ function PlayerDashboard() {
             console.error('Error fetching player stats:', err);
           }
         }
-        // Fetch next game if player has a team
         if (currentPlayer?.team?.teamId) {
           try {
             const upcomingGames = await fetchUpcomingGames(currentPlayer.team.teamId)
@@ -119,7 +118,6 @@ function PlayerDashboard() {
               <p style={{ color: '#b6c2d1' }}>Player data not found</p>
             )}
           </div>
-          {/* Recent Performance Chart removed as requested */}
         </div>
         {/* Next Game */}
         <div style={{ background: 'var(--card, #222)', borderRadius: '16px', boxShadow: '0 2px 16px #00e0ff11', padding: '2rem 1.5rem', marginBottom: '2rem' }}>

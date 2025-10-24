@@ -18,9 +18,8 @@ function Login() {
       const res = await login({ email, password })
       
       if (res && (res.message === 'Logged in successfully' || res.success)) {
-        // Get user info to redirect to appropriate dashboard
         const userInfo = await getCurrentUser()
-        setUser(userInfo) // Update the auth context
+        setUser(userInfo) 
         
         if (userInfo && userInfo.role === 'Coach') {
           router.push('/coach/dashboard')
@@ -50,7 +49,6 @@ function Login() {
         border: '2px solid var(--primary, #00e0ff)',
         position: 'relative',
       }}>
-        {/* Logo removed as requested */}
         <h1 style={{
           fontSize: '2.2rem',
           fontWeight: 800,

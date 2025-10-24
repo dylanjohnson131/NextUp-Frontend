@@ -29,7 +29,6 @@ function TeamsManagement() {
   useEffect(() => {
     fetchTeams()
     fetchAvailableCoaches()
-    // Check if we should show create form from URL params
     if (router.query.action === 'create') {
       setShowCreateForm(true)
     }
@@ -433,5 +432,4 @@ function TeamsManagement() {
     )
 }
 
-// Only Athletic Directors can access this page
 export default withAuth(TeamsManagement, ['AthleticDirector'])
