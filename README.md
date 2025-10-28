@@ -3,6 +3,9 @@
 Frontend application for NextUp - a modern youth football team management platform built with Next.js.
 Overview
 nextup-client is the user-facing application for NextUp, providing intuitive interfaces for players, coaches, and athletic directors to manage teams, track performance, and gain insights into youth football programs. Built with Next.js for optimal performance and SEO, the client features role-specific dashboards and real-time data visualization.
+
+Want to check out the API? View here: https://github.com/dylanjohnson131/nextup-api
+
  # Tech Stack
 
 Framework: Next.js 13.5.6 (App Router)
