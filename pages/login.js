@@ -25,6 +25,8 @@ function Login() {
           router.push('/coach/dashboard')
         } else if (userInfo && userInfo.role === 'Player') {
           router.push('/player/dashboard')
+        } else if (userInfo && userInfo.role === 'Athletic Director') {
+          router.push('/ad/dashboard')
         } else {
           router.push('/dashboard')
         }
