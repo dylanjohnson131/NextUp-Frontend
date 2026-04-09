@@ -1,11 +1,9 @@
 import { useState } from 'react'
-import { useRouter } from 'next/router'
 import { login, getCurrentUser } from '../lib/api'
 import { withGuest } from '../hocs/withAuth'
 import { useAuth } from '../contexts/AuthContext'
 
 function Login() {
-  const router = useRouter()
   const { login: setUser } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -19,15 +17,8 @@ function Login() {
       
       if (res && (res.message === 'Logged in successfully' || res.success)) {
         const userInfo = await getCurrentUser()
-        setUser(userInfo) 
-        
-        if (userInfo && userInfo.role === 'Coach') {
-          router.push('/coach/dashboard')
-        } else if (userInfo && userInfo.role === 'Player') {
-          router.push('/player/dashboard')
-        } else {
-          router.push('/dashboard')
-        }
+        setUser(userInfo)
+        // withGuest HOC handles the redirect once isAuthenticated becomes true
       } else {
         setError('Invalid credentials')
       }

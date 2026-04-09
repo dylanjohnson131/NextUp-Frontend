@@ -159,7 +159,7 @@ function TeamsManagement() {
 
     return (
       <div style={{ minHeight: '100vh', background: 'var(--background-gradient)' }}>
-  <div className="main-container" style={{ paddingTop: '9rem' }}>
+  <div className="main-container" style={{ paddingTop: 'calc(var(--navbar-height) + 2rem)' }}>
           {/* Header */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32 }}>
             <div>

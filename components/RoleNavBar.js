@@ -1,133 +1,139 @@
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { logout as apiLogout } from '../lib/api'
 import { useAuth } from '../contexts/AuthContext'
-
 import { useState } from 'react'
 
+const NAV_LINKS = {
+  Player: [
+    { href: '/player/dashboard', label: 'Dashboard' },
+    { href: '/player/my-stats', label: 'My Stats' },
+    { href: '/player/my-goals', label: 'My Goals' },
+    { href: '/player/team-info', label: 'My Team' },
+    { href: '/player/matchup', label: 'Matchup' },
+  ],
+  Coach: [
+    { href: '/coach/dashboard', label: 'Dashboard' },
+    { href: '/coach/schedule', label: 'Schedule' },
+    { href: '/coach/game-stats', label: 'Game Stats' },
+    { href: '/coach/my-team', label: 'My Team' },
+  ],
+  AthleticDirector: [
+    { href: '/athletic-director/dashboard', label: 'Dashboard' },
+    { href: '/athletic-director/teams', label: 'Teams' },
+    { href: '/athletic-director/games', label: 'Games' },
+    { href: '/athletic-director/schedule', label: 'Schedule' },
+  ],
+}
+
 function getInitials(name) {
-  if (!name) return '';
-  const parts = name.trim().split(' ');
-  if (parts.length === 1) return parts[0][0].toUpperCase();
-  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  if (!name) return ''
+  const parts = name.trim().split(' ')
+  if (parts.length === 1) return parts[0][0].toUpperCase()
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
 }
 
 export default function RoleNavBar() {
-  const { user, loading, isAuthenticated, logout } = useAuth()
+  const { user, loading, logout } = useAuth()
+  const router = useRouter()
   const [showDropdown, setShowDropdown] = useState(false)
 
   const handleLogout = async () => {
     try {
       logout()
       await apiLogout()
-    } catch (err) {
+    } catch {
       window.location.href = '/'
     }
   }
 
-  const handleAvatarClick = () => setShowDropdown(v => !v)
-  const closeDropdown = () => setShowDropdown(false)
+  if (loading || !user || !user.role) return null
 
-  if (loading || !user || !user.role) {
-    return null;
-  }
-
-  if (user.role === 'Player') {
-    return (
-      <nav className="navbar">
-        <div className="navbar-content">
-          <div className="navbar-row">
-            <img src="/nextup-logo.png" alt="NextUp Logo" className="navbar-logo" style={{ height: '7rem', width: 'auto', display: 'inline-block', verticalAlign: 'middle' }} />
-            <div className="navbar-links">
-              <Link href="/player/dashboard" className="navbar-link">Dashboard</Link>
-              <Link href="/player/my-stats" className="navbar-link">My Stats</Link>
-              <Link href="/player/my-goals" className="navbar-link">My Goals</Link>
-              <Link href="/player/team-info" className="navbar-link">My Team</Link>
-              <Link href="/player/matchup" className="navbar-link">Matchup</Link>
-            </div>
-            <div className="navbar-user" tabIndex={0} onBlur={closeDropdown} style={{ position: 'relative', marginLeft: '2rem' }}>
-              <div className="navbar-avatar" onClick={handleAvatarClick} style={{ cursor: 'pointer', background: '#1976d2', color: '#fff', borderRadius: '50%', width: 48, height: 48, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 600, fontSize: 22, boxShadow: '0 2px 8px rgba(0,0,0,0.10)' }} title={user.name}>
-                {getInitials(user.name)}
-              </div>
-              {showDropdown && (
-                <div style={{ position: 'absolute', right: 0, top: 56, background: '#fff', borderRadius: 8, boxShadow: '0 2px 8px rgba(0,0,0,0.15)', padding: '0.5rem 1rem', zIndex: 2000, minWidth: 120 }}>
-                  <button className="button" style={{ width: '100%' }} onMouseDown={handleLogout}>Logout</button>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </nav>
-    )
-  }
-
-  if (user.role === 'Coach') {
-    return (
-      <nav className="navbar">
-        <div className="navbar-content">
-          <div className="navbar-row">
-            <img src="/nextup-logo.png" alt="NextUp Logo" className="navbar-logo" style={{ height: '7rem', width: 'auto', display: 'inline-block', verticalAlign: 'middle' }} />
-            <div className="navbar-links">
-              <Link href="/coach/dashboard" className="navbar-link">Dashboard</Link>
-              <Link href="/coach/schedule" className="navbar-link">Schedule</Link>
-              <Link href="/coach/game-stats" className="navbar-link">Game Stats</Link>
-              <Link href="/coach/my-team" className="navbar-link">My Team</Link>
-            </div>
-            <div className="navbar-user" tabIndex={0} onBlur={closeDropdown} style={{ position: 'relative', marginLeft: '2rem' }}>
-              <div className="navbar-avatar" onClick={handleAvatarClick} style={{ cursor: 'pointer', background: '#1976d2', color: '#fff', borderRadius: '50%', width: 48, height: 48, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 600, fontSize: 22, boxShadow: '0 2px 8px rgba(0,0,0,0.10)' }} title={user.name}>
-                {getInitials(user.name)}
-              </div>
-              {showDropdown && (
-                <div style={{ position: 'absolute', right: 0, top: 56, background: '#fff', borderRadius: 8, boxShadow: '0 2px 8px rgba(0,0,0,0.15)', padding: '0.5rem 1rem', zIndex: 2000, minWidth: 120 }}>
-                  <button className="button" style={{ width: '100%' }} onMouseDown={handleLogout}>Logout</button>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </nav>
-    )
-  }
-
-  if (user.role === 'AthleticDirector') {
-    return (
-      <nav className="navbar">
-        <div className="navbar-content">
-          <div className="navbar-row">
-            <img src="/nextup-logo.png" alt="NextUp Logo" className="navbar-logo" style={{ height: '7rem', width: 'auto', display: 'inline-block', verticalAlign: 'middle' }} />
-            <div className="navbar-links">
-              <Link href="/athletic-director/dashboard" className="navbar-link">Dashboard</Link>
-              <Link href="/athletic-director/teams" className="navbar-link">Teams</Link>
-              <Link href="/athletic-director/games" className="navbar-link">Games</Link>
-              <Link href="/athletic-director/schedule" className="navbar-link">Schedule</Link>
-            </div>
-            <div className="navbar-user" tabIndex={0} onBlur={closeDropdown} style={{ position: 'relative', marginLeft: '2rem' }}>
-              <div className="navbar-avatar" onClick={handleAvatarClick} style={{ cursor: 'pointer', background: '#1976d2', color: '#fff', borderRadius: '50%', width: 48, height: 48, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 600, fontSize: 22, boxShadow: '0 2px 8px rgba(0,0,0,0.10)' }} title={user.name}>
-                {getInitials(user.name)}
-              </div>
-              {showDropdown && (
-                <div style={{ position: 'absolute', right: 0, top: 56, background: '#fff', borderRadius: 8, boxShadow: '0 2px 8px rgba(0,0,0,0.15)', padding: '0.5rem 1rem', zIndex: 2000, minWidth: 120 }}>
-                  <button className="button" style={{ width: '100%' }} onMouseDown={handleLogout}>Logout</button>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </nav>
-    )
-  }
+  const links = NAV_LINKS[user.role] || []
 
   return (
     <nav className="navbar">
       <div className="navbar-content">
         <div className="navbar-row">
-          <img src="/nextup-logo.png" alt="NextUp Logo" className="navbar-logo" style={{ height: '7rem', width: 'auto', display: 'inline-block', verticalAlign: 'middle' }} />
-          <div className="navbar-user" tabIndex={0} onBlur={closeDropdown} style={{ position: 'relative', marginLeft: '2rem' }}>
-            <div className="navbar-avatar" onClick={handleAvatarClick} style={{ cursor: 'pointer', background: '#1976d2', color: '#fff', borderRadius: '50%', width: 48, height: 48, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 600, fontSize: 22, boxShadow: '0 2px 8px rgba(0,0,0,0.10)' }} title={user.name}>
+          <img
+            src="/nextup-logo.png"
+            alt="NextUp"
+            style={{ height: '3rem', width: 'auto', display: 'block' }}
+          />
+          <div className="navbar-links">
+            {links.map(({ href, label }) => (
+              <Link
+                key={href}
+                href={href}
+                className={`navbar-link${router.pathname === href || router.pathname.startsWith(href + '/') ? ' active' : ''}`}
+              >
+                {label}
+              </Link>
+            ))}
+          </div>
+          <div
+            className="navbar-user"
+            tabIndex={0}
+            onBlur={() => setShowDropdown(false)}
+            style={{ position: 'relative', marginLeft: '1.5rem' }}
+          >
+            <div
+              onClick={() => setShowDropdown(v => !v)}
+              style={{
+                cursor: 'pointer',
+                background: 'rgba(0, 224, 255, 0.15)',
+                border: '1.5px solid rgba(0, 224, 255, 0.3)',
+                color: '#00e0ff',
+                borderRadius: '50%',
+                width: 40,
+                height: 40,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontWeight: 700,
+                fontSize: 16,
+                transition: 'background 0.2s',
+              }}
+              title={user.name}
+            >
               {getInitials(user.name)}
             </div>
             {showDropdown && (
-              <div style={{ position: 'absolute', right: 0, top: 56, background: '#fff', borderRadius: 8, boxShadow: '0 2px 8px rgba(0,0,0,0.15)', padding: '0.5rem 1rem', zIndex: 2000, minWidth: 120 }}>
-                <button className="button" style={{ width: '100%' }} onMouseDown={handleLogout}>Logout</button>
+              <div style={{
+                position: 'absolute',
+                right: 0,
+                top: 48,
+                background: '#0d2d4a',
+                border: '1px solid rgba(0, 224, 255, 0.15)',
+                borderRadius: 10,
+                boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
+                padding: '0.5rem',
+                zIndex: 2000,
+                minWidth: 140,
+              }}>
+                <div style={{ padding: '0.5rem 0.75rem', color: '#94a3b8', fontSize: '0.85rem', borderBottom: '1px solid rgba(255,255,255,0.06)', marginBottom: '0.25rem' }}>
+                  {user.name}
+                </div>
+                <button
+                  onMouseDown={handleLogout}
+                  style={{
+                    width: '100%',
+                    padding: '0.5rem 0.75rem',
+                    background: 'none',
+                    border: 'none',
+                    color: '#f87171',
+                    fontSize: '0.9rem',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    textAlign: 'left',
+                    borderRadius: 6,
+                    transition: 'background 0.15s',
+                  }}
+                  onMouseOver={e => e.currentTarget.style.background = 'rgba(248,113,113,0.08)'}
+                  onMouseOut={e => e.currentTarget.style.background = 'none'}
+                >
+                  Sign Out
+                </button>
               </div>
             )}
           </div>

@@ -43,7 +43,7 @@ function OpponentDepthChart({ roster }) {
       <tr key={positionName}>
         <td>{positionDisplayMap[positionName] || positionName}</td>
         {slots.map((player, idx) => (
-          <td key={idx} style={{ padding: '0.5rem', color: '#333' }}>
+          <td key={idx} style={{ padding: '0.5rem', color: '#e2e8f0' }}>
             {player ? player.name : <span style={{ color: '#888' }}>-</span>}
           </td>
         ))}
@@ -54,7 +54,7 @@ function OpponentDepthChart({ roster }) {
     <div style={{ margin: '2rem 0', background: '#222', borderRadius: '10px', padding: '1.5rem' }}>
       <h2 style={{ color: 'var(--primary)', marginBottom: '1rem' }}>Opponent Depth Chart</h2>
       <div style={{ overflowX: 'auto' }}>
-        <table style={{ width: '100%', background: '#fff', borderRadius: '8px' }}>
+        <table style={{ width: '100%', background: '#162032', borderRadius: '8px' }}>
           <thead>
             <tr>
               <th style={{ padding: '0.5rem', textAlign: 'left' }}>POS</th>
@@ -151,12 +151,11 @@ function OpponentOverview() {
   if (error) return <div>{error}</div>;
 
   return (
-    <main>
-      <div>
+    <main style={{ minHeight: '100vh', background: 'var(--background-gradient)', paddingTop: 'calc(var(--navbar-height) + 2rem)', paddingBottom: '3rem' }}>
+      <div style={{ maxWidth: '900px', margin: '0 auto', padding: '0 1.5rem' }}>
         {/* Team Name and Record */}
         <div style={{
-          margin: '3.2rem 0 0.5rem 0',
-          paddingLeft: '1.5rem',
+          marginBottom: '1rem',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'flex-start',

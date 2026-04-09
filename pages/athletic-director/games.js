@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useAuth } from '../../contexts/AuthContext'
 import { useRouter } from 'next/router'
 import { fetchAthleticDirectorGames, fetchAthleticDirectorTeams, createAthleticDirectorGame, updateAthleticDirectorGame, deleteAthleticDirectorGame } from '../../lib/api'
+
 import withAuth from '../../hocs/withAuth'
 
 function GamesManagement() {
@@ -97,8 +98,6 @@ function GamesManagement() {
         HomeScore: formData.homeScore ? parseInt(formData.homeScore) : null,
         AwayScore: formData.awayScore ? parseInt(formData.awayScore) : null
       };
-      console.log('Submitting game update:', submitData);
-
       if (editingGame) {
         await updateAthleticDirectorGame(editingGame.gameId, submitData)
       } else {
@@ -154,16 +153,7 @@ function GamesManagement() {
     }
 
     try {
-      const response = await fetch(`/api/athletic-directors/games/${gameId}`, {
-        method: 'DELETE',
-        credentials: 'include'
-      })
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: 'Failed to delete game' }))
-        throw new Error(errorData.error || 'Failed to delete game')
-      }
-
+      await deleteAthleticDirectorGame(gameId)
       await fetchGames()
     } catch (err) {
       setError(err.message || 'Failed to delete game')
@@ -225,7 +215,7 @@ function GamesManagement() {
 
     return (
       <div style={{ minHeight: '100vh', background: 'var(--background-gradient)' }}>
-  <div className="main-container" style={{ paddingTop: '9rem' }}>
+  <div className="main-container" style={{ paddingTop: 'calc(var(--navbar-height) + 2rem)' }}>
           {/* Header */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32 }}>
             <div>

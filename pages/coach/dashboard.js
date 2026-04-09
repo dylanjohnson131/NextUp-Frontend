@@ -51,8 +51,8 @@ function CoachDashboard() {
   }
 
   return (
-    <main className="container mx-auto px-4 py-8">
-        <main style={{ maxWidth: '900px', margin: '0 auto', padding: '2.5rem 1.5rem' }}>
+    <main style={{ minHeight: '100vh', background: 'var(--background-gradient)', paddingTop: 'calc(var(--navbar-height) + 2rem)', paddingBottom: '3rem' }}>
+      <div style={{ maxWidth: '900px', margin: '0 auto', padding: '0 1.5rem' }}>
           <div style={{ marginBottom: '2.5rem' }}>
             <h1 style={{ fontSize: '2.5rem', fontWeight: 700, color: 'var(--primary)', marginBottom: '0.5rem', letterSpacing: '0.5px' }}>Coach Dashboard</h1>
             <p style={{ color: '#b6c2b7', fontSize: '1.1rem', marginBottom: 0 }}>Welcome back! Here's an overview of your teams and recent activity.</p>
@@ -130,8 +130,8 @@ function CoachDashboard() {
               )}
             </div>
           </div>
-        </main>
-      </main>
+      </div>
+    </main>
   )
 }
 

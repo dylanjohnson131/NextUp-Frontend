@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { getCurrentPlayer, fetchUpcomingGames, fetchTeamById } from '../../lib/api'
+import { groupPlayersByPosition, categorizePositions } from '../../lib/positions'
 import withAuth from '../../hocs/withAuth'
 
 function Matchup() {
@@ -26,24 +27,18 @@ function Matchup() {
               } else if (game.awayTeam?.awayTeamId === myTeamId) {
                 opp = game.homeTeam;
               }
-              setOpponent(opp);
-              console.log('Opponent:', opp);
-              const oppTeamId = opp?.awayTeamId || opp?.homeTeamId;
-              console.log('Opponent teamId used for API call:', oppTeamId);
+              setOpponent(opp)
+              const oppTeamId = opp?.awayTeamId || opp?.homeTeamId
               if (oppTeamId) {
                 setRosterLoading(true);
                 try {
-                  const teamData = await fetchTeamById(oppTeamId);
-                  console.log('Opponent teamData:', teamData);
-                  setOpponentRoster(teamData?.players || []);
-                } catch (err) {
-                  console.error('Error fetching opponent teamData:', err);
-                  setOpponentRoster([]);
+                  const teamData = await fetchTeamById(oppTeamId)
+                  setOpponentRoster(teamData?.players || [])
+                } catch {
+                  setOpponentRoster([])
                 } finally {
                   setRosterLoading(false);
                 }
-              } else {
-                console.warn('No valid teamId found for opponent.');
               }
             }
           } catch (error) {}
@@ -55,12 +50,12 @@ function Matchup() {
     }
     loadMatchupData()
   }, [])
-  const { groupPlayersByPosition, categorizePositions } = require('../../lib/positions');
   const grouped = groupPlayersByPosition(opponentRoster);
   const categorized = categorizePositions(grouped);
 
   return (
-    <main className="container" style={{ maxWidth: 900, margin: '6rem auto', padding: '2rem', background: 'linear-gradient(180deg, rgba(255,255,255,0.02), transparent)', borderRadius: 12 }}>
+    <main style={{ minHeight: '100vh', background: 'var(--background-gradient)', paddingTop: 'calc(var(--navbar-height) + 2rem)', paddingBottom: '3rem' }}>
+    <div style={{ maxWidth: 900, margin: '0 auto', padding: '0 1.5rem' }}>
       <h1 style={{ fontSize: '2.6rem', fontWeight: 800, marginBottom: '2.2rem', background: 'var(--text-gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', textFillColor: 'transparent', textAlign: 'center', letterSpacing: '2px', textShadow: '0 1px 2px #222, 0 0 10px #283e5133' }}>Next Matchup</h1>
       <div style={{ background: 'var(--card)', borderRadius: 16, boxShadow: '0 4px 24px #00e0ff22, 0 1.5px 8px #000a', padding: '2rem', marginBottom: '2.5rem' }}>
         <h2 style={{ fontSize: '2rem', fontWeight: 700, marginBottom: '1.2rem', color: 'var(--text)' }}>Upcoming Game</h2>
@@ -162,6 +157,7 @@ function Matchup() {
           )}
         </div>
       </div>
+    </div>
     </main>
   )
 }

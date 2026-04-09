@@ -1,72 +1,52 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import withAuth from '../../hocs/withAuth'
-import { getCurrentUser, getCurrentPlayer, fetchUpcomingGames } from '../../lib/api'
+import { getCurrentUser, getCurrentPlayer, fetchUpcomingGames, fetchPlayerStats } from '../../lib/api'
 
 function PlayerDashboard() {
   const router = useRouter()
   const [user, setUser] = useState(null)
   const [playerData, setPlayerData] = useState(null)
-  const [playerStats, setPlayerStats] = useState([])
   const [nextGame, setNextGame] = useState(null)
   const [opponent, setOpponent] = useState(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const logUserInfo = (userInfo) => {
-      if (userInfo) {
-        console.log('Fetched userInfo:', userInfo);
-      } else {
-        console.warn('No userInfo returned from getCurrentUser');
-      }
-    }
     const loadData = async () => {
       try {
-        let userInfo = null;
-        let currentPlayer = null;
-        try {
-          userInfo = await getCurrentUser();
-        } catch (err) {
-          console.error('Error fetching userInfo:', err);
-        }
-        try {
-          currentPlayer = await getCurrentPlayer();
-        } catch (err) {
-          console.error('Error fetching currentPlayer:', err);
-        }
+        const [userInfo, currentPlayer] = await Promise.all([
+          getCurrentUser().catch(() => null),
+          getCurrentPlayer().catch(() => null),
+        ])
 
-        logUserInfo(userInfo);
         setUser(userInfo)
         setPlayerData(currentPlayer)
 
         if (currentPlayer?.playerId) {
-          try {
-            const stats = await import('../../lib/api').then(api => api.fetchPlayerStats(currentPlayer.playerId));
-            setPlayerStats(stats || []);
-          } catch (err) {
-            console.error('Error fetching player stats:', err);
-          }
+          fetchPlayerStats(currentPlayer.playerId).catch(() => null)
         }
+
         if (currentPlayer?.team?.teamId) {
           try {
             const upcomingGames = await fetchUpcomingGames(currentPlayer.team.teamId)
             if (upcomingGames && upcomingGames.length > 0) {
-              const game = upcomingGames[0];
-              setNextGame(game);
-              const myTeamId = currentPlayer.team.teamId;
-              let opp = null;
+              const game = upcomingGames[0]
+              setNextGame(game)
+              const myTeamId = currentPlayer.team.teamId
+              let opp = null
               if (game.homeTeam?.homeTeamId === myTeamId) {
-                opp = game.awayTeam;
+                opp = game.awayTeam
               } else if (game.awayTeam?.awayTeamId === myTeamId) {
-                opp = game.homeTeam;
+                opp = game.homeTeam
               }
-              setOpponent(opp);
+              setOpponent(opp)
             }
-          } catch (error) {
-            console.error('Error fetching upcoming games:', error);
+          } catch {
+            // no upcoming games
           }
         }
-      } catch (error) {
+      } catch {
+        // handled per-call above
       } finally {
         setLoading(false)
       }
@@ -76,83 +56,100 @@ function PlayerDashboard() {
 
   if (loading) {
     return (
-      <main style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(135deg, #0a192f 0%, #1e293b 100%)', paddingTop: '9rem' }}>
+      <main style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--background-gradient)', paddingTop: 'var(--navbar-height)' }}>
         <div style={{ color: '#b6c2d1', fontSize: '1.2rem' }}>Loading...</div>
       </main>
     )
   }
 
   return (
-    <main style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #0a192f 0%, #1e293b 100%)', paddingTop: '9rem', paddingBottom: '3rem' }}>
+    <main style={{ minHeight: '100vh', background: 'var(--background-gradient)', paddingTop: 'calc(var(--navbar-height) + 2rem)', paddingBottom: '3rem' }}>
       <section style={{ maxWidth: 950, margin: '0 auto', padding: '0 1.5rem' }}>
-        <div style={{ textAlign: 'center', marginBottom: '2.2rem' }}>
-          <h1 style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--primary, #00e0ff)', letterSpacing: '2px', marginBottom: '0.5rem', textShadow: '0 2px 12px #00e0ff33' }}>Player Dashboard</h1>
-          <p style={{ color: '#b6c2d1', fontSize: '1.15rem', fontWeight: 500 }}>
-            Welcome back, {user?.name ? user.name.split(' ')[0] : 'Player'}! Track your progress and team performance.
+        <div style={{ marginBottom: '2.2rem' }}>
+          <h1 style={{ fontSize: '2.2rem', fontWeight: 800, color: 'var(--primary)', letterSpacing: '1px', marginBottom: '0.4rem' }}>
+            Player Dashboard
+          </h1>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '1.05rem' }}>
+            Welcome back, {user?.name ? user.name.split(' ')[0] : 'Player'}!
           </p>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '2.2rem' }}>
-          {/* Player Quick Stats - flush with Next Game card */}
-          <div style={{ background: 'var(--card, #222)', borderRadius: '16px', boxShadow: '0 2px 16px #00e0ff11', padding: '2rem 1.5rem', marginBottom: '0', width: '190%' }}>
-            <h2 style={{ fontSize: '1.35rem', fontWeight: 700, color: 'var(--primary, #00e0ff)', marginBottom: '1.2rem' }}>Your Profile</h2>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
+          {/* Profile Card */}
+          <div style={{ background: 'var(--card)', borderRadius: '16px', border: '1px solid rgba(0,224,255,0.08)', padding: '1.75rem 1.5rem' }}>
+            <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--primary)', marginBottom: '1.2rem', textTransform: 'uppercase', letterSpacing: '1px', fontSize: '0.85rem' }}>Your Profile</h2>
             {playerData ? (
-              <div style={{ display: 'grid', rowGap: '1.1rem' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ color: '#b6c2d1' }}>Position:</span>
-                  <span style={{ color: '#fff', fontWeight: 600 }}>{playerData.position && playerData.position.trim() !== '' ? playerData.position : 'Not set'}</span>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ color: '#b6c2d1' }}>Jersey #:</span>
-                  <span style={{ color: '#fff', fontWeight: 600 }}>{playerData.jerseyNumber ? playerData.jerseyNumber : 'Not assigned'}</span>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ color: '#b6c2d1' }}>Age:</span>
-                  <span style={{ color: '#fff', fontWeight: 600 }}>{playerData.age ? playerData.age : 'Not set'}</span>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ color: '#b6c2d1' }}>Team:</span>
-                  <span style={{ color: '#fff', fontWeight: 600 }}>{playerData.team?.name || 'No team'}</span>
-                </div>
+              <div style={{ display: 'grid', rowGap: '0.9rem' }}>
+                {[
+                  ['Position', playerData.position?.trim() || 'Not set'],
+                  ['Jersey #', playerData.jerseyNumber ?? 'Not assigned'],
+                  ['Age', playerData.age ?? 'Not set'],
+                  ['Team', playerData.team?.name || 'No team'],
+                  ['Height', playerData.height || 'Not set'],
+                  ['Weight', playerData.weight ? `${playerData.weight} lbs` : 'Not set'],
+                ].map(([label, value]) => (
+                  <div key={label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ color: 'var(--muted)', fontSize: '0.9rem' }}>{label}</span>
+                    <span style={{ color: '#fff', fontWeight: 600, fontSize: '0.95rem' }}>{value}</span>
+                  </div>
+                ))}
               </div>
             ) : (
-              <p style={{ color: '#b6c2d1' }}>Player data not found</p>
+              <p style={{ color: 'var(--muted)' }}>Profile data unavailable</p>
             )}
           </div>
-        </div>
-        {/* Next Game */}
-        <div style={{ background: 'var(--card, #222)', borderRadius: '16px', boxShadow: '0 2px 16px #00e0ff11', padding: '2rem 1.5rem', marginBottom: '2rem' }}>
-          <h2 style={{ fontSize: '1.35rem', fontWeight: 700, color: 'var(--primary, #00e0ff)', marginBottom: '1.2rem' }}>Next Game</h2>
-          <div style={{ background: '#1e293b', borderRadius: '10px', padding: '1.2rem 1rem' }}>
-            {nextGame ? (
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+
+          {/* Next Game Card */}
+          <div style={{ background: 'var(--card)', borderRadius: '16px', border: '1px solid rgba(0,224,255,0.08)', padding: '1.75rem 1.5rem' }}>
+            <h2 style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--primary)', marginBottom: '1.2rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Next Game</h2>
+            <div style={{ background: '#162032', borderRadius: '10px', padding: '1.2rem 1rem' }}>
+              {nextGame ? (
                 <div>
-                  <p style={{ color: '#fff', fontWeight: 600, fontSize: '1.08rem' }}>
+                  <p style={{ color: '#fff', fontWeight: 700, fontSize: '1.1rem', marginBottom: '0.4rem' }}>
                     vs. {opponent?.name || opponent?.Name || 'TBD'}
                   </p>
-                  <p style={{ color: '#b6c2d1', fontSize: '1rem' }}>
+                  <p style={{ color: 'var(--muted)', fontSize: '0.95rem', marginBottom: '0.25rem' }}>
                     {nextGame.gameDate ? new Date(nextGame.gameDate).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'short',
-                      day: 'numeric'
-                    }) : 'Date TBD'} - {nextGame.gameTime || 'Time TBD'}
+                      year: 'numeric', month: 'short', day: 'numeric'
+                    }) : 'Date TBD'}
                   </p>
                   {nextGame.location && (
-                    <p style={{ color: '#7dd3fc', fontSize: '0.98rem' }}>{nextGame.location}</p>
+                    <p style={{ color: 'var(--muted)', fontSize: '0.9rem' }}>{nextGame.location}</p>
                   )}
+                  <button
+                    onClick={() => router.push('/player/matchup')}
+                    style={{ marginTop: '1rem', background: 'var(--primary)', color: '#0a192f', fontWeight: 700, fontSize: '0.9rem', padding: '0.55rem 1.2rem', borderRadius: '8px', border: 'none', cursor: 'pointer' }}
+                  >
+                    Scout Opponent
+                  </button>
                 </div>
-                <button
-                  onClick={() => router.push('/player/matchup')}
-                  style={{ background: 'var(--primary, #00e0ff)', color: '#1e293b', fontWeight: 700, fontSize: '1rem', padding: '0.7rem 1.5rem', borderRadius: '8px', border: 'none', boxShadow: '0 2px 8px #00e0ff33', cursor: 'pointer', transition: 'background 0.2s, color 0.2s' }}
-                >
-                  Scout Opponent
-                </button>
-              </div>
-            ) : (
-              <div style={{ textAlign: 'center' }}>
-                <p style={{ color: '#b6c2d1' }}>No upcoming games scheduled</p>
-                <p style={{ color: '#7dd3fc', fontSize: '0.98rem', marginTop: '0.7rem' }}>Check back later for game updates</p>
-              </div>
-            )}
+              ) : (
+                <div style={{ textAlign: 'center', padding: '1rem 0' }}>
+                  <p style={{ color: 'var(--muted)' }}>No upcoming games scheduled</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Quick Links */}
+        <div style={{ background: 'var(--card)', borderRadius: '16px', border: '1px solid rgba(0,224,255,0.08)', padding: '1.75rem 1.5rem' }}>
+          <h2 style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--primary)', marginBottom: '1.2rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Quick Links</h2>
+          <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+            {[
+              { href: '/player/my-stats', label: 'My Stats' },
+              { href: '/player/my-goals', label: 'My Goals' },
+              { href: '/player/team-info', label: 'Team Info' },
+              { href: '/player/matchup', label: 'Matchup' },
+            ].map(({ href, label }) => (
+              <button
+                key={href}
+                onClick={() => router.push(href)}
+                style={{ background: '#162032', border: '1px solid rgba(0,224,255,0.12)', color: '#fff', padding: '0.6rem 1.2rem', borderRadius: '8px', fontWeight: 500, fontSize: '0.9rem', cursor: 'pointer', transition: 'border-color 0.2s' }}
+              >
+                {label}
+              </button>
+            ))}
           </div>
         </div>
       </section>

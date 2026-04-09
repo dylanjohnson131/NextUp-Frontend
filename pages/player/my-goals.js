@@ -120,7 +120,9 @@ function MyGoals() {
   }
 
   return (
-  <main className="container" style={{ maxWidth: 700, margin: '7rem auto 4rem auto', padding: '2.5rem 2rem', paddingTop: '2.5rem', background: 'var(--card)', borderRadius: 16, boxShadow: '0 4px 24px #00e0ff22, 0 1.5px 8px #000a' }}>
+  <main style={{ minHeight: '100vh', background: 'var(--background-gradient)', paddingTop: 'calc(var(--navbar-height) + 2rem)', paddingBottom: '3rem' }}>
+  <div style={{ maxWidth: 700, margin: '0 auto', padding: '0 1.5rem' }}>
+  <div style={{ background: 'var(--card)', borderRadius: 16, boxShadow: '0 4px 24px #00e0ff22, 0 1.5px 8px #000a', padding: '2.5rem 2rem' }}>
       <h1 style={{
         fontSize: '2.6rem',
         fontWeight: 800,
@@ -307,7 +309,9 @@ function MyGoals() {
           </div>
         )}
       </div>
-    </main>
+    </div>
+  </div>
+  </main>
   );
 }
 

@@ -111,13 +111,13 @@ function DepthChart() {
     const slots = [0, 1, 2, 3].map(i => players[i] || null);
     return (
       <tr key={positionName}>
-        <td className="fon">{positionName}</td>
+        <td style={{ padding: '0.5rem', color: 'var(--primary)', fontWeight: 600 }}>{positionName}</td>
         {slots.map((player, idx) => (
-          <td key={idx} className="border px-2 py-1 whitespace-nowrap">
+          <td key={idx} style={{ padding: '0.5rem', color: '#e2e8f0' }}>
             {player ? (
-              <Link href={`/coach/player/${player.playerId}`} className="text-cyan-700 dark:text-cyan-400 font-medium hover:underline">
+              <span style={{ color: 'var(--primary)', fontWeight: 500 }}>
                 {player.name}
-              </Link>
+              </span>
             ) : (
               <span className="text-slate-400">-</span>
             )}
@@ -136,7 +136,8 @@ function DepthChart() {
   }
 
   return (
-    <main style={{ maxWidth: '900px', margin: '0 auto', padding: '2.5rem 1.5rem' }}>
+    <main style={{ minHeight: '100vh', background: 'var(--background-gradient)' }}>
+    <div style={{ maxWidth: '900px', margin: '0 auto', padding: 'calc(var(--navbar-height) + 2rem) 1.5rem 3rem' }}>
       <h1 style={{ fontSize: '2.5rem', fontWeight: 700, color: 'var(--primary)', marginBottom: '1.2rem', letterSpacing: '0.5px' }}>Depth Chart</h1>
       {coach?.team && (
         <div style={{ background: '#222', borderRadius: '14px', boxShadow: '0 2px 12px rgba(0,0,0,0.10)', padding: '1.5rem', marginBottom: '2rem' }}>
@@ -201,7 +202,7 @@ function DepthChart() {
       <div style={{ background: '#222', borderRadius: '14px', boxShadow: '0 2px 12px rgba(0,0,0,0.10)', padding: '2rem 1.5rem', marginBottom: '2rem' }}>
         {activeTab === 'offense' && (
           <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', background: '#fff', borderRadius: '8px', marginBottom: '1rem' }}>
+            <table style={{ width: '100%', background: '#162032', borderRadius: '8px', marginBottom: '1rem' }}>
               <thead>
                 <tr>
                   <th style={{ padding: '0.5rem', textAlign: 'left' }}>POS</th>
@@ -222,7 +223,7 @@ function DepthChart() {
         )}
         {activeTab === 'defense' && (
           <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', background: '#fff', borderRadius: '8px', marginBottom: '1rem' }}>
+            <table style={{ width: '100%', background: '#162032', borderRadius: '8px', marginBottom: '1rem' }}>
               <thead>
                 <tr>
                   <th style={{ padding: '0.5rem', textAlign: 'left' }}>POS</th>
@@ -243,7 +244,7 @@ function DepthChart() {
         )}
         {activeTab === 'special' && (
           <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', background: '#fff', borderRadius: '8px', marginBottom: '1rem' }}>
+            <table style={{ width: '100%', background: '#162032', borderRadius: '8px', marginBottom: '1rem' }}>
               <thead>
                 <tr>
                   <th style={{ padding: '0.5rem', textAlign: 'left' }}>POS</th>
@@ -267,6 +268,7 @@ function DepthChart() {
       <div style={{ background: '#222', borderRadius: '14px', boxShadow: '0 2px 12px rgba(0,0,0,0.10)', padding: '2rem 1.5rem', marginBottom: '2rem' }}>
         <CoachNotes />
       </div>
+    </div>
     </main>
   )
 }

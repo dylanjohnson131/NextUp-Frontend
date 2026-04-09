@@ -79,7 +79,7 @@ function MyTeam() {
       <tr key={positionName}>
         <td style={{ color: 'var(--primary)', fontWeight: 600 }}>{positionName}</td>
         {slots.map((player, idx) => (
-          <td key={idx} style={{ padding: '0.5rem', color: '#333' }}>
+          <td key={idx} style={{ padding: '0.5rem', color: '#e2e8f0' }}>
             {player ? player.name : <span style={{ color: '#888' }}>-</span>}
           </td>
         ))}
@@ -92,7 +92,8 @@ function MyTeam() {
     setTimeout(() => setSaved(false), 1500);
   };
   return (
-  <main style={{ maxWidth: '900px', margin: '9rem auto 0 auto', padding: '2.5rem 1.5rem' }}>
+  <main style={{ minHeight: '100vh', background: 'var(--background-gradient)' }}>
+  <div style={{ maxWidth: '900px', margin: '0 auto', padding: 'calc(var(--navbar-height) + 2rem) 1.5rem 3rem' }}>
       <h1 style={{ fontSize: '2.5rem', fontWeight: 700, color: 'var(--primary)', marginBottom: '1.2rem', letterSpacing: '0.5px' }}>My Team</h1>
       {/* Team Overview */}
       <div style={{ background: '#222', borderRadius: '14px', boxShadow: '0 2px 12px rgba(0,0,0,0.10)', padding: '2rem 1.5rem', marginBottom: '2rem' }}>
@@ -170,7 +171,7 @@ function MyTeam() {
         </div>
         {/* Depth Chart Table */}
         <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', background: '#fff', borderRadius: '8px', marginBottom: '1rem' }}>
+          <table style={{ width: '100%', background: '#162032', borderRadius: '8px', marginBottom: '1rem' }}>
             <thead>
               <tr>
                 <th style={{ padding: '0.5rem', textAlign: 'left' }}>POS</th>
@@ -223,21 +224,18 @@ function MyTeam() {
           <a href="/coach/depth-chart" style={{
             display: 'inline-block',
             background: 'var(--primary)',
-            color: '#fff',
+            color: '#0a192f',
             borderRadius: '8px',
             padding: '0.7rem 1.5rem',
             fontWeight: 600,
             fontSize: '1rem',
             textDecoration: 'none',
-            boxShadow: '0 1px 6px rgba(0,0,0,0.07)',
-            transition: 'background 0.2s',
-          }}
-          onMouseOver={e => e.currentTarget.style.background = 'var(--accent)'}
-          onMouseOut={e => e.currentTarget.style.background = 'var(--primary)'}>
-            Manage Roster
+          }}>
+            View Depth Chart
           </a>
         </div>
       )}
+    </div>
     </main>
   )
 }

@@ -42,21 +42,23 @@ function TeamInfo() {
 
   if (loading) {
     return (
-      <main className="container" style={{ maxWidth: 700, margin: '7rem auto 4rem auto', padding: '2.5rem 2rem', background: 'var(--card)', borderRadius: 16, boxShadow: '0 4px 24px #00e0ff22, 0 1.5px 8px #000a' }}>
+      <main className="container" style={{ maxWidth: 700, margin: '0 auto', padding: '0 1.5rem', paddingTop: 'calc(var(--navbar-height) + 2rem)' }}>
         <div style={{ color: 'var(--text)', fontSize: '1.2rem', textAlign: 'center' }}>Loading team information...</div>
       </main>
     );
   }
   if (error) {
     return (
-      <main className="container" style={{ maxWidth: 700, margin: '7rem auto 4rem auto', padding: '2.5rem 2rem', background: 'var(--card)', borderRadius: 16, boxShadow: '0 4px 24px #00e0ff22, 0 1.5px 8px #000a' }}>
+      <main className="container" style={{ maxWidth: 700, margin: '0 auto', padding: '0 1.5rem', paddingTop: 'calc(var(--navbar-height) + 2rem)' }}>
         <div style={{ background: '#ff4d4f22', color: '#ff4d4f', borderRadius: 8, padding: '0.7rem 1rem', marginBottom: 18, textAlign: 'center', position: 'relative' }}>{error}</div>
       </main>
     );
   }
 
   return (
-    <main className="container" style={{ maxWidth: 700, margin: '7rem auto 4rem auto', padding: '2.5rem 2rem', background: 'var(--card)', borderRadius: 16, boxShadow: '0 4px 24px #00e0ff22, 0 1.5px 8px #000a' }}>
+    <main style={{ minHeight: '100vh', background: 'var(--background-gradient)', paddingTop: 'calc(var(--navbar-height) + 2rem)', paddingBottom: '3rem' }}>
+    <div style={{ maxWidth: 700, margin: '0 auto', padding: '0 1.5rem' }}>
+    <div style={{ background: 'var(--card)', borderRadius: 16, boxShadow: '0 4px 24px #00e0ff22, 0 1.5px 8px #000a', padding: '2.5rem 2rem' }}>
       <h1 style={{ fontSize: '2.6rem', fontWeight: 800, marginBottom: '2.2rem', background: 'var(--text-gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', textFillColor: 'transparent', textAlign: 'center', letterSpacing: '2px', textShadow: '0 1px 2px #222, 0 0 10px #283e5133' }}>Team Info</h1>
       {team && (
         <>
@@ -179,6 +181,8 @@ function TeamInfo() {
           </div>
         </>
       )}
+    </div>
+    </div>
     </main>
   );
 }

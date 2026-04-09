@@ -38,8 +38,7 @@ function MyStats() {
         });
         statAverages.completionPercentage = totalAttempts > 0 ? (totalCompletions / totalAttempts) * 100 : 0;
         setPlayer({ ...playerData, stats: statAverages })
-      } catch (err) {
-        console.error('Player info error:', err)
+      } catch {
         setError('Failed to load your player information')
       } finally {
         setLoading(false)
@@ -65,7 +64,9 @@ function MyStats() {
   }
 
   return (
-  <main className="container" style={{ maxWidth: 700, margin: '9rem auto 4rem auto', padding: '2.5rem 2rem', background: 'var(--card)', borderRadius: 16, boxShadow: '0 4px 24px #00e0ff22, 0 1.5px 8px #000a' }}>
+  <main style={{ minHeight: '100vh', background: 'var(--background-gradient)', paddingTop: 'calc(var(--navbar-height) + 2rem)', paddingBottom: '3rem' }}>
+  <div style={{ maxWidth: 700, margin: '0 auto', padding: '0 1.5rem' }}>
+  <div style={{ background: 'var(--card)', borderRadius: 16, boxShadow: '0 4px 24px #00e0ff22, 0 1.5px 8px #000a', padding: '2.5rem 2rem' }}>
       <h1 style={{
         fontSize: '2.6rem',
         fontWeight: 800,
@@ -80,7 +81,9 @@ function MyStats() {
         textShadow: '0 1px 2px #222, 0 0 10px #283e5133'
       }}>My Stats</h1>
       <PlayerStatsCard player={player} />
-    </main>
+    </div>
+  </div>
+  </main>
   );
 }
 

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import withAuth from '../../hocs/withAuth';
-import { getCurrentCoach, fetchUpcomingGames, fetchTeamById, updatePlayerStats } from '../../lib/api';
-import { getStatsForPosition } from '../../lib/positions';
+import { getCurrentCoach, fetchUpcomingGames, fetchTeamById, updatePlayerStats, fetchPlayerGameStats } from '../../lib/api';
+import { getStatsForPosition, toPascalCase } from '../../lib/positions';
 
 function GameStats() {
   const [games, setGames] = useState([]);
@@ -49,7 +49,6 @@ function GameStats() {
     const fetchStats = async () => {
       if (selectedGame && selectedPlayer) {
         try {
-          const { fetchPlayerGameStats } = await import('../../lib/api');
           const gameStats = await fetchPlayerGameStats(selectedGame.gameId, selectedPlayer.playerId);
           const normalizedExistingStats = {};
           if (gameStats) {
@@ -84,7 +83,6 @@ function GameStats() {
     setSaving(true);
     setSaveError("");
     const statFields = getStatsForPosition(selectedPlayer.position);
-    const { toPascalCase } = await import('../../lib/positions');
     const payload = {};
     statFields.forEach(field => {
       payload[toPascalCase(field)] = stats[field] === undefined || stats[field] === "" ? 0 : Number(stats[field]);
@@ -105,7 +103,8 @@ function GameStats() {
   };
 
   return (
-    <main style={{ maxWidth: '900px', margin: '9rem auto 0 auto', padding: '2.5rem 1.5rem' }}>
+    <main style={{ minHeight: '100vh', background: 'var(--background-gradient)' }}>
+    <div style={{ maxWidth: '900px', margin: '0 auto', padding: 'calc(var(--navbar-height) + 2rem) 1.5rem 3rem' }}>
       <h1 style={{ fontSize: '2.5rem', fontWeight: 700, color: 'var(--primary)', marginBottom: '1.2rem', letterSpacing: '0.5px' }}>Game Stats</h1>
       {saveSuccessMessage && (
         <div style={{ color: 'limegreen', fontWeight: 700, fontSize: '1.2rem', marginBottom: '1.2rem' }}>{saveSuccessMessage}</div>
@@ -224,6 +223,7 @@ function GameStats() {
           </>
         )}
       </div>
+    </div>
     </main>
   );
 }

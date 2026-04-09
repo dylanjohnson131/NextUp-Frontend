@@ -65,8 +65,6 @@ function Register() {
         }
         res = await registerCoach(coachData)
       }
-      console.log('Registration response:', res);
-     
       const success =
         (res && (res.Message?.toLowerCase().includes('registered') || res.message?.toLowerCase().includes('registered')))
         || (res && (res.User || res.Player));
@@ -85,7 +83,6 @@ function Register() {
       } else {
         setError(err.message || 'Registration failed');
       }
-      console.error('Registration error:', err);
     } finally {
       setLoading(false);
     }
