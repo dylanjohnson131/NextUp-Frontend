@@ -4,15 +4,15 @@ const nextConfig = {
   async rewrites() {
     return [
       {
-        source: '/api/:path*',
-        destination: 'http://localhost:5164/api/:path*',
+        source: "/api/:path*",
+        destination: "https://nextup-api-production.up.railway.app/api/:path*",
       },
       {
-        source: '/auth/:path*',
-        destination: 'http://localhost:5164/auth/:path*',
+        source: "/auth/:path*",
+        destination: "https://nextup-api-production.up.railway.app/auth/:path*",
       },
-    ]
+    ];
   },
-}
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
